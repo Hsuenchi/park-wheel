@@ -324,3 +324,8 @@ svg text{
   #spinText{ font-size: 16px; }
   .centerBtn{ width: 74px; height: 74px; }
 }
+/* 把輸入列整條移除，後面的內容會自動往上補 */
+.inputRow {
+  display: none !important;
+}
+
