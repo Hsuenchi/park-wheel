@@ -5,11 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>公園轉盤選擇器</title>
-  
+
   <!-- ✅ iPhone 主畫面圖示 -->
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
   <meta name="apple-mobile-web-app-title" content="公園轉盤">
-  
+
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -71,7 +71,9 @@
 
             <div id="wheelRotator" class="wheelRotator">
               <svg id="wheelSvg" class="wheelSvg" viewBox="0 0 400 400" aria-label="轉盤"></svg>
-              <button id="centerBtn" class="centerBtn" type="button" aria-label="中心按鈕"></button>
+
+              <!-- ✅ 中心按鈕（保留佈局用，不讓使用者/讀屏誤操作） -->
+              <button id="centerBtn" class="centerBtn" type="button" aria-label="中心按鈕" disabled aria-hidden="true"></button>
             </div>
           </div>
         </div>
@@ -95,10 +97,16 @@
           <p class="resultHint">今天就去</p>
           <p id="resultName" class="resultName">—</p>
 
-          <!-- ✅ 最小 UI 加料：地圖按鈕 -->
-          <a id="mapBtn" class="btn btn-map" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">
-            打開地圖
-          </a>
+          <!-- ✅ 地圖 + 保留：並排最直覺（JS 會在有結果時顯示保留按鈕） -->
+          <div class="resultActions">
+            <a id="mapBtn" class="btn btn-map" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">
+              打開地圖
+            </a>
+
+            <button id="preserveBtn" class="btn btn-preserve hidden" type="button" title="不要封印這個公園，之後仍可再抽到">
+              保留
+            </button>
+          </div>
 
           <p class="resultHint">玩吧！🎉</p>
         </div>
@@ -113,4 +121,6 @@
   <script src="./app.js" defer></script>
 </body>
 </html>
+
+
 
