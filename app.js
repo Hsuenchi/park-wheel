@@ -34,8 +34,14 @@ const locBtn = $("#locBtn");
 const resetNoRepeatBtn = $("#resetNoRepeatBtn");
 const filterHint = $("#filterHint");
 
+// ✅ 新增：保留按鍵（按了就「不封印」目前結果）
+const preserveBtn = $("#preserveBtn");
+
 // ✅ 每次抽幾個
 const BATCH_SIZE = 6;
+
+// ✅ near 強化：只從最近 N 個中挑（再抽 6）
+const NEAR_TOP_N = 30;
 
 // === 資料來源 ===
 const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
@@ -143,9 +149,8 @@ function toNumberMaybe(v) {
   return Number.isFinite(n) ? n : undefined;
 }
 
-// ✅ 你原本只取 names；我保留 names 取法，同時「盡量」抓 meta（行政區/座標/地址）
+// ✅ names + meta
 function extractParksFromJson(data) {
-  // 回傳：[{name, district?, lat?, lng?, address?}, ...]
   if (!Array.isArray(data) || data.length === 0) return [];
 
   // names.json：["xxx","yyy"]
@@ -241,7 +246,6 @@ function buildMapUrl(name) {
   if (meta && Number.isFinite(meta.lat) && Number.isFinite(meta.lng)) {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${meta.lat},${meta.lng}`)}`;
   }
-  // 有地址就組合，沒有就用名字搜尋
   const query = meta?.address ? `${name} ${meta.address}` : name;
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
@@ -271,7 +275,7 @@ function setUIState() {
   emptyState.classList.toggle("hidden", hasParks);
   wheelSection.classList.toggle("hidden", !hasParks);
 
-  // ✅ 方法A：列表區塊永遠不顯示（就算 HTML 沒有也不會出錯）
+  // ✅ 方法A：列表區塊永遠不顯示
   if (listSection) listSection.classList.add("hidden");
   if (listTitle) listTitle.textContent = "";
 
@@ -292,14 +296,24 @@ function setUIState() {
   if (!selectedPark || isSpinning) {
     resultBox.classList.add("hidden");
     setMapBtn(null);
+    if (preserveBtn) {
+      preserveBtn.disabled = true;
+      preserveBtn.classList.add("hidden");
+    }
   } else {
     resultBox.classList.remove("hidden");
     resultName.textContent = selectedPark;
     setMapBtn(selectedPark);
+
+    // 只有出結果才顯示保留
+    if (preserveBtn) {
+      preserveBtn.disabled = false;
+      preserveBtn.classList.remove("hidden");
+    }
   }
 }
 
-// ✅ 方法A：不渲染 chips（即使 chips 存在也不顯示）
+// ✅ 方法A：不渲染 chips
 function renderChips() {
   if (!chips) return;
   chips.innerHTML = "";
@@ -338,7 +352,6 @@ function rebuildWheel() {
   defs.appendChild(filter);
 
   parks.forEach((name, i) => {
-    // ✅ 讓每格「中心」對齊 12 點鐘指針（避免判定看起來偏右）
     const startAngle = i * segmentAngle - 90 - (segmentAngle / 2);
     const endAngle = startAngle + segmentAngle;
 
@@ -372,14 +385,11 @@ function rebuildWheel() {
     g.appendChild(path);
 
     const midAngle = startAngle + segmentAngle / 2;
-
-    // ✅ 6 格：字更外更舒服
     const textR = 150;
     const p = polarToXY(cx, cy, textR, midAngle);
     const px = Math.round(p.x);
     const py = Math.round(p.y);
 
-    // ✅ 字：乾淨 + 自動縮字 + 太長省略
     const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute("x", String(px));
     text.setAttribute("y", String(py));
@@ -451,7 +461,6 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 }
 
 function getFilteredPoolNames() {
-  // 根據模式回傳 name[]
   const mode = modeSelect ? modeSelect.value : "all";
 
   if (mode === "district") {
@@ -463,7 +472,6 @@ function getFilteredPoolNames() {
   if (mode === "near") {
     if (!userLoc) return masterPool.slice();
 
-    // 找有座標的，依距離排序
     const withCoord = masterPool
       .map((name) => {
         const meta = parkMeta.get(name);
@@ -475,8 +483,9 @@ function getFilteredPoolNames() {
       .sort((a, b) => a.km - b.km);
 
     if (withCoord.length === 0) return masterPool.slice();
-    // 不直接只取最近 6：讓「換一批」仍有變化，先回傳由近到遠的清單，後面再挑 6
-    return withCoord.map(x => x.name);
+
+    // ✅ 強化：只回傳最近 30 個（接著再由 loadNewBatch 抽 6）
+    return withCoord.slice(0, NEAR_TOP_N).map(x => x.name);
   }
 
   return masterPool.slice();
@@ -490,7 +499,7 @@ function ensureModeUI() {
   if (locBtn) locBtn.hidden = mode !== "near";
 
   if (mode === "near") {
-    setFilterHint(userLoc ? "已取得定位：將優先從附近的公園挑選。" : "最近模式需要定位：請按「取得定位」。");
+    setFilterHint(userLoc ? `已取得定位：將優先從最近 ${NEAR_TOP_N} 個公園挑選。` : "最近模式需要定位：請按「取得定位」。");
   } else {
     setFilterHint("");
   }
@@ -522,7 +531,7 @@ function loadNewBatch(forceInclude = "") {
     lastBatchSet = new Set();
     selectedPark = null;
 
-    setFilterHint("🎉 這個篩選範圍內的公園都已抽過（封印完）！目前 0 個可抽。請按『重置不重複』或切換模式/行政區。");
+    setFilterHint("🎉 這個篩選範圍內都已抽過（封印完）！目前 0 個可抽。請按『重置不重複』或切換模式/行政區。");
 
     resetWheelInstant();
     wheelSvg.innerHTML = "";
@@ -534,13 +543,12 @@ function loadNewBatch(forceInclude = "") {
   const primaryCount = Math.min(maxCount, remaining.length);
   let primary = pickRandomUnique(remaining, primaryCount, new Set(), forceInclude);
 
-  // ✅ 不足 6：用 basePool 補滿（可能包含已封印的，只是用來「維持 6 格爽感」）
+  // ✅ 不足 6：用 basePool 補滿（可能包含已封印的，只是用來維持 6 格）
   let batch = primary.slice();
 
   if (batch.length < maxCount) {
     const need = maxCount - batch.length;
     const fillerCandidates = basePool.filter(n => !batch.includes(n)); // 可包含 sealed
-
     const filler = pickRandomUnique(fillerCandidates, need, lastBatchSet, "");
     batch = uniqueStrings(batch.concat(filler));
 
@@ -579,13 +587,35 @@ function addPark(name) {
     masterPool = uniqueStrings(masterPool);
   }
 
-  // ✅ meta 也補一份（至少 name）
   if (!parkMeta.has(trimmed)) {
     parkMeta.set(trimmed, { name: trimmed });
   }
 
   parkInput.value = "";
   loadNewBatch(trimmed);
+}
+
+// ✅ 保留：把目前結果從封印移除（也移除同批 won，讓它可以再被抽到）
+function preserveSelected() {
+  const name = normalizeName(selectedPark);
+  if (!name) return;
+
+  const sealedSet = loadSet(SEALED_KEY);
+  const wonSet = loadSet(WIN_KEY);
+
+  const wasSealed = sealedSet.delete(name);
+  const wasWon = wonSet.delete(name);
+
+  saveSet(SEALED_KEY, sealedSet);
+  saveSet(WIN_KEY, wonSet);
+
+  if (wasSealed || wasWon) {
+    setFilterHint(`已保留「${name}」：不會進入封印（之後仍可能再抽到）。`);
+  } else {
+    setFilterHint(`「${name}」目前本來就不在封印中。`);
+  }
+
+  renderAll();
 }
 
 // ✅ 轉盤：easing + bounce + 不重複「結果」+ 封印抽中的那個（跨批次）
@@ -606,15 +636,13 @@ function spin() {
   // ✅ 只從「未封印」且「同一批未抽過」的候選中抽
   let candidates = parks.filter((p) => !wonSet.has(p) && !sealedSet0.has(p));
 
-  // ✅ 若這批已沒有可抽的（可能剩下的都是填充用封印格）
   if (candidates.length === 0) {
     isSpinning = false;
-    setFilterHint("這一批已沒有可抽的公園（可能都已封印或是填充格）。請按『換一批』；若最後變成 0 個可抽，代表已全部逛完！");
+    setFilterHint("這一批已沒有可抽的公園（可能都已封印或是填充格）。請按『換一批』。");
     renderAll();
     return;
   }
 
-  // ✅ 決定 winner
   const winnerName = candidates[Math.floor(Math.random() * candidates.length)];
   const winnerIndex = parks.indexOf(winnerName);
 
@@ -632,11 +660,11 @@ function spin() {
     const idx = Math.floor(((360 - normalized + slice / 2) % 360) / slice);
     const picked = parks[idx];
 
-    // ✅ 保底：若剛好停到封印格（理論上不會，但防呆）
+    // 防呆：若停到封印格（理論上不會）
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)) {
       isSpinning = false;
-      setFilterHint("剛剛停到已封印的填充格了（防呆）。請再轉一次或按『換一批』。");
+      setFilterHint("剛剛停到已封印的填充格（防呆）。請再轉一次或按『換一批』。");
       renderAll();
       return;
     }
@@ -694,7 +722,7 @@ function requestLocation() {
     (pos) => {
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       locBtn.disabled = false;
-      setFilterHint("已取得定位：將優先從附近的公園挑選。");
+      setFilterHint(`已取得定位：將優先從最近 ${NEAR_TOP_N} 個公園挑選。`);
       if (!isSpinning) loadNewBatch();
     },
     () => {
@@ -710,7 +738,6 @@ function requestLocation() {
 // No-repeat reset
 // =========================
 function resetNoRepeat() {
-  // ✅ 清掉封印與同批紀錄（抽完就抽完；要重來就按這裡）
   localStorage.removeItem(WIN_KEY);
   localStorage.removeItem(SEALED_KEY);
 
@@ -764,8 +791,7 @@ async function init() {
   // filters init
   ensureModeUI();
 
-  // ✅ 一進來先清 legacy（避免你以前那版 SHOWN_KEY 還在造成誤會）
-  // 不影響新邏輯，只是避免「換一批怪怪的」
+  // ✅ 清 legacy（避免舊版整批封印干擾）
   localStorage.removeItem(SHOWN_KEY);
 
   // 先來一批
@@ -782,6 +808,14 @@ async function init() {
     newBatchBtn.addEventListener("click", () => {
       if (isSpinning) return;
       loadNewBatch();
+    });
+  }
+
+  // ✅ 保留按鍵
+  if (preserveBtn) {
+    preserveBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      preserveSelected();
     });
   }
 
@@ -806,5 +840,6 @@ async function init() {
 }
 
 init();
+
 
 
