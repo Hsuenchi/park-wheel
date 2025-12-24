@@ -41,14 +41,16 @@ const BATCH_SIZE = 6;
 const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
 const CUSTOM_KEY = "tripweb_custom_parks_v1";
 
-// ✅ 不重複紀錄（曾出現過的公園）
-const SHOWN_KEY = "tripweb_shown_parks_v1";   // 出現在輪盤上的
-const WIN_KEY   = "tripweb_won_parks_v1";     // 被抽中的（結果）
+// ✅ 不重複紀錄
+// SHOWN_KEY：舊邏輯「整批封印」已停用（保留不刪，避免舊資料干擾）
+const SHOWN_KEY = "tripweb_shown_parks_v1";   // (legacy)
+const WIN_KEY   = "tripweb_won_parks_v1";     // 同一批內「結果不重複」
+const SEALED_KEY = "tripweb_sealed_parks_v1"; // ✅ 跨批次：只封印「抽中的那個」
 
 // === 目前轉盤顯示的公園（抽樣結果）===
-let parks = [];              // 仍維持「字串」陣列：你現有 rebuildWheel 用這個
+let parks = [];              // 字串陣列：rebuildWheel 用這個
 let isSpinning = false;
-let rotation = 0;            // ✅ 記錄目前轉盤角度（deg）
+let rotation = 0;            // 目前角度（deg）
 let selectedPark = null;
 
 // === 全部抽樣池（JSON + 自訂）===
@@ -497,40 +499,60 @@ function ensureModeUI() {
 }
 
 // =========================
-// Batch logic（✅ 不重複出現曾出現過的公園）
+// Batch logic（✅ 不自動重置 + 只封印「抽中的那個」）
+// - 先抽未封印的（可抽中）
+// - 若不足 6：用已封印的補滿 6（只是填格子，不會抽中）
+// - 若真的全部都封印完：0 個可抽（提示手動重置）
 // =========================
 function loadNewBatch(forceInclude = "") {
   if (masterPool.length === 0) return;
 
-  const shownSet = loadSet(SHOWN_KEY);
+  const sealedSet = loadSet(SEALED_KEY);
 
   // ✅ 先套用 filters
-  let basePool = getFilteredPoolNames();
+  const basePool = getFilteredPoolNames();
+  const maxCount = Math.min(BATCH_SIZE, basePool.length);
 
-  // ✅ 不重複：盡量排除「曾出現過」
-  let freshPool = basePool.filter((n) => !shownSet.has(n));
+  // ✅ 剩下「未封印」的（真正可抽中的）
+  const remaining = basePool.filter(n => !sealedSet.has(n));
 
-  // 如果 freshPool 不夠抽一批，就重置（只重置在該 filter 範圍內的「曾出現過」概念）
-  // 這樣不會「永遠抽不到」，也符合「不重複直到用完一輪」
-  const count = Math.min(BATCH_SIZE, basePool.length);
+  // ✅ 抽完就抽完：不自動重置
+  if (remaining.length === 0) {
+    parks = [];
+    lastBatchSet = new Set();
+    selectedPark = null;
 
-  if (freshPool.length < count) {
-    // 清掉 basePool 這個範圍內的 shown 記錄（保留其它名字的紀錄）
-    for (const n of basePool) shownSet.delete(n);
-    saveSet(SHOWN_KEY, shownSet);
-    freshPool = basePool.slice();
-    setFilterHint("已把目前篩選範圍內的公園用完一輪，已自動重置不重複紀錄。");
+    setFilterHint("🎉 這個篩選範圍內的公園都已抽過（封印完）！目前 0 個可抽。請按『重置不重複』或切換模式/行政區。");
+
+    resetWheelInstant();
+    wheelSvg.innerHTML = "";
+    renderAll();
+    return;
   }
 
-  // ✅ 仍保留你原本：降低跟上一批重複率（lastBatchSet）
-  const batch = pickRandomUnique(freshPool, count, lastBatchSet, forceInclude);
+  // ✅ 先抽可抽中的（未封印）
+  const primaryCount = Math.min(maxCount, remaining.length);
+  let primary = pickRandomUnique(remaining, primaryCount, new Set(), forceInclude);
+
+  // ✅ 不足 6：用 basePool 補滿（可能包含已封印的，只是用來「維持 6 格爽感」）
+  let batch = primary.slice();
+
+  if (batch.length < maxCount) {
+    const need = maxCount - batch.length;
+    const fillerCandidates = basePool.filter(n => !batch.includes(n)); // 可包含 sealed
+
+    const filler = pickRandomUnique(fillerCandidates, need, lastBatchSet, "");
+    batch = uniqueStrings(batch.concat(filler));
+
+    // 極少見：basePool 太小導致仍不足，就允許重複補到滿
+    while (batch.length < maxCount && basePool.length > 0) {
+      batch.push(basePool[Math.floor(Math.random() * basePool.length)]);
+    }
+    batch = batch.slice(0, maxCount);
+  }
 
   parks = batch;
   lastBatchSet = new Set(parks);
-
-  // ✅ 把這批加入「曾出現過」
-  for (const n of parks) shownSet.add(n);
-  saveSet(SHOWN_KEY, shownSet);
 
   selectedPark = null;
 
@@ -566,7 +588,7 @@ function addPark(name) {
   loadNewBatch(trimmed);
 }
 
-// ✅ 轉盤：easing + bounce + 不重複「結果」
+// ✅ 轉盤：easing + bounce + 不重複「結果」+ 封印抽中的那個（跨批次）
 function spin() {
   if (isSpinning || parks.length === 0) return;
 
@@ -578,51 +600,57 @@ function spin() {
   const n = parks.length;
   const slice = 360 / n;
 
-  // ✅ 結果不重複：在目前這批 parks 裡，找還沒抽過的
   const wonSet = loadSet(WIN_KEY);
-  let candidates = parks.filter((p) => !wonSet.has(p));
+  const sealedSet0 = loadSet(SEALED_KEY);
 
+  // ✅ 只從「未封印」且「同一批未抽過」的候選中抽
+  let candidates = parks.filter((p) => !wonSet.has(p) && !sealedSet0.has(p));
+
+  // ✅ 若這批已沒有可抽的（可能剩下的都是填充用封印格）
   if (candidates.length === 0) {
-    // 這批 6 個都抽過了：重置這批的結果紀錄（只重置這批，不影響其它）
-    for (const p of parks) wonSet.delete(p);
-    saveSet(WIN_KEY, wonSet);
-    candidates = parks.slice();
-    setFilterHint("這一批的公園你已經都抽過了，我幫你重置『結果不重複』紀錄～");
+    isSpinning = false;
+    setFilterHint("這一批已沒有可抽的公園（可能都已封印或是填充格）。請按『換一批』；若最後變成 0 個可抽，代表已全部逛完！");
+    renderAll();
+    return;
   }
 
-  // ✅ 直接決定 winnerIndex，然後算出「要轉到哪個角度」才能精準停在它
+  // ✅ 決定 winner
   const winnerName = candidates[Math.floor(Math.random() * candidates.length)];
   const winnerIndex = parks.indexOf(winnerName);
 
-  // 讓 idx 公式穩定命中 winner：normalized = (360 - winnerIndex*slice) % 360
   const desiredNormalized = ((360 - winnerIndex * slice) % 360 + 360) % 360;
-
-  // spins：保留你原本的圈數，但我們不再用 randomAngle 亂飄（避免重複與誤差）
   const spins = 5 + Math.random() * 3;
-
-  // 從目前 rotation 轉到 desiredNormalized 的 delta
   const delta = ((desiredNormalized - rotation) % 360 + 360) % 360;
-
   const totalRotation = rotation + (spins * 360) + delta;
 
-  // ✅ 主旋轉 easing（更像真轉盤）
   wheelRotator.style.transition = "transform 3800ms cubic-bezier(0.12, 0.78, 0.18, 1)";
   wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
-  // ✅ 主旋轉結束後：bounce 一下
   window.setTimeout(() => {
     const normalized = ((totalRotation % 360) + 360) % 360;
 
-    // ✅ 用你原本的判定公式（但現在角度是我們算好的，會很準）
     const idx = Math.floor(((360 - normalized + slice / 2) % 360) / slice);
     const picked = parks[idx];
 
-    // 記錄結果不重複
+    // ✅ 保底：若剛好停到封印格（理論上不會，但防呆）
+    const sealedSet1 = loadSet(SEALED_KEY);
+    if (sealedSet1.has(picked)) {
+      isSpinning = false;
+      setFilterHint("剛剛停到已封印的填充格了（防呆）。請再轉一次或按『換一批』。");
+      renderAll();
+      return;
+    }
+
+    // ✅ 同一批結果不重複
     wonSet.add(picked);
     saveSet(WIN_KEY, wonSet);
 
-    // ✅ bounce：先超出一點，再回來
-    const BOUNCE = 7; // deg
+    // ✅ 跨批次封印：只封印抽中的那個
+    sealedSet1.add(picked);
+    saveSet(SEALED_KEY, sealedSet1);
+
+    // ✅ bounce
+    const BOUNCE = 7;
     wheelRotator.style.transition = "transform 140ms ease-out";
     wheelRotator.style.transform = `rotate(${totalRotation + BOUNCE}deg)`;
 
@@ -631,7 +659,6 @@ function spin() {
       wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
       window.setTimeout(() => {
-        // ✅ 鎖定角度（避免累積誤差）
         rotation = normalized;
         wheelRotator.style.transition = "none";
         wheelRotator.style.transform = `rotate(${rotation}deg)`;
@@ -668,7 +695,6 @@ function requestLocation() {
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       locBtn.disabled = false;
       setFilterHint("已取得定位：將優先從附近的公園挑選。");
-      // 立即換一批（讓最近模式立刻生效）
       if (!isSpinning) loadNewBatch();
     },
     () => {
@@ -684,9 +710,14 @@ function requestLocation() {
 // No-repeat reset
 // =========================
 function resetNoRepeat() {
-  localStorage.removeItem(SHOWN_KEY);
+  // ✅ 清掉封印與同批紀錄（抽完就抽完；要重來就按這裡）
   localStorage.removeItem(WIN_KEY);
-  setFilterHint("已重置『不重複』紀錄。");
+  localStorage.removeItem(SEALED_KEY);
+
+  // legacy：順手清掉避免舊資料干擾
+  localStorage.removeItem(SHOWN_KEY);
+
+  setFilterHint("已重置『封印/不重複』紀錄。");
   if (!isSpinning) loadNewBatch();
 }
 
@@ -733,6 +764,10 @@ async function init() {
   // filters init
   ensureModeUI();
 
+  // ✅ 一進來先清 legacy（避免你以前那版 SHOWN_KEY 還在造成誤會）
+  // 不影響新邏輯，只是避免「換一批怪怪的」
+  localStorage.removeItem(SHOWN_KEY);
+
   // 先來一批
   loadNewBatch();
 
@@ -771,3 +806,5 @@ async function init() {
 }
 
 init();
+
+
