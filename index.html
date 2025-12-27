@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>公園轉盤選擇器</title>
 
-  <!-- ✅ iPhone 主畫面圖示 -->
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
   <meta name="apple-mobile-web-app-title" content="公園轉盤">
 
@@ -21,17 +20,18 @@
   <main class="page">
     <section class="card">
       <header class="header">
-  <div class="headerLeft">
-    <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作">恢復</button>
-  </div>
+        <!-- ✅ 左邊：恢復（不會擋到） -->
+        <div class="headerActions headerActionsLeft" aria-label="左側工具">
+          <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作">恢復</button>
+        </div>
 
-  <h1>公園轉盤選擇器</h1>
+        <h1>公園轉盤選擇器</h1>
 
-  <div class="headerRight">
-    <button id="recordBtn" class="btn btn-record" type="button" title="查看紀錄">紀錄</button>
-  </div>
-</header>
-
+        <!-- ✅ 右邊：紀錄 -->
+        <div class="headerActions headerActionsRight" aria-label="右側工具">
+          <button id="recordBtn" class="btn btn-record" type="button" title="查看紀錄">紀錄</button>
+        </div>
+      </header>
 
       <section class="inputRow">
         <input id="parkInput" type="text" placeholder="輸入公園名稱..." autocomplete="off" />
@@ -45,7 +45,6 @@
         </button>
       </section>
 
-      <!-- ✅ Filters -->
       <section class="filterRow" aria-label="篩選">
         <div class="filterGroup" id="modeGroup">
           <label class="filterLabel" for="modeSelect">模式</label>
@@ -125,7 +124,6 @@
         <p id="emptyText">正在載入公園資料…</p>
       </section>
 
-      <!-- ✅ 收藏清單 -->
       <section id="favSection" class="favSection">
         <header class="favHeader">
           <h2 class="favTitle">學姊喜歡的公園</h2>
@@ -138,7 +136,6 @@
         <p id="favEmpty" class="favEmpty">（還沒有收藏）</p>
       </section>
 
-      <!-- ✅ 紀錄面板（右上角按鈕開關） -->
       <div id="recordPanel" class="panel hidden" role="dialog" aria-modal="true" aria-label="轉盤紀錄">
         <div class="panelCard">
           <div class="panelHeader">
@@ -153,7 +150,6 @@
         </div>
       </div>
 
-      <!-- ✅ 全收集告白彈窗 -->
       <div id="loveModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="完成訊息">
         <div class="modalCard">
           <p class="modalText">人瑄學姊笑起來真的很好看，我很喜歡學姊</p>
@@ -167,7 +163,6 @@
   <script src="./app.js" defer></script>
 </body>
 </html>
-
 
 
 
