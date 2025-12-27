@@ -36,9 +36,9 @@
         </button>
       </section>
 
-      <!-- ✅ 最小 UI 加料：Filters（不改你原排版，只多一行） -->
+      <!-- ✅ Filters（固定顯示：用 disabled + 變暗 來引導） -->
       <section class="filterRow" aria-label="篩選">
-        <div class="filterGroup">
+        <div class="filterGroup" id="modeGroup">
           <label class="filterLabel" for="modeSelect">模式</label>
           <select id="modeSelect" class="filterSelect">
             <option value="all" selected>隨機</option>
@@ -47,12 +47,12 @@
           </select>
         </div>
 
-        <div class="filterGroup" id="districtGroup" hidden>
+        <div class="filterGroup" id="districtGroup">
           <label class="filterLabel" for="districtSelect">行政區</label>
           <select id="districtSelect" class="filterSelect"></select>
         </div>
 
-        <button id="locBtn" class="btn btn-loc" type="button" title="需要定位權限" hidden>
+        <button id="locBtn" class="btn btn-loc" type="button" title="需要定位權限">
           取得定位
         </button>
 
@@ -97,7 +97,7 @@
           <p class="resultHint">今天就去</p>
           <p id="resultName" class="resultName">—</p>
 
-          <!-- ✅ 地圖 + 保留：並排最直覺（JS 會在有結果時顯示保留按鈕） -->
+          <!-- ✅ 地圖 + 保留 + 收藏 -->
           <div class="resultActions">
             <a id="mapBtn" class="btn btn-map" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">
               打開地圖
@@ -105,6 +105,10 @@
 
             <button id="preserveBtn" class="btn btn-preserve hidden" type="button" title="不要封印這個公園，之後仍可再抽到">
               保留
+            </button>
+
+            <button id="favBtn" class="btn btn-fav hidden" type="button" title="把這個公園收藏起來">
+              <span class="heart" aria-hidden="true">♥</span> 收藏
             </button>
           </div>
 
@@ -115,12 +119,28 @@
       <section id="emptyState" class="emptyState">
         <p id="emptyText">正在載入公園資料…</p>
       </section>
+
+      <!-- ✅ 收藏清單 -->
+      <section id="favSection" class="favSection">
+        <header class="favHeader">
+          <h2 class="favTitle">學姊喜歡的公園</h2>
+          <button id="favClearBtn" class="btn btn-favClear" type="button" title="清空收藏">
+            清空
+          </button>
+        </header>
+
+        <ul id="favList" class="favList" aria-label="收藏清單"></ul>
+        <p id="favEmpty" class="favEmpty">（還沒有收藏）</p>
+      </section>
     </section>
   </main>
 
   <script src="./app.js" defer></script>
 </body>
 </html>
+
+
+
 
 
 
