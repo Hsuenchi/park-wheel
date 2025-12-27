@@ -4,7 +4,7 @@ const $ = (sel) => document.querySelector(sel);
 const parkInput = $("#parkInput");
 const addBtn = $("#addBtn");
 
-// ✅ 方法A：列表區塊不存在也沒關係（全部都做 null-safe）
+// ✅ optional legacy nodes (null-safe)
 const listSection = $("#listSection");
 const listTitle = $("#listTitle");
 const chips = $("#chips");
@@ -24,9 +24,8 @@ const resultName = $("#resultName");
 
 const newBatchBtn = $("#btnNewBatch");
 
-// ✅ 新增：map + filters（都是最小 UI 元件）
+// filters
 const mapBtn = $("#mapBtn");
-
 const modeSelect = $("#modeSelect");
 const districtGroup = $("#districtGroup");
 const districtSelect = $("#districtSelect");
@@ -34,67 +33,70 @@ const locBtn = $("#locBtn");
 const resetNoRepeatBtn = $("#resetNoRepeatBtn");
 const filterHint = $("#filterHint");
 
-// ✅ 新增：保留按鍵（按了就「不封印」目前結果）
+// preserve + favorite
 const preserveBtn = $("#preserveBtn");
-
-// ✅ 新增：收藏（愛心）
 const favBtn = $("#favBtn");
-const favSection = $("#favSection");
+
+// favorites section
 const favList = $("#favList");
 const favEmpty = $("#favEmpty");
 const favClearBtn = $("#favClearBtn");
 
-// ✅ 每次抽幾個
-const BATCH_SIZE = 6;
+// record + undo + modal
+const undoBtn = $("#undoBtn");
+const recordBtn = $("#recordBtn");
+const recordPanel = $("#recordPanel");
+const recordCloseBtn = $("#recordCloseBtn");
+const recordList = $("#recordList");
+const recordEmpty = $("#recordEmpty");
 
-// ✅ near：最近 30 個 → 依序每批 6 個
+const loveModal = $("#loveModal");
+const loveCloseBtn = $("#loveCloseBtn");
+
+// constants
+const BATCH_SIZE = 6;
 const NEAR_TOP_N = 30;
 
-// === 資料來源 ===
 const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
 const CUSTOM_KEY = "tripweb_custom_parks_v1";
 
-// ✅ 不重複紀錄
-// SHOWN_KEY：舊邏輯「整批封印」已停用（保留不刪，避免舊資料干擾）
-const SHOWN_KEY = "tripweb_shown_parks_v1";   // (legacy)
-const WIN_KEY   = "tripweb_won_parks_v1";     // 同一批內「結果不重複」
-const SEALED_KEY = "tripweb_sealed_parks_v1"; // ✅ 跨批次：只封印「抽中的那個」
+const SHOWN_KEY  = "tripweb_shown_parks_v1";   // legacy
+const WIN_KEY    = "tripweb_won_parks_v1";     // in-batch no-repeat
+const SEALED_KEY = "tripweb_sealed_parks_v1";  // cross-batch seal
 
-// ✅ 收藏 key
+// ✅ new: record/history + undo + love flag
+const HISTORY_KEY     = "tripweb_history_v1";
+const UNDO_STACK_KEY  = "tripweb_undo_stack_v1";
+const LOVE_SHOWN_KEY  = "tripweb_love_shown_v1";
+
+// favorites + near cursor
 const FAV_KEY = "tripweb_fav_parks_v1";
-
-// ✅ near cursor（把 30 個用完就停）
 const NEAR_CURSOR_KEY = "tripweb_near_cursor_v1";
 const NEAR_LOC_KEY    = "tripweb_near_loc_v1";
 
-// === 目前轉盤顯示的公園（抽樣結果）===
-let parks = [];              // 字串陣列：rebuildWheel 用這個
+// state
+let parks = [];
 let isSpinning = false;
-let rotation = 0;            // 目前角度（deg）
+let rotation = 0;
 let selectedPark = null;
 
-// === 全部抽樣池（JSON + 自訂）===
-let masterPool = [];         // names (string)
+let masterPool = [];
 let customParks = [];
-
-// ✅ meta：name -> {name, district, lat, lng, address}
 let parkMeta = new Map();
 
-// ✅ 定位
-let userLoc = null;          // {lat,lng}
-
-// 用來降低「換一批」跟上一批重複率
+let userLoc = null;
 let lastBatchSet = new Set();
 
-// ✅ near cache
-let nearSorted = [];         // 最近 30 個（依距離排序）
-let nearCursor = 0;          // 0..30
-let nearLocKey = "";         // 用來偵測定位變更
+// near cache
+let nearSorted = [];
+let nearCursor = 0;
+let nearLocKey = "";
 
-// ✅ 收藏
+// favorites + history
 let favorites = [];
+let history = [];
 
-/** 色盤：淡藍灰 / 淡粉灰 / 淡黃 / 淡綠 */
+/** 色盤 */
 const colors = [
   { start: "#BFC8D7", end: "#A8B3C5" },
   { start: "#E2D2D2", end: "#D1C0C0" },
@@ -109,9 +111,8 @@ const colors = [
 // =========================
 // Utils
 // =========================
-function normalizeName(x) {
-  return String(x ?? "").trim();
-}
+function normalizeName(x) { return String(x ?? "").trim(); }
+
 function uniqueStrings(arr) {
   const out = [];
   const seen = new Set();
@@ -132,9 +133,7 @@ function loadCustomParks() {
     const arr = JSON.parse(raw);
     if (!Array.isArray(arr)) return [];
     return uniqueStrings(arr);
-  } catch {
-    return [];
-  }
+  } catch { return []; }
 }
 function saveCustomParks() {
   localStorage.setItem(CUSTOM_KEY, JSON.stringify(customParks));
@@ -145,12 +144,21 @@ function loadSet(key) {
     const raw = localStorage.getItem(key);
     const arr = raw ? JSON.parse(raw) : [];
     return new Set(Array.isArray(arr) ? arr.map(normalizeName).filter(Boolean) : []);
-  } catch {
-    return new Set();
-  }
+  } catch { return new Set(); }
 }
 function saveSet(key, set) {
   localStorage.setItem(key, JSON.stringify([...set]));
+}
+
+function loadArray(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    const arr = raw ? JSON.parse(raw) : [];
+    return uniqueStrings(Array.isArray(arr) ? arr : []);
+  } catch { return []; }
+}
+function saveArray(key, arr) {
+  localStorage.setItem(key, JSON.stringify(uniqueStrings(arr)));
 }
 
 function loadNumber(key, fallback = 0) {
@@ -158,16 +166,13 @@ function loadNumber(key, fallback = 0) {
   const n = Number(raw);
   return Number.isFinite(n) ? n : fallback;
 }
-function saveNumber(key, n) {
-  localStorage.setItem(key, String(Number(n) || 0));
-}
+function saveNumber(key, n) { localStorage.setItem(key, String(Number(n) || 0)); }
+
 function loadString(key, fallback = "") {
   const raw = localStorage.getItem(key);
   return typeof raw === "string" ? raw : fallback;
 }
-function saveString(key, s) {
-  localStorage.setItem(key, String(s ?? ""));
-}
+function saveString(key, s) { localStorage.setItem(key, String(s ?? "")); }
 
 async function fetchJson(url) {
   const res = await fetch(url, { cache: "no-store" });
@@ -181,39 +186,27 @@ function getFirstString(obj, keys) {
   }
   return "";
 }
-
 function toNumberMaybe(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : undefined;
 }
 
-// ✅ names + meta
 function extractParksFromJson(data) {
   if (!Array.isArray(data) || data.length === 0) return [];
-
-  // names.json：["xxx","yyy"]
   if (typeof data[0] === "string") {
     return uniqueStrings(data).map((name) => ({ name }));
   }
-
-  // full.json：[{...}]
   if (typeof data[0] === "object" && data[0]) {
     const out = [];
-
     for (const obj of data) {
       const name = getFirstString(obj, ["name","Name","公園名稱","公園名","parkName","title"]);
       if (!name) continue;
-
       const district = getFirstString(obj, ["district","District","行政區","區","town","addrDistrict"]);
       const address  = getFirstString(obj, ["address","Address","地址","addr","location","位置"]);
-
       const lat = toNumberMaybe(obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y);
       const lng = toNumberMaybe(obj.lng ?? obj.longitude ?? obj.Longitude ?? obj.經度 ?? obj.X ?? obj.x);
-
       out.push({ name: normalizeName(name), district: normalizeName(district), address: normalizeName(address), lat, lng });
     }
-
-    // 去重（以 name 為準）
     const seen = new Set();
     const dedup = [];
     for (const p of out) {
@@ -224,11 +217,9 @@ function extractParksFromJson(data) {
     }
     return dedup;
   }
-
   return [];
 }
 
-/** 洗牌（不改原陣列） */
 function shuffledCopy(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -238,21 +229,12 @@ function shuffledCopy(arr) {
   return a;
 }
 
-/**
- * 取 count 個不重複
- * - excludeSet: 盡量避開上一批
- * - forceInclude: 必須包含的某個名字（例如你剛新增的）
- */
 function pickRandomUnique(all, count, excludeSet = new Set(), forceInclude = "") {
   const force = normalizeName(forceInclude);
   const pool = all.filter(n => !excludeSet.has(n));
-
   let picked = [];
-  if (pool.length >= count) {
-    picked = shuffledCopy(pool).slice(0, count);
-  } else {
-    picked = shuffledCopy(all).slice(0, Math.min(count, all.length));
-  }
+  if (pool.length >= count) picked = shuffledCopy(pool).slice(0, count);
+  else picked = shuffledCopy(all).slice(0, Math.min(count, all.length));
 
   if (force) {
     if (!picked.includes(force)) {
@@ -266,7 +248,6 @@ function pickRandomUnique(all, count, excludeSet = new Set(), forceInclude = "")
       picked = picked.concat(more);
     }
   }
-
   return picked.slice(0, count);
 }
 
@@ -278,7 +259,6 @@ function resetWheelInstant() {
   wheelRotator.style.transition = "";
 }
 
-// ✅ Google Maps URL
 function buildMapUrl(name) {
   const meta = parkMeta.get(name);
   if (meta && Number.isFinite(meta.lat) && Number.isFinite(meta.lng)) {
@@ -305,23 +285,78 @@ function setMapBtn(name) {
 }
 
 // =========================
+// Undo (stack snapshots of localStorage)
+// =========================
+const SNAP_KEYS = [
+  WIN_KEY, SEALED_KEY, HISTORY_KEY, FAV_KEY,
+  NEAR_CURSOR_KEY, NEAR_LOC_KEY,
+  LOVE_SHOWN_KEY
+];
+
+function loadUndoStack() {
+  try {
+    const raw = localStorage.getItem(UNDO_STACK_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveUndoStack(stack) {
+  localStorage.setItem(UNDO_STACK_KEY, JSON.stringify(stack));
+}
+function pushUndo(label = "") {
+  const snap = { t: Date.now(), label, store: {} };
+  for (const k of SNAP_KEYS) snap.store[k] = localStorage.getItem(k); // string|null
+  const stack = loadUndoStack();
+  stack.push(snap);
+  while (stack.length > 40) stack.shift();
+  saveUndoStack(stack);
+  updateUndoUI();
+}
+function undoOnce() {
+  const stack = loadUndoStack();
+  const snap = stack.pop();
+  if (!snap) return;
+
+  // restore
+  for (const k of SNAP_KEYS) {
+    const v = snap.store[k];
+    if (v == null) localStorage.removeItem(k);
+    else localStorage.setItem(k, v);
+  }
+  saveUndoStack(stack);
+
+  // re-read in-memory caches
+  favorites = loadArray(FAV_KEY);
+  history = loadArray(HISTORY_KEY);
+  nearCursor = loadNumber(NEAR_CURSOR_KEY, 0);
+  nearLocKey = loadString(NEAR_LOC_KEY, "");
+
+  // UI refresh
+  selectedPark = null;
+  renderAll();
+  if (!isSpinning) loadNewBatch();
+
+  setFilterHint("已恢復上一個動作。");
+  updateUndoUI();
+}
+function updateUndoUI() {
+  if (!undoBtn) return;
+  const stack = loadUndoStack();
+  undoBtn.disabled = isSpinning || stack.length === 0;
+}
+
+// =========================
 // Favorites
 // =========================
-function loadFavorites() {
-  try {
-    const raw = localStorage.getItem(FAV_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    return uniqueStrings(Array.isArray(arr) ? arr : []);
-  } catch {
-    return [];
-  }
-}
-function saveFavorites() {
-  localStorage.setItem(FAV_KEY, JSON.stringify(favorites));
-}
+function loadFavorites() { return loadArray(FAV_KEY); }
+function saveFavorites() { saveArray(FAV_KEY, favorites); }
+
+function isFav(name) { return favorites.includes(name); }
+
 function addFavorite(name) {
   const n = normalizeName(name);
   if (!n) return;
+  pushUndo("favorite_add");
   if (!favorites.includes(n)) {
     favorites.unshift(n);
     favorites = uniqueStrings(favorites);
@@ -331,22 +366,36 @@ function addFavorite(name) {
     setFilterHint(`「${n}」已在收藏裡 ❤️`);
   }
   renderFavorites();
+  renderRecord();
+  updateUndoUI();
 }
 function removeFavorite(name) {
   const n = normalizeName(name);
+  pushUndo("favorite_remove");
   favorites = favorites.filter(x => x !== n);
   saveFavorites();
   renderFavorites();
+  renderRecord();
+  updateUndoUI();
+}
+function toggleFavorite(name) {
+  const n = normalizeName(name);
+  if (!n) return;
+  if (isFav(n)) removeFavorite(n);
+  else addFavorite(n);
 }
 function clearFavorites() {
+  if (favorites.length === 0) return;
+  pushUndo("favorite_clear");
   favorites = [];
   saveFavorites();
   renderFavorites();
+  renderRecord();
+  updateUndoUI();
 }
 
 function renderFavorites() {
-  if (!favSection || !favList || !favEmpty) return;
-
+  if (!favList || !favEmpty) return;
   favList.innerHTML = "";
   const has = favorites.length > 0;
   favEmpty.classList.toggle("hidden", has);
@@ -373,7 +422,7 @@ function renderFavorites() {
     rm.className = "favRemove";
     rm.type = "button";
     rm.textContent = "移除";
-    rm.dataset.remove = name;
+    rm.dataset.removeFav = name;
 
     actions.appendChild(open);
     actions.appendChild(rm);
@@ -385,97 +434,195 @@ function renderFavorites() {
 }
 
 // =========================
+// History / Record
+// =========================
+function loadHistory() { return loadArray(HISTORY_KEY); }
+function saveHistory() { saveArray(HISTORY_KEY, history); }
+
+function addHistory(name) {
+  const n = normalizeName(name);
+  if (!n) return;
+  if (history.includes(n)) return;
+  history.unshift(n);
+  history = uniqueStrings(history);
+  saveHistory();
+}
+
+function removeHistory(name) {
+  const n = normalizeName(name);
+  history = history.filter(x => x !== n);
+  saveHistory();
+}
+
+function renderRecord() {
+  if (!recordList || !recordEmpty) return;
+  recordList.innerHTML = "";
+  const has = history.length > 0;
+  recordEmpty.classList.toggle("hidden", has);
+
+  for (const name of history) {
+    const li = document.createElement("li");
+    li.className = "recordItem";
+
+    const nm = document.createElement("div");
+    nm.className = "recordName";
+    nm.textContent = name;
+
+    const acts = document.createElement("div");
+    acts.className = "recordActions";
+
+    const fav = document.createElement("button");
+    fav.type = "button";
+    fav.className = "btn-recFav" + (isFav(name) ? " isOn" : "");
+    fav.textContent = "♥";
+    fav.title = "收藏 / 取消收藏";
+    fav.dataset.favToggle = name;
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "btn-recDel";
+    del.textContent = "刪除";
+    del.title = "刪除紀錄並恢復可抽";
+    del.dataset.recDelete = name;
+
+    acts.appendChild(fav);
+    acts.appendChild(del);
+
+    li.appendChild(nm);
+    li.appendChild(acts);
+    recordList.appendChild(li);
+  }
+}
+
+function openRecordPanel() {
+  if (!recordPanel) return;
+  renderRecord();
+  recordPanel.classList.remove("hidden");
+}
+function closeRecordPanel() {
+  if (!recordPanel) return;
+  recordPanel.classList.add("hidden");
+}
+
+// ✅ 刪除紀錄 = 解除封印 + 解除同批不重複 + 移出紀錄
+function deleteRecordAndUnseal(name) {
+  const n = normalizeName(name);
+  if (!n) return;
+
+  pushUndo("record_delete_unseal");
+
+  // remove history
+  removeHistory(n);
+
+  // unseal + unwon
+  const sealed = loadSet(SEALED_KEY);
+  const won = loadSet(WIN_KEY);
+  sealed.delete(n);
+  won.delete(n);
+  saveSet(SEALED_KEY, sealed);
+  saveSet(WIN_KEY, won);
+
+  setFilterHint(`已刪除紀錄「${n}」：它已重新變成可被抽到。`);
+  renderRecord();
+
+  // 若不是轉動中，刷新 batch（避免剛好卡住）
+  if (!isSpinning) loadNewBatch();
+  updateUndoUI();
+}
+
+// =========================
+// Modal (love)
+// =========================
+function showLoveModalOnceIfCompleted(sealedSet) {
+  const total = masterPool.length;
+  if (total <= 0) return;
+
+  const already = localStorage.getItem(LOVE_SHOWN_KEY) === "1";
+  if (already) return;
+
+  if (sealedSet.size >= total) {
+    localStorage.setItem(LOVE_SHOWN_KEY, "1");
+    if (loveModal) loveModal.classList.remove("hidden");
+  }
+}
+function closeLoveModal() {
+  if (!loveModal) return;
+  loveModal.classList.add("hidden");
+}
+
+// =========================
 // UI
 // =========================
 function updateControlLocksByMode() {
   const mode = modeSelect ? modeSelect.value : "all";
   const hasDistrictData = districtSelect && districtSelect.options && districtSelect.options.length > 0;
 
-  // 行政區：只在 district 模式可用
   if (districtSelect) {
     const enableDistrict = (mode === "district") && hasDistrictData && !isSpinning;
     districtSelect.disabled = !enableDistrict;
   }
 
-  // 取得定位：只在 near 模式「且尚未取得定位」可用
   if (locBtn) {
     const enableLoc = (mode === "near") && !userLoc && !isSpinning;
     locBtn.disabled = !enableLoc;
   }
 
-  // reset
   if (resetNoRepeatBtn) resetNoRepeatBtn.disabled = isSpinning;
-
-  // modeSelect itself
   if (modeSelect) modeSelect.disabled = isSpinning;
 
-  // 文案提示
-  if (mode === "all") {
-    if (!isSpinning) setFilterHint("");
-  }
-  if (mode === "district" && !hasDistrictData) {
+  updateUndoUI();
+
+  if (mode === "district" && !hasDistrictData && !isSpinning) {
     setFilterHint("你的資料裡沒有行政區欄位（district/行政區/區），所以無法依行政區篩選。");
   }
-  if (mode === "near") {
-    if (!userLoc) setFilterHint("最近模式需要定位：請按「取得定位」。");
-    else setFilterHint(`已取得定位：將依序提供最近 ${NEAR_TOP_N} 個公園（每批 ${BATCH_SIZE} 個）。`);
+  if (mode === "near" && !isSpinning) {
+    setFilterHint(userLoc ? `已取得定位：將依序提供最近 ${NEAR_TOP_N} 個（每批 ${BATCH_SIZE} 個）。` : "最近模式需要定位：請按「取得定位」。");
   }
 }
 
 function setUIState() {
   const hasParks = parks.length > 0;
-
   emptyState.classList.toggle("hidden", hasParks);
   wheelSection.classList.toggle("hidden", !hasParks);
 
-  // ✅ 方法A：列表區塊永遠不顯示
   if (listSection) listSection.classList.add("hidden");
   if (listTitle) listTitle.textContent = "";
 
   parkInput.disabled = isSpinning;
   addBtn.disabled = isSpinning;
   spinBtn.disabled = isSpinning || !hasParks;
-
   if (newBatchBtn) newBatchBtn.disabled = isSpinning || masterPool.length === 0;
 
   spinText.textContent = isSpinning ? "轉動中..." : "開始轉動！";
 
-  // controls lock by mode
   updateControlLocksByMode();
 
   if (!selectedPark || isSpinning) {
     resultBox.classList.add("hidden");
     setMapBtn(null);
 
-    if (preserveBtn) {
-      preserveBtn.disabled = true;
-      preserveBtn.classList.add("hidden");
-    }
-    if (favBtn) {
-      favBtn.disabled = true;
-      favBtn.classList.add("hidden");
-    }
+    if (preserveBtn) { preserveBtn.disabled = true; preserveBtn.classList.add("hidden"); }
+    if (favBtn) { favBtn.disabled = true; favBtn.classList.add("hidden"); }
   } else {
     resultBox.classList.remove("hidden");
     resultName.textContent = selectedPark;
     setMapBtn(selectedPark);
 
-    // 只有出結果才顯示保留 / 收藏
-    if (preserveBtn) {
-      preserveBtn.disabled = false;
-      preserveBtn.classList.remove("hidden");
-    }
-    if (favBtn) {
-      favBtn.disabled = false;
-      favBtn.classList.remove("hidden");
-    }
+    if (preserveBtn) { preserveBtn.disabled = false; preserveBtn.classList.remove("hidden"); }
+    if (favBtn) { favBtn.disabled = false; favBtn.classList.remove("hidden"); }
   }
 }
 
-// ✅ 方法A：不渲染 chips
 function renderChips() {
   if (!chips) return;
   chips.innerHTML = "";
+}
+
+function renderAll() {
+  setUIState();
+  renderChips();
+  renderFavorites();
+  renderRecord();
 }
 
 // =========================
@@ -485,7 +632,6 @@ function polarToXY(cx, cy, r, angleDeg) {
   const rad = (angleDeg * Math.PI) / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
-
 function arcPath(cx, cy, r, startAngle, endAngle) {
   const start = polarToXY(cx, cy, r, startAngle);
   const end = polarToXY(cx, cy, r, endAngle);
@@ -505,9 +651,7 @@ function rebuildWheel() {
 
   const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
   filter.setAttribute("id", "textShadow");
-  filter.innerHTML = `
-    <feDropShadow dx="0" dy="1.2" stdDeviation="0.6" flood-color="rgba(0,0,0,0.35)"/>
-  `;
+  filter.innerHTML = `<feDropShadow dx="0" dy="1.2" stdDeviation="0.6" flood-color="rgba(0,0,0,0.35)"/>`;
   defs.appendChild(filter);
 
   parks.forEach((name, i) => {
@@ -525,7 +669,6 @@ function rebuildWheel() {
     const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
     stop1.setAttribute("offset", "0%");
     stop1.setAttribute("stop-color", c.start);
-
     const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
     stop2.setAttribute("offset", "100%");
     stop2.setAttribute("stop-color", c.end);
@@ -562,7 +705,6 @@ function rebuildWheel() {
     if (len >= 12) fs = 16;
     if (len >= 14) fs = 15;
     text.setAttribute("font-size", String(fs));
-
     text.setAttribute("text-anchor", "middle");
     text.setAttribute("dominant-baseline", "middle");
     text.setAttribute("filter", "url(#textShadow)");
@@ -631,7 +773,6 @@ function getFilteredPoolNamesNonNear() {
 // =========================
 function computeNearLocKey(loc) {
   if (!loc) return "";
-  // 用小數 4 位當作「定位版本」的 key（足夠穩定，避免一直重算）
   return `${loc.lat.toFixed(4)},${loc.lng.toFixed(4)}`;
 }
 
@@ -714,7 +855,7 @@ function loadNearBatch() {
 }
 
 // =========================
-// Batch logic（non-near）
+// Batch logic
 // =========================
 function loadNewBatch(forceInclude = "") {
   if (masterPool.length === 0) return;
@@ -727,14 +868,11 @@ function loadNewBatch(forceInclude = "") {
 
   const sealedSet = loadSet(SEALED_KEY);
 
-  // ✅ 先套用 filters（只有 all/district）
   const basePool = getFilteredPoolNamesNonNear();
   const maxCount = Math.min(BATCH_SIZE, basePool.length);
 
-  // ✅ 剩下「未封印」的（真正可抽中的）
   const remaining = basePool.filter(n => !sealedSet.has(n));
 
-  // ✅ 抽完就抽完：不自動重置
   if (remaining.length === 0) {
     parks = [];
     lastBatchSet = new Set();
@@ -748,16 +886,13 @@ function loadNewBatch(forceInclude = "") {
     return;
   }
 
-  // ✅ 先抽可抽中的（未封印）
   const primaryCount = Math.min(maxCount, remaining.length);
   let primary = pickRandomUnique(remaining, primaryCount, new Set(), forceInclude);
 
-  // ✅ 不足 6：用 basePool 補滿（可能包含已封印的，只是用來維持 6 格）
   let batch = primary.slice();
-
   if (batch.length < maxCount) {
     const need = maxCount - batch.length;
-    const fillerCandidates = basePool.filter(n => !batch.includes(n)); // 可包含 sealed
+    const fillerCandidates = basePool.filter(n => !batch.includes(n));
     const filler = pickRandomUnique(fillerCandidates, need, lastBatchSet, "");
     batch = uniqueStrings(batch.concat(filler));
 
@@ -769,7 +904,6 @@ function loadNewBatch(forceInclude = "") {
 
   parks = batch;
   lastBatchSet = new Set(parks);
-
   selectedPark = null;
 
   resetWheelInstant();
@@ -789,12 +923,10 @@ function addPark(name) {
     customParks = uniqueStrings(customParks);
     saveCustomParks();
   }
-
   if (!masterPool.includes(trimmed)) {
     masterPool.push(trimmed);
     masterPool = uniqueStrings(masterPool);
   }
-
   if (!parkMeta.has(trimmed)) {
     parkMeta.set(trimmed, { name: trimmed });
   }
@@ -803,10 +935,12 @@ function addPark(name) {
   loadNewBatch(trimmed);
 }
 
-// ✅ 保留：把目前結果從封印移除（也移除同批 won，讓它可以再被抽到）
+// ✅ 保留：解除封印 + 解除同批不重複 + 並且「不留紀錄」
 function preserveSelected() {
   const name = normalizeName(selectedPark);
   if (!name) return;
+
+  pushUndo("preserve");
 
   const sealedSet = loadSet(SEALED_KEY);
   const wonSet = loadSet(WIN_KEY);
@@ -817,16 +951,22 @@ function preserveSelected() {
   saveSet(SEALED_KEY, sealedSet);
   saveSet(WIN_KEY, wonSet);
 
+  // ✅ 不留紀錄：若剛才已寫入紀錄，這裡移除
+  if (history.includes(name)) {
+    history = history.filter(x => x !== name);
+    saveHistory();
+  }
+
   if (wasSealed || wasWon) {
-    setFilterHint(`已保留「${name}」：不會進入封印（之後仍可能再抽到）。`);
+    setFilterHint(`已保留「${name}」：不封印、也不記錄（之後仍可能再抽到）。`);
   } else {
-    setFilterHint(`「${name}」目前本來就不在封印中。`);
+    setFilterHint(`「${name}」目前本來就不在封印中（已確保不記錄）。`);
   }
 
   renderAll();
+  updateUndoUI();
 }
 
-// ✅ 轉盤：easing + bounce + 不重複「結果」+ 封印抽中的那個（跨批次）
 function spin() {
   if (isSpinning || parks.length === 0) return;
 
@@ -841,16 +981,18 @@ function spin() {
   const wonSet = loadSet(WIN_KEY);
   const sealedSet0 = loadSet(SEALED_KEY);
 
-  // ✅ 只從「未封印」且「同一批未抽過」的候選中抽
+  // ✅ candidates: not won and not sealed
   let candidates = parks.filter((p) => !wonSet.has(p) && !sealedSet0.has(p));
 
+  // ✅ 1) 你要的提示：轉到相同 / 已無可抽
   if (candidates.length === 0) {
     isSpinning = false;
-    setFilterHint("這一批已沒有可抽的公園（可能都已封印）。請按『換一批』。");
+    setFilterHint("轉過這個了! 請再轉一次或換一批!");
     renderAll();
     return;
   }
 
+  // pick winner index by candidate
   const winnerName = candidates[Math.floor(Math.random() * candidates.length)];
   const winnerIndex = parks.indexOf(winnerName);
 
@@ -868,24 +1010,31 @@ function spin() {
     const idx = Math.floor(((360 - normalized + slice / 2) % 360) / slice);
     const picked = parks[idx];
 
-    // 防呆：若停到封印格（理論上不會）
+    // ✅ 防呆：若停到封印格（統一你要的文案）
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)) {
       isSpinning = false;
-      setFilterHint("轉這個了! 請再轉一次或換一批!");
+      setFilterHint("轉過這個了! 請再轉一次或換一批!");
       renderAll();
       return;
     }
 
-    // ✅ 同一批結果不重複
+    // ✅ 這次會寫入封印/紀錄，所以先 pushUndo
+    pushUndo("spin_pick");
+
+    // in-batch no repeat
     wonSet.add(picked);
     saveSet(WIN_KEY, wonSet);
 
-    // ✅ 跨批次封印：只封印抽中的那個
+    // cross-batch seal
     sealedSet1.add(picked);
     saveSet(SEALED_KEY, sealedSet1);
 
-    // ✅ bounce
+    // ✅ record/history: 重複只記一次
+    history = loadHistory();
+    addHistory(picked);
+
+    // bounce
     const BOUNCE = 7;
     wheelRotator.style.transition = "transform 140ms ease-out";
     wheelRotator.style.transform = `rotate(${totalRotation + BOUNCE}deg)`;
@@ -903,20 +1052,19 @@ function spin() {
 
         selectedPark = picked;
         isSpinning = false;
+
+        // ✅ 4) 全收集告白
+        showLoveModalOnceIfCompleted(sealedSet1);
+
         renderAll();
+        updateUndoUI();
       }, 230);
     }, 150);
   }, 3800);
 }
 
-function renderAll() {
-  setUIState();
-  renderChips();
-  renderFavorites();
-}
-
 // =========================
-// Location（距離最近）
+// Location
 // =========================
 function requestLocation() {
   if (!("geolocation" in navigator)) {
@@ -930,12 +1078,9 @@ function requestLocation() {
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-
-      // ✅ 取得定位後：loc 按鈕直接變暗（disabled）
       buildNearCacheIfNeeded(true);
       updateControlLocksByMode();
 
-      // ✅ 只要不是轉動中，就立刻載入 near 的第一批（如果目前模式是 near）
       if (!isSpinning && modeSelect && modeSelect.value === "near") loadNewBatch();
       else if (!isSpinning) setFilterHint("已取得定位。切到『距離我最近』即可使用。");
     },
@@ -950,18 +1095,22 @@ function requestLocation() {
 }
 
 // =========================
-// No-repeat reset
+// Reset no-repeat
 // =========================
 function resetNoRepeat() {
+  pushUndo("reset_no_repeat");
+
   localStorage.removeItem(WIN_KEY);
   localStorage.removeItem(SEALED_KEY);
-  localStorage.removeItem(SHOWN_KEY); // legacy
-
-  // near cursor 也順便重置
+  localStorage.removeItem(SHOWN_KEY);
   localStorage.removeItem(NEAR_CURSOR_KEY);
+
+  // ✅ 讓告白可再次觸發
+  localStorage.removeItem(LOVE_SHOWN_KEY);
 
   setFilterHint("已重置『封印/不重複』紀錄。");
   if (!isSpinning) loadNewBatch();
+  updateUndoUI();
 }
 
 // =========================
@@ -971,11 +1120,12 @@ async function init() {
   if (emptyText) emptyText.textContent = "正在載入公園資料…";
 
   favorites = loadFavorites();
-  renderFavorites();
+  history = loadHistory();
+  renderAll();
 
   customParks = loadCustomParks();
 
-  // ✅ 先嘗試抓 parks.full.json 的 meta；抓不到就退回 names.json
+  // load data
   let parksObjs = [];
   for (const url of DATA_URLS) {
     try {
@@ -985,18 +1135,15 @@ async function init() {
     } catch {}
   }
 
-  // 建 meta map
   parkMeta = new Map();
   for (const p of parksObjs) {
     if (!p.name) continue;
     parkMeta.set(p.name, p);
   }
 
-  // masterPool：names + custom
   const jsonNames = parksObjs.map(p => p.name);
   masterPool = uniqueStrings([...jsonNames, ...customParks]);
 
-  // custom 也補 meta
   for (const n of customParks) {
     if (!parkMeta.has(n)) parkMeta.set(n, { name: n });
   }
@@ -1007,15 +1154,14 @@ async function init() {
     return;
   }
 
-  // district options
   updateDistrictOptions();
 
-  // ✅ 清 legacy（避免舊版整批封印干擾）
+  // legacy cleanup
   localStorage.removeItem(SHOWN_KEY);
 
-  // 先來一批
   loadNewBatch();
 
+  // events
   addBtn.addEventListener("click", () => addPark(parkInput.value));
   parkInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") addPark(parkInput.value);
@@ -1030,7 +1176,6 @@ async function init() {
     });
   }
 
-  // ✅ 保留按鍵
   if (preserveBtn) {
     preserveBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -1038,32 +1183,26 @@ async function init() {
     });
   }
 
-  // ✅ 收藏按鍵
   if (favBtn) {
     favBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      if (selectedPark) addFavorite(selectedPark);
+      if (selectedPark) toggleFavorite(selectedPark);
     });
   }
+
   if (favList) {
     favList.addEventListener("click", (e) => {
       const t = e.target;
       if (!(t instanceof HTMLElement)) return;
-      const name = t.dataset.remove;
+      const name = t.dataset.removeFav;
       if (name) removeFavorite(name);
     });
   }
-  if (favClearBtn) {
-    favClearBtn.addEventListener("click", () => clearFavorites());
-  }
+  if (favClearBtn) favClearBtn.addEventListener("click", clearFavorites);
 
-  // filters events
   if (modeSelect) {
     modeSelect.addEventListener("change", () => {
-      // 模式切換：UI 先更新鎖定
       updateControlLocksByMode();
-
-      // near 模式：若已定位就走近距離批次，沒定位就等使用者按「取得定位」
       if (!isSpinning) loadNewBatch();
     });
   }
@@ -1072,18 +1211,52 @@ async function init() {
       if (!isSpinning) loadNewBatch();
     });
   }
-  if (locBtn) {
-    locBtn.addEventListener("click", requestLocation);
+  if (locBtn) locBtn.addEventListener("click", requestLocation);
+  if (resetNoRepeatBtn) resetNoRepeatBtn.addEventListener("click", resetNoRepeat);
+
+  // record panel
+  if (recordBtn) recordBtn.addEventListener("click", openRecordPanel);
+  if (recordCloseBtn) recordCloseBtn.addEventListener("click", closeRecordPanel);
+  if (recordPanel) {
+    recordPanel.addEventListener("click", (e) => {
+      if (e.target === recordPanel) closeRecordPanel(); // 點遮罩關閉
+    });
   }
-  if (resetNoRepeatBtn) {
-    resetNoRepeatBtn.addEventListener("click", resetNoRepeat);
+  if (recordList) {
+    recordList.addEventListener("click", (e) => {
+      const t = e.target;
+      if (!(t instanceof HTMLElement)) return;
+
+      const favName = t.dataset.favToggle;
+      if (favName) {
+        toggleFavorite(favName);
+        renderRecord();
+        return;
+      }
+
+      const delName = t.dataset.recDelete;
+      if (delName) {
+        deleteRecordAndUnseal(delName);
+        return;
+      }
+    });
   }
+
+  // undo
+  if (undoBtn) undoBtn.addEventListener("click", undoOnce);
+
+  // love modal
+  if (loveCloseBtn) loveCloseBtn.addEventListener("click", closeLoveModal);
+  if (loveModal) {
+    loveModal.addEventListener("click", (e) => {
+      if (e.target === loveModal) closeLoveModal();
+    });
+  }
+
+  updateUndoUI();
 }
 
 init();
-
-
-
 
 
 
