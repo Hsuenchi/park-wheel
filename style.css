@@ -72,6 +72,7 @@ body{
   align-items:center;
   justify-content:center;
   margin-bottom: 18px;
+  padding-inline: 110px; /* ✅ 讓左右按鈕不會蓋到標題 */
 }
 .header h1{
   margin:0;
@@ -80,14 +81,16 @@ body{
   color: #166534;
   letter-spacing: 0.4px;
 }
+
 .headerActions{
   position:absolute;
-  right: 0;
   top: 50%;
   transform: translateY(-50%);
   display:flex;
   gap: 8px;
 }
+.headerActionsLeft{ left: 0; }
+.headerActionsRight{ right: 0; }
 
 .inputRow{
   display:flex;
@@ -131,12 +134,11 @@ body{
 .btnIcon svg{ width:100%; height:100%; }
 
 .btn-add{
-  background: var(--green-600);
+  background: #16a34a;
   color:#fff;
   box-shadow: 0 10px 24px rgba(22,163,74,.22);
 }
 
-/* ✅ 右上：恢復 / 紀錄 */
 .btn-undo{
   padding: 10px 12px;
   border-radius: 999px;
@@ -153,7 +155,6 @@ body{
   box-shadow: 0 12px 24px rgba(14,165,233,.08);
 }
 
-/* ✅ Filters */
 .filterRow{
   display:flex;
   align-items:flex-end;
@@ -190,7 +191,6 @@ body{
   background: rgba(148,163,184,.12);
   border-color: rgba(148,163,184,.28);
 }
-
 .filterHint{
   margin: 0;
   font-size: 12px;
@@ -217,18 +217,8 @@ body{
   border: 1px solid rgba(148,163,184,.28);
 }
 
-.wheelStage{
-  display:flex;
-  justify-content:center;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.wheelFrame{
-  position: relative;
-  width: min(400px, 78vw);
-  aspect-ratio: 1 / 1;
-}
+.wheelStage{ display:flex; justify-content:center; margin-top:10px; margin-bottom:20px; }
+.wheelFrame{ position:relative; width: min(400px, 78vw); aspect-ratio: 1 / 1; }
 
 .wheelRotator{
   position:absolute;
@@ -239,7 +229,6 @@ body{
   transition: transform 4000ms cubic-bezier(0.17, 0.67, 0.12, 0.99);
   will-change: transform;
 }
-
 .wheelSvg{
   width:100%;
   height:100%;
@@ -248,7 +237,6 @@ body{
   shape-rendering: geometricPrecision;
   text-rendering: geometricPrecision;
 }
-
 .pointer{
   position:absolute;
   top: -15px;
@@ -261,7 +249,6 @@ body{
   filter: drop-shadow(0 10px 16px rgba(15,23,42,.25));
   z-index: 50;
 }
-
 .centerBtn{
   position:absolute;
   top: 50%;
@@ -300,7 +287,6 @@ body{
   box-shadow: 0 14px 28px rgba(2,132,199,.10);
   border: 1px solid rgba(2,132,199,.18);
 }
-.btn-batch:hover{ filter: brightness(1.02); }
 
 .result{
   margin-top: 18px;
@@ -315,7 +301,6 @@ body{
 }
 .resultHint{ margin: 6px 0; color: #475569; font-weight: 900; }
 .resultName{ margin: 6px 0; font-size: 24px; font-weight: 1000; color: #166534; }
-
 .resultActions{
   display:flex;
   justify-content:center;
@@ -323,7 +308,6 @@ body{
   flex-wrap: wrap;
   margin-top: 10px;
 }
-
 .btn-map{
   padding: 12px 16px;
   border-radius: 999px;
@@ -332,10 +316,7 @@ body{
   border: 1px solid rgba(14,165,233,.22);
   box-shadow: 0 14px 28px rgba(14,165,233,.10);
 }
-.btn-map[aria-disabled="true"]{
-  opacity:.55;
-  pointer-events:none;
-}
+.btn-map[aria-disabled="true"]{ opacity:.55; pointer-events:none; }
 
 .btn-preserve{
   padding: 12px 16px;
@@ -345,7 +326,6 @@ body{
   border: 1px solid rgba(250,204,21,.22);
   box-shadow: 0 14px 28px rgba(250,204,21,.08);
 }
-
 .btn-fav{
   padding: 12px 16px;
   border-radius: 999px;
@@ -354,13 +334,8 @@ body{
   border: 1px solid rgba(244,63,94,.18);
   box-shadow: 0 14px 28px rgba(244,63,94,.08);
 }
-.btn-fav .heart{
-  font-weight: 1000;
-  font-size: 18px;
-  line-height: 1;
-}
+.btn-fav .heart{ font-weight: 1000; font-size: 18px; line-height: 1; }
 
-/* ✅ 收藏清單 */
 .favSection{
   margin-top: 18px;
   border-top: 1px solid rgba(15,23,42,.08);
@@ -378,7 +353,6 @@ body{
   font-size: 14px;
   font-weight: 1000;
   color:#14532d;
-  letter-spacing: .2px;
 }
 .btn-favClear{
   padding: 10px 12px;
@@ -412,11 +386,7 @@ body{
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.favActions{
-  display:flex;
-  gap: 8px;
-  flex-shrink: 0;
-}
+.favActions{ display:flex; gap: 8px; flex-shrink: 0; }
 .favOpen{
   padding: 8px 10px;
   border-radius: 999px;
@@ -447,7 +417,6 @@ body{
   color: #94a3b8;
   font-weight: 900;
 }
-
 .hidden{ display:none !important; }
 
 svg text{
@@ -455,10 +424,8 @@ svg text{
   stroke: rgba(0,0,0,.28);
   stroke-width: 1.2px;
   stroke-linejoin: round;
-  letter-spacing: 0;
 }
 
-/* ✅ 紀錄面板（遮罩） */
 .panel{
   position: fixed;
   inset: 0;
@@ -504,7 +471,6 @@ svg text{
   font-weight: 900;
   color:#64748b;
 }
-
 .recordList{
   list-style:none;
   padding:0;
@@ -525,17 +491,12 @@ svg text{
 }
 .recordName{
   font-weight: 950;
-  color:#0f172a;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
   flex: 1;
 }
-.recordActions{
-  display:flex;
-  gap: 8px;
-  flex-shrink:0;
-}
+.recordActions{ display:flex; gap: 8px; flex-shrink:0; }
 .btn-recFav{
   padding: 8px 10px;
   border-radius: 999px;
@@ -544,10 +505,7 @@ svg text{
   border: 1px solid rgba(244,63,94,.18);
   font-weight: 1000;
 }
-.btn-recFav.isOn{
-  background: rgba(244,63,94,.18);
-  border-color: rgba(244,63,94,.26);
-}
+.btn-recFav.isOn{ background: rgba(244,63,94,.18); border-color: rgba(244,63,94,.26); }
 .btn-recDel{
   padding: 8px 10px;
   border-radius: 999px;
@@ -563,7 +521,6 @@ svg text{
   text-align:center;
 }
 
-/* ✅ 告白彈窗 */
 .modal{
   position: fixed;
   inset: 0;
@@ -587,7 +544,6 @@ svg text{
   margin: 0 0 12px;
   font-size: 16px;
   font-weight: 1000;
-  color:#0f172a;
 }
 .btn-modalClose{
   padding: 12px 16px;
@@ -600,14 +556,13 @@ svg text{
 
 @media (max-width: 520px){
   .card{ padding: 18px; border-radius: 22px; }
+  .header{ padding-inline: 92px; } /* ✅ 手機再縮一點 */
   .header h1{ font-size: 20px; }
   #spinText{ font-size: 16px; }
   .centerBtn{ width: 74px; height: 74px; }
 }
 
-/* 把輸入列整條移除，後面的內容會自動往上補 */
-.inputRow {
-  display: none !important;
-}
+/* 把輸入列整條移除 */
+.inputRow { display: none !important; }
 
 
