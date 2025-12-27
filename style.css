@@ -67,6 +67,7 @@ body{
 }
 
 .header{
+  position: relative;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -78,6 +79,14 @@ body{
   font-weight: 600;
   color: #166534;
   letter-spacing: 0.4px;
+}
+.headerActions{
+  position:absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display:flex;
+  gap: 8px;
 }
 
 .inputRow{
@@ -125,6 +134,23 @@ body{
   background: var(--green-600);
   color:#fff;
   box-shadow: 0 10px 24px rgba(22,163,74,.22);
+}
+
+/* ✅ 右上：恢復 / 紀錄 */
+.btn-undo{
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(148,163,184,.16);
+  color:#334155;
+  border: 1px solid rgba(148,163,184,.26);
+}
+.btn-record{
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(14,165,233,.12);
+  color:#075985;
+  border: 1px solid rgba(14,165,233,.20);
+  box-shadow: 0 12px 24px rgba(14,165,233,.08);
 }
 
 /* ✅ Filters */
@@ -223,7 +249,6 @@ body{
   text-rendering: geometricPrecision;
 }
 
-/* ✅ 淺綠色箭頭 */
 .pointer{
   position:absolute;
   top: -15px;
@@ -237,7 +262,6 @@ body{
   z-index: 50;
 }
 
-/* 中心按鈕：純圓 */
 .centerBtn{
   position:absolute;
   top: 50%;
@@ -252,7 +276,6 @@ body{
   cursor: default;
 }
 
-/* Spin row */
 .spinRow{
   display:flex;
   justify-content:center;
@@ -301,7 +324,6 @@ body{
   margin-top: 10px;
 }
 
-/* ✅ 地圖按鈕 */
 .btn-map{
   padding: 12px 16px;
   border-radius: 999px;
@@ -315,7 +337,6 @@ body{
   pointer-events:none;
 }
 
-/* ✅ 保留按鈕：柔一點 */
 .btn-preserve{
   padding: 12px 16px;
   border-radius: 999px;
@@ -325,7 +346,6 @@ body{
   box-shadow: 0 14px 28px rgba(250,204,21,.08);
 }
 
-/* ✅ 收藏愛心 */
 .btn-fav{
   padding: 12px 16px;
   border-radius: 999px;
@@ -340,7 +360,7 @@ body{
   line-height: 1;
 }
 
-/* ✅ 收藏清單區 */
+/* ✅ 收藏清單 */
 .favSection{
   margin-top: 18px;
   border-top: 1px solid rgba(15,23,42,.08);
@@ -367,7 +387,6 @@ body{
   color:#334155;
   border: 1px solid rgba(148,163,184,.26);
 }
-
 .favList{
   list-style:none;
   padding:0;
@@ -431,13 +450,152 @@ body{
 
 .hidden{ display:none !important; }
 
-/* 轉盤文字更乾淨 */
 svg text{
   paint-order: stroke fill;
   stroke: rgba(0,0,0,.28);
   stroke-width: 1.2px;
   stroke-linejoin: round;
   letter-spacing: 0;
+}
+
+/* ✅ 紀錄面板（遮罩） */
+.panel{
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,.30);
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-end;
+  padding: 18px;
+  z-index: 1000;
+}
+.panelCard{
+  width: min(420px, 92vw);
+  margin-top: 14px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: var(--shadow-2xl);
+  border: 1px solid rgba(15,23,42,.10);
+  padding: 14px;
+}
+.panelHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.panelTitle{
+  margin:0;
+  font-size: 14px;
+  font-weight: 1000;
+  color:#0f172a;
+}
+.btn-panelClose{
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(148,163,184,.16);
+  color:#334155;
+  border: 1px solid rgba(148,163,184,.26);
+}
+.panelHint{
+  margin: 8px 0 10px;
+  font-size: 12px;
+  font-weight: 900;
+  color:#64748b;
+}
+
+.recordList{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap: 8px;
+}
+.recordItem{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(15,23,42,.08);
+  background: rgba(16,185,129,.05);
+}
+.recordName{
+  font-weight: 950;
+  color:#0f172a;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  flex: 1;
+}
+.recordActions{
+  display:flex;
+  gap: 8px;
+  flex-shrink:0;
+}
+.btn-recFav{
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(244,63,94,.10);
+  color:#9f1239;
+  border: 1px solid rgba(244,63,94,.18);
+  font-weight: 1000;
+}
+.btn-recFav.isOn{
+  background: rgba(244,63,94,.18);
+  border-color: rgba(244,63,94,.26);
+}
+.btn-recDel{
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(148,163,184,.16);
+  color:#334155;
+  border: 1px solid rgba(148,163,184,.26);
+  font-weight: 1000;
+}
+.recordEmpty{
+  margin: 10px 0 0;
+  color:#94a3b8;
+  font-weight: 900;
+  text-align:center;
+}
+
+/* ✅ 告白彈窗 */
+.modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+  z-index: 1100;
+}
+.modalCard{
+  width: min(520px, 92vw);
+  background:#fff;
+  border-radius: 18px;
+  box-shadow: var(--shadow-2xl);
+  border: 1px solid rgba(15,23,42,.10);
+  padding: 18px 16px;
+  text-align:center;
+}
+.modalText{
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 1000;
+  color:#0f172a;
+}
+.btn-modalClose{
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: rgba(16,185,129,.14);
+  color:#065f46;
+  border: 1px solid rgba(16,185,129,.22);
+  font-weight: 1000;
 }
 
 @media (max-width: 520px){
