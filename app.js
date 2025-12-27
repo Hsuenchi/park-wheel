@@ -44,7 +44,7 @@ const loveCloseBtn = $("#loveCloseBtn");
 
 // constants
 const BATCH_SIZE = 6;
-const NEAR_TOP_N = 30;
+const NEAR_TOP_N = 18; // ✅ 30 → 18（你要的）
 
 const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
 const CUSTOM_KEY = "tripweb_custom_parks_v1";
@@ -54,10 +54,7 @@ const SEALED_KEY = "tripweb_sealed_parks_v1";
 const HISTORY_KEY     = "tripweb_history_v1";
 const UNDO_STACK_KEY  = "tripweb_undo_stack_v1";
 const LOVE_SHOWN_KEY  = "tripweb_love_shown_v1";
-
 const FAV_KEY = "tripweb_fav_parks_v1";
-const NEAR_CURSOR_KEY = "tripweb_near_cursor_v1";
-const NEAR_LOC_KEY    = "tripweb_near_loc_v1";
 
 // state
 let parks = [];
@@ -70,11 +67,6 @@ let customParks = [];
 let parkMeta = new Map();
 
 let userLoc = null;
-
-// near cache
-let nearSorted = [];
-let nearCursor = 0;
-let nearLocKey = "";
 
 // favorites + history
 let favorites = [];
@@ -127,19 +119,6 @@ function loadArray(key){
 }
 function saveArray(key, arr){ localStorage.setItem(key, JSON.stringify(uniqueStrings(arr))); }
 
-function loadNumber(key, fallback=0){
-  const raw = localStorage.getItem(key);
-  const n = Number(raw);
-  return Number.isFinite(n) ? n : fallback;
-}
-function saveNumber(key, n){ localStorage.setItem(key, String(Number(n) || 0)); }
-
-function loadString(key, fallback=""){
-  const raw = localStorage.getItem(key);
-  return typeof raw === "string" ? raw : fallback;
-}
-function saveString(key, s){ localStorage.setItem(key, String(s ?? "")); }
-
 async function fetchJson(url){
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed: ${url}`);
@@ -180,7 +159,7 @@ function extractParksFromJson(data){
       const district = getFirstString(obj, ["district","District","行政區","區","town","addrDistrict"]);
       const address  = getFirstString(obj, ["address","Address","地址","addr","location","位置"]);
 
-      // 常見欄位：lat/lng 或 經度/緯度 或 X/Y
+      // 常見欄位：lat/lng 或 經度/緯度 或 X/Y（台北資料很常是 X/Y）
       const lat = toNumberMaybe(obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y);
       const lng = toNumberMaybe(obj.lng ?? obj.longitude ?? obj.Longitude ?? obj.經度 ?? obj.X ?? obj.x);
 
@@ -250,11 +229,7 @@ function setMapBtn(name){
 // =========================
 // Undo (snapshot localStorage)
 // =========================
-const SNAP_KEYS = [
-  WIN_KEY, SEALED_KEY, HISTORY_KEY, FAV_KEY,
-  NEAR_CURSOR_KEY, NEAR_LOC_KEY,
-  LOVE_SHOWN_KEY
-];
+const SNAP_KEYS = [ WIN_KEY, SEALED_KEY, HISTORY_KEY, FAV_KEY, LOVE_SHOWN_KEY ];
 
 function loadUndoStack(){
   try{
@@ -274,6 +249,7 @@ function pushUndo(label=""){
   saveUndoStack(stack);
   updateUndoUI();
 }
+
 function undoOnce(){
   const stack = loadUndoStack();
   const snap = stack.pop();
@@ -288,8 +264,6 @@ function undoOnce(){
 
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
-  nearCursor = loadNumber(NEAR_CURSOR_KEY, 0);
-  nearLocKey = loadString(NEAR_LOC_KEY, "");
 
   selectedPark = null;
   renderAll();
@@ -410,7 +384,6 @@ function renderRecord(){
 function openRecordPanel(){ recordPanel?.classList.remove("hidden"); renderRecord(); }
 function closeRecordPanel(){ recordPanel?.classList.add("hidden"); }
 
-// 刪除紀錄 = 解封印 + 解同批 + 移除紀錄
 function deleteRecordAndUnseal(name){
   const n = normalizeName(name);
   if (!n) return;
@@ -458,21 +431,20 @@ function updateControlLocksByMode(){
   const mode = modeSelect ? modeSelect.value : "all";
   const hasDistrictData = districtSelect && districtSelect.options && districtSelect.options.length > 0;
 
-  // 行政區：只有 district 模式可用
   if (districtSelect) districtSelect.disabled = !(mode === "district" && hasDistrictData && !isSpinning);
 
-  // 取得定位：只有 near 模式、且 아직 未定位 才可按；定位成功後會自動變暗不可按
+  // ✅ near 模式下：未定位才可按；定位成功後自動變暗不可按
   if (locBtn) locBtn.disabled = !(mode === "near" && !userLoc && !isSpinning);
 
   if (resetNoRepeatBtn) resetNoRepeatBtn.disabled = isSpinning;
   if (modeSelect) modeSelect.disabled = isSpinning;
 
-  // districtGroup 顯示控制
   if (districtGroup) districtGroup.hidden = mode !== "district";
 
   if (mode === "near") {
-    setFilterHint(userLoc ? `已取得定位：將依序提供最近 ${NEAR_TOP_N} 個（每批 ${BATCH_SIZE} 個）。` : "最近模式需要定位：請按「取得定位」。");
+    setFilterHint(userLoc ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。` : "最近模式需要定位：請按「取得定位」。");
   }
+
   updateUndoUI();
 }
 
@@ -596,7 +568,7 @@ function rebuildWheel(){
 }
 
 // =========================
-// Distance: WGS84 + TWD97 support
+// Distance (含 TWD97 X/Y 轉換)
 // =========================
 function haversineKm(lat1, lng1, lat2, lng2){
   const R = 6371;
@@ -608,19 +580,13 @@ function haversineKm(lat1, lng1, lat2, lng2){
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
 }
-
-// ✅ 偵測是否是 TWD97 TM2 (121) 的 X/Y
 function looksLikeTWD97XY(x, y){
-  // 台北常見範圍：x~(200000~350000), y~(2700000~2800000)
   return Number.isFinite(x) && Number.isFinite(y) && x > 100000 && x < 500000 && y > 2400000 && y < 3000000;
 }
-
-// ✅ TWD97 TM2 (121) -> WGS84
 function twd97ToWgs84(x, y){
-  // reference: standard TM2 conversion
   const a = 6378137.0;
   const b = 6356752.314245;
-  const long0 = 121 * Math.PI / 180; // central meridian
+  const long0 = 121 * Math.PI / 180;
   const k0 = 0.9999;
   const dx = 250000;
 
@@ -628,87 +594,62 @@ function twd97ToWgs84(x, y){
   const xAdj = x - dx;
   const M = y / k0;
 
-  const mu = M / (a * (1 - Math.pow(e,2)/4 - 3*Math.pow(e,4)/64 - 5*Math.pow(e,6)/256));
+  const mu = M / (a * (1 - (e**2)/4 - 3*(e**4)/64 - 5*(e**6)/256));
   const e1 = (1 - Math.sqrt(1 - e*e)) / (1 + Math.sqrt(1 - e*e));
 
   let phi1 = mu
-    + (3*e1/2 - 27*Math.pow(e1,3)/32) * Math.sin(2*mu)
-    + (21*Math.pow(e1,2)/16 - 55*Math.pow(e1,4)/32) * Math.sin(4*mu)
-    + (151*Math.pow(e1,3)/96) * Math.sin(6*mu)
-    + (1097*Math.pow(e1,4)/512) * Math.sin(8*mu);
+    + (3*e1/2 - 27*(e1**3)/32) * Math.sin(2*mu)
+    + (21*(e1**2)/16 - 55*(e1**4)/32) * Math.sin(4*mu)
+    + (151*(e1**3)/96) * Math.sin(6*mu)
+    + (1097*(e1**4)/512) * Math.sin(8*mu);
 
   const e2 = (e*e)/(1 - e*e);
   const N1 = a / Math.sqrt(1 - e*e * Math.sin(phi1)**2);
   const T1 = Math.tan(phi1)**2;
   const C1 = e2 * Math.cos(phi1)**2;
-  const R1 = a * (1 - e*e) / Math.pow(1 - e*e * Math.sin(phi1)**2, 1.5);
+  const R1 = a * (1 - e*e) / (1 - e*e * Math.sin(phi1)**2) ** 1.5;
   const D = xAdj / (N1 * k0);
 
   const lat = phi1 - (N1*Math.tan(phi1)/R1) * (
     D*D/2
-    - (5 + 3*T1 + 10*C1 - 4*C1*C1 - 9*e2) * Math.pow(D,4)/24
-    + (61 + 90*T1 + 298*C1 + 45*T1*T1 - 252*e2 - 3*C1*C1) * Math.pow(D,6)/720
+    - (5 + 3*T1 + 10*C1 - 4*C1*C1 - 9*e2) * (D**4)/24
+    + (61 + 90*T1 + 298*C1 + 45*T1*T1 - 252*e2 - 3*C1*C1) * (D**6)/720
   );
 
   const lon = long0 + (
     D
-    - (1 + 2*T1 + C1) * Math.pow(D,3)/6
-    + (5 - 2*C1 + 28*T1 - 3*C1*C1 + 8*e2 + 24*T1*T1) * Math.pow(D,5)/120
+    - (1 + 2*T1 + C1) * (D**3)/6
+    + (5 - 2*C1 + 28*T1 - 3*C1*C1 + 8*e2 + 24*T1*T1) * (D**5)/120
   ) / Math.cos(phi1);
 
   return { lat: lat * 180/Math.PI, lng: lon * 180/Math.PI };
 }
-
-// ✅ 統一拿到 WGS84 經緯度（若是 TWD97 就自動轉）
 function getWgs84LatLng(meta){
   if (!meta) return null;
-
   const lat = meta.lat;
   const lng = meta.lng;
-
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
 
-  // 已經是正常經緯度
   if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return { lat, lng };
 
-  // 可能是 TWD97：meta.lng=X, meta.lat=Y（你之前的抽取方式）
-  if (looksLikeTWD97XY(lng, lat)) {
+  // lat=Y, lng=X 的情況
+  if (looksLikeTWD97XY(lng, lat)){
     const r = twd97ToWgs84(lng, lat);
-    // ✅ 回寫，之後不用每次轉
     meta.lat = r.lat;
     meta.lng = r.lng;
     return r;
   }
-
   return null;
 }
 
-function computeNearLocKey(loc){
-  if (!loc) return "";
-  return `${loc.lat.toFixed(4)},${loc.lng.toFixed(4)}`;
-}
-
-function buildNearCacheIfNeeded(force=false){
-  if (!userLoc) return false;
-
-  const newKey = computeNearLocKey(userLoc);
-  const storedKey = loadString(NEAR_LOC_KEY, "");
-  const storedCursor = loadNumber(NEAR_CURSOR_KEY, 0);
-
-  if (!force && storedKey === newKey){
-    nearLocKey = storedKey;
-    nearCursor = storedCursor;
-  } else {
-    nearLocKey = newKey;
-    nearCursor = 0;
-    saveString(NEAR_LOC_KEY, nearLocKey);
-    saveNumber(NEAR_CURSOR_KEY, nearCursor);
-  }
+// ✅ 取得「最近 18 個」的名字清單
+function getNearestTopNames(limit){
+  if (!userLoc) return null;
 
   const withCoord = masterPool
     .map((name) => {
       const meta = parkMeta.get(name);
-      const ll = getWgs84LatLng(meta); // ✅ 這行是關鍵：支援 TWD97
+      const ll = getWgs84LatLng(meta);
       if (!ll) return null;
       const km = haversineKm(userLoc.lat, userLoc.lng, ll.lat, ll.lng);
       return { name, km };
@@ -716,58 +657,12 @@ function buildNearCacheIfNeeded(force=false){
     .filter(Boolean)
     .sort((a,b)=>a.km-b.km);
 
-  nearSorted = withCoord.slice(0, NEAR_TOP_N).map(x => x.name);
-  return true;
-}
-
-function loadNearBatch(){
-  if (!userLoc){
-    parks = [];
-    selectedPark = null;
-    setFilterHint("最近模式需要定位：請按「取得定位」。");
-    resetWheelInstant();
-    wheelSvg.innerHTML = "";
-    renderAll();
-    return;
-  }
-
-  buildNearCacheIfNeeded(false);
-
-  if (!nearSorted || nearSorted.length === 0){
-    parks = [];
-    selectedPark = null;
-    setFilterHint("找不到可用的經緯度/座標（已支援 X/Y 轉換）。請確認 parks.full.json 真的有座標欄位。");
-    resetWheelInstant();
-    wheelSvg.innerHTML = "";
-    renderAll();
-    return;
-  }
-
-  if (nearCursor >= nearSorted.length){
-    parks = [];
-    selectedPark = null;
-    setFilterHint("沒有再更近了...");
-    resetWheelInstant();
-    wheelSvg.innerHTML = "";
-    renderAll();
-    return;
-  }
-
-  const batch = nearSorted.slice(nearCursor, nearCursor + BATCH_SIZE);
-  nearCursor += batch.length;
-  saveNumber(NEAR_CURSOR_KEY, nearCursor);
-
-  parks = batch;
-  selectedPark = null;
-
-  resetWheelInstant();
-  rebuildWheel();
-  setFilterHint(`最近 ${NEAR_TOP_N} 個中：第 ${Math.ceil(nearCursor / BATCH_SIZE)} 批（${batch.length} 個）。`);
-  renderAll();
+  if (withCoord.length === 0) return [];
+  return withCoord.slice(0, limit).map(x => x.name);
 }
 
 // =========================
-// Pool / Batch
+// Non-near filters
 // =========================
 function getFilteredPoolNamesNonNear(){
   const mode = modeSelect ? modeSelect.value : "all";
@@ -779,19 +674,80 @@ function getFilteredPoolNamesNonNear(){
   return masterPool.slice();
 }
 
-function loadNewBatch(forceInclude=""){
+// =========================
+// Batch (near：最近18 → 隨機6)
+// =========================
+function loadNewBatch(){
   if (masterPool.length === 0) return;
 
   const mode = modeSelect ? modeSelect.value : "all";
+  const sealedSet = loadSet(SEALED_KEY);
+
+  let basePool = [];
   if (mode === "near"){
-    loadNearBatch();
+    if (!userLoc){
+      parks = [];
+      selectedPark = null;
+      setFilterHint("最近模式需要定位：請按「取得定位」。");
+      resetWheelInstant();
+      wheelSvg.innerHTML = "";
+      renderAll();
+      return;
+    }
+
+    basePool = getNearestTopNames(NEAR_TOP_N);
+
+    if (basePool.length === 0){
+      parks = [];
+      selectedPark = null;
+      setFilterHint("找不到可用座標（無法計算最近）。");
+      resetWheelInstant();
+      wheelSvg.innerHTML = "";
+      renderAll();
+      return;
+    }
+
+    // ✅ 如果最近18個都封印了，就顯示「沒有再更近了...」
+    const remainingNear = basePool.filter(n => !sealedSet.has(n));
+    if (remainingNear.length === 0){
+      parks = [];
+      selectedPark = null;
+      setFilterHint("沒有再更近了...");
+      resetWheelInstant();
+      wheelSvg.innerHTML = "";
+      renderAll();
+      return;
+    }
+
+    // ✅ 隨機抽 6（若不足 6，用已封印的補格子維持 6 格）
+    const maxCount = Math.min(BATCH_SIZE, basePool.length);
+
+    const primaryCount = Math.min(maxCount, remainingNear.length);
+    const primary = pickRandomUnique(remainingNear, primaryCount);
+
+    let batch = primary.slice();
+    if (batch.length < maxCount){
+      const need = maxCount - batch.length;
+      const fillerCandidates = basePool.filter(n => !batch.includes(n)); // 允許 sealed 作填充
+      const filler = pickRandomUnique(fillerCandidates, need);
+      batch = uniqueStrings(batch.concat(filler));
+      while (batch.length < maxCount && basePool.length > 0){
+        batch.push(basePool[Math.floor(Math.random() * basePool.length)]);
+      }
+      batch = batch.slice(0, maxCount);
+    }
+
+    parks = batch;
+    selectedPark = null;
+    resetWheelInstant();
+    rebuildWheel();
+    setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${parks.length} 個。`);
+    renderAll();
     return;
   }
 
-  const sealedSet = loadSet(SEALED_KEY);
-  const basePool = getFilteredPoolNamesNonNear();
-  const maxCount = Math.min(BATCH_SIZE, basePool.length);
-
+  // 非 near
+  basePool = getFilteredPoolNamesNonNear();
   const remaining = basePool.filter(n => !sealedSet.has(n));
   if (remaining.length === 0){
     parks = [];
@@ -803,9 +759,7 @@ function loadNewBatch(forceInclude=""){
     return;
   }
 
-  // 抽未封印的最多 6
-  const primary = pickRandomUnique(remaining, maxCount);
-  parks = primary;
+  parks = pickRandomUnique(remaining, Math.min(BATCH_SIZE, remaining.length));
   selectedPark = null;
 
   resetWheelInstant();
@@ -853,7 +807,6 @@ function spin(){
     const idx = Math.floor(((360 - normalized + slice / 2) % 360) / slice);
     const picked = parks[idx];
 
-    // 防呆：停到封印格就同一句
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)){
       isSpinning = false;
@@ -872,7 +825,6 @@ function spin(){
 
     addHistory(picked);
 
-    // bounce
     const BOUNCE = 7;
     wheelRotator.style.transition = "transform 140ms ease-out";
     wheelRotator.style.transform = `rotate(${totalRotation + BOUNCE}deg)`;
@@ -891,7 +843,6 @@ function spin(){
         selectedPark = picked;
         isSpinning = false;
 
-        // 全收集告白
         const already = localStorage.getItem(LOVE_SHOWN_KEY) === "1";
         if (!already && loadSet(SEALED_KEY).size >= masterPool.length){
           localStorage.setItem(LOVE_SHOWN_KEY, "1");
@@ -921,7 +872,7 @@ function preserveSelected(){
   saveSet(SEALED_KEY, sealedSet);
   saveSet(WIN_KEY, wonSet);
 
-  // ✅ 保留：不留紀錄
+  // 保留：不留紀錄
   history = history.filter(x => x !== name);
   saveHistory();
 
@@ -941,9 +892,7 @@ function requestLocation(){
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      buildNearCacheIfNeeded(true);
       updateControlLocksByMode();
-
       if (!isSpinning && modeSelect?.value === "near") loadNewBatch();
       else setFilterHint("已取得定位。切到『距離我最近』即可使用。");
     },
@@ -961,11 +910,49 @@ function resetNoRepeat(){
   pushUndo("reset_no_repeat");
   localStorage.removeItem(WIN_KEY);
   localStorage.removeItem(SEALED_KEY);
-  localStorage.removeItem(NEAR_CURSOR_KEY);
   localStorage.removeItem(LOVE_SHOWN_KEY);
   setFilterHint("已重置『封印/不重複』紀錄。");
   if (!isSpinning) loadNewBatch();
   updateUndoUI();
+}
+
+// =========================
+// UI helpers (record panel + others)
+// =========================
+function openRecordPanel(){ recordPanel?.classList.remove("hidden"); renderRecord(); }
+function closeRecordPanel(){ recordPanel?.classList.add("hidden"); }
+
+function setUIState(){
+  const hasParks = parks.length > 0;
+  emptyState.classList.toggle("hidden", hasParks);
+  wheelSection.classList.toggle("hidden", !hasParks);
+
+  parkInput.disabled = isSpinning;
+  addBtn.disabled = isSpinning;
+  spinBtn.disabled = isSpinning || !hasParks;
+  if (newBatchBtn) newBatchBtn.disabled = isSpinning || masterPool.length === 0;
+
+  spinText.textContent = isSpinning ? "轉動中..." : "開始轉動！";
+  updateControlLocksByMode();
+
+  if (!selectedPark || isSpinning){
+    resultBox.classList.add("hidden");
+    setMapBtn(null);
+    preserveBtn?.classList.add("hidden");
+    favBtn?.classList.add("hidden");
+  } else {
+    resultBox.classList.remove("hidden");
+    resultName.textContent = selectedPark;
+    setMapBtn(selectedPark);
+    preserveBtn?.classList.remove("hidden");
+    favBtn?.classList.remove("hidden");
+  }
+}
+
+function renderAll(){
+  setUIState();
+  renderFavorites();
+  renderRecord();
 }
 
 // =========================
@@ -1035,6 +1022,7 @@ async function init(){
       renderRecord();
     }
   });
+
   favClearBtn?.addEventListener("click", () => {
     if (favorites.length === 0) return;
     pushUndo("fav_clear");
@@ -1052,7 +1040,6 @@ async function init(){
   locBtn?.addEventListener("click", requestLocation);
   resetNoRepeatBtn?.addEventListener("click", resetNoRepeat);
 
-  // record panel
   recordBtn?.addEventListener("click", openRecordPanel);
   recordCloseBtn?.addEventListener("click", closeRecordPanel);
   recordPanel?.addEventListener("click", (e) => { if (e.target === recordPanel) closeRecordPanel(); });
@@ -1060,10 +1047,8 @@ async function init(){
   recordList?.addEventListener("click", (e) => {
     const t = e.target;
     if (!(t instanceof HTMLElement)) return;
-
     const favName = t.dataset.favToggle;
     if (favName){ toggleFavorite(favName); return; }
-
     const delName = t.dataset.recDelete;
     if (delName){ deleteRecordAndUnseal(delName); return; }
   });
@@ -1077,6 +1062,8 @@ async function init(){
 }
 
 init();
+
+
 
 
 
