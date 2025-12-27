@@ -20,9 +20,13 @@
   <main class="page">
     <section class="card">
       <header class="header">
-        <!-- ✅ 左邊：恢復（不會擋到） -->
+        <!-- ✅ 左邊：返回箭頭（恢復） -->
         <div class="headerActions headerActionsLeft" aria-label="左側工具">
-          <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作">恢復</button>
+          <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作" aria-label="恢復上一個動作">
+            <svg class="undoIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
 
         <h1>公園轉盤選擇器</h1>
@@ -163,6 +167,7 @@
   <script src="./app.js" defer></script>
 </body>
 </html>
+
 
 
 
