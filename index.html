@@ -22,6 +22,12 @@
     <section class="card">
       <header class="header">
         <h1>公園轉盤選擇器</h1>
+
+        <!-- ✅ 右上角：恢復 + 紀錄 -->
+        <div class="headerActions" aria-label="右上工具">
+          <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作">恢復</button>
+          <button id="recordBtn" class="btn btn-record" type="button" title="查看紀錄">紀錄</button>
+        </div>
       </header>
 
       <section class="inputRow">
@@ -36,7 +42,7 @@
         </button>
       </section>
 
-      <!-- ✅ Filters（固定顯示：用 disabled + 變暗 來引導） -->
+      <!-- ✅ Filters -->
       <section class="filterRow" aria-label="篩選">
         <div class="filterGroup" id="modeGroup">
           <label class="filterLabel" for="modeSelect">模式</label>
@@ -66,13 +72,10 @@
       <section id="wheelSection" class="wheelSection hidden">
         <div class="wheelStage">
           <div class="wheelFrame">
-            <!-- ✅ 淺綠色箭頭 -->
             <div class="pointer" aria-hidden="true"></div>
 
             <div id="wheelRotator" class="wheelRotator">
               <svg id="wheelSvg" class="wheelSvg" viewBox="0 0 400 400" aria-label="轉盤"></svg>
-
-              <!-- ✅ 中心按鈕（保留佈局用，不讓使用者/讀屏誤操作） -->
               <button id="centerBtn" class="centerBtn" type="button" aria-label="中心按鈕" disabled aria-hidden="true"></button>
             </div>
           </div>
@@ -97,7 +100,6 @@
           <p class="resultHint">今天就去</p>
           <p id="resultName" class="resultName">—</p>
 
-          <!-- ✅ 地圖 + 保留 + 收藏 -->
           <div class="resultActions">
             <a id="mapBtn" class="btn btn-map" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">
               打開地圖
@@ -132,6 +134,30 @@
         <ul id="favList" class="favList" aria-label="收藏清單"></ul>
         <p id="favEmpty" class="favEmpty">（還沒有收藏）</p>
       </section>
+
+      <!-- ✅ 紀錄面板（右上角按鈕開關） -->
+      <div id="recordPanel" class="panel hidden" role="dialog" aria-modal="true" aria-label="轉盤紀錄">
+        <div class="panelCard">
+          <div class="panelHeader">
+            <h3 class="panelTitle">紀錄</h3>
+            <button id="recordCloseBtn" class="btn btn-panelClose" type="button" aria-label="關閉紀錄">關閉</button>
+          </div>
+
+          <p class="panelHint">✅ 重複只記一次｜🗑 刪除後此公園會重新變成「可被抽到」</p>
+
+          <ul id="recordList" class="recordList"></ul>
+          <p id="recordEmpty" class="recordEmpty">（還沒有紀錄）</p>
+        </div>
+      </div>
+
+      <!-- ✅ 全收集告白彈窗 -->
+      <div id="loveModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="完成訊息">
+        <div class="modalCard">
+          <p class="modalText">人瑄學姊笑起來真的很好看，我很喜歡學姊</p>
+          <button id="loveCloseBtn" class="btn btn-modalClose" type="button">知道了</button>
+        </div>
+      </div>
+
     </section>
   </main>
 
