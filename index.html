@@ -21,14 +21,17 @@
   <main class="page">
     <section class="card">
       <header class="header">
-        <h1>公園轉盤選擇器</h1>
+  <div class="headerLeft">
+    <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作">恢復</button>
+  </div>
 
-        <!-- ✅ 右上角：恢復 + 紀錄 -->
-        <div class="headerActions" aria-label="右上工具">
-          <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作">恢復</button>
-          <button id="recordBtn" class="btn btn-record" type="button" title="查看紀錄">紀錄</button>
-        </div>
-      </header>
+  <h1>公園轉盤選擇器</h1>
+
+  <div class="headerRight">
+    <button id="recordBtn" class="btn btn-record" type="button" title="查看紀錄">紀錄</button>
+  </div>
+</header>
+
 
       <section class="inputRow">
         <input id="parkInput" type="text" placeholder="輸入公園名稱..." autocomplete="off" />
@@ -164,6 +167,7 @@
   <script src="./app.js" defer></script>
 </body>
 </html>
+
 
 
 
