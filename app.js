@@ -149,15 +149,8 @@ function toNumberMaybe(v){
   return Number.isFinite(n) ? n : undefined;
 }
 
-// ✅ 你目前的 extractParksFromJson 會呼叫它，但你原檔沒定義會直接噴錯
-function looksLikeTWD97XY(x, y){
-  if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
-  // 台灣 TWD97 TM2 常見範圍大約：
-  // X: 100000~400000, Y: 2400000~2900000
-  return x > 100000 && x < 400000 && y > 2400000 && y < 2900000;
-}
-
-// ✅ 支援官方 parks.full.json（records/result.records/features）+ pm_Latitude/pm_Longitude
+// ✅ 支援官方 parks.full.json（records/result.records/features/純陣列）
+// ✅ 支援欄位：pm_name / pm_location / pm_Latitude / pm_Longitude
 function extractParksFromJson(data){
   // 1) normalize array
   let arr = data;
@@ -195,12 +188,14 @@ function extractParksFromJson(data){
 
       const name = getFirstString(obj, [
         "name","Name","公園名稱","公園名","parkName","title",
+        "pm_name","pm_Name",                      // ✅ 官方 parks.full.json
         "pm_ParkName","pm_parkname","ParkName"
       ]);
       if (!name) continue;
 
       const address = getFirstString(obj, [
         "address","Address","地址","addr","location","位置",
+        "pm_location","pm_Location",              // ✅ 官方 parks.full.json
         "pm_Address","pm_address"
       ]);
 
@@ -209,21 +204,18 @@ function extractParksFromJson(data){
         "pm_area","pm_district","pm_District"
       ]);
       if (!district && address){
-        const m = String(address).match(/([一-龥]{1,4}區)/);
+        // ✅ 台北市行政區 1~3 個字 + 區（避免抓到「位於北投區」那種）
+        const m = String(address).match(/([一-龥]{1,3}區)/);
         if (m) district = m[1];
       }
 
-      // ✅ 先吃 WGS84 經緯度欄位
+      // ✅ 先吃 WGS84 經緯度欄位（官方：pm_Latitude/pm_Longitude）
       let lat = getNum(obj, [
-        "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度","Y","y"
+        "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度"
       ]);
       let lng = getNum(obj, [
-        "pm_Longitude","pm_longitude","pm_lng","pm_lon","Longitude","longitude","lng","經度","X","x"
+        "pm_Longitude","pm_longitude","pm_lng","pm_lon","Longitude","longitude","lng","經度"
       ]);
-
-      // ✅ 再補：如果資料其實是 TWD97 X/Y（常見欄位）
-      let x = getNum(obj, ["pm_X","pm_x","X","x","twd97X","TWD97X","座標X"]);
-      let y = getNum(obj, ["pm_Y","pm_y","Y","y","twd97Y","TWD97Y","座標Y"]);
 
       // GeoJSON geometry.coordinates = [lng, lat]
       if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw?.geometry?.coordinates && Array.isArray(raw.geometry.coordinates)){
@@ -231,12 +223,6 @@ function extractParksFromJson(data){
         const glat = toNumberMaybe(raw.geometry.coordinates[1]);
         if (!Number.isFinite(lat) && Number.isFinite(glat)) lat = glat;
         if (!Number.isFinite(lng) && Number.isFinite(glng)) lng = glng;
-      }
-
-      // 如果 lat/lng 取不到，但 x/y 像 TWD97：先塞進去避免空值（但 near 仍會因非WGS84而跳過）
-      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && looksLikeTWD97XY(x, y)){
-        lat = y;   // Y
-        lng = x;   // X
       }
 
       out.push({
@@ -544,12 +530,6 @@ function updateDistrictOptions(){
   }
 }
 
-/**
- * ✅ 改成「你那個能成功抓定位版本」的鎖定/提示邏輯：
- * - loc 只有 near 模式顯示；定位成功後變暗不可按
- * - near 模式提示：未定位 →「請按取得定位，再按重新整理」
- * - near 模式且 parks 空時，emptyText 也同步提示
- */
 function updateControlLocksByMode(){
   const mode = modeSelect ? modeSelect.value : "all";
   const hasDistrictData = districtSelect && districtSelect.options && districtSelect.options.length > 0;
@@ -557,6 +537,7 @@ function updateControlLocksByMode(){
   if (districtGroup) districtGroup.hidden = mode !== "district";
   if (districtSelect) districtSelect.disabled = !(mode === "district" && hasDistrictData && !isSpinning);
 
+  // ✅ 跟可用版一致：loc 只在 near 可見；定位成功後變暗不可按
   if (locBtn){
     locBtn.hidden = mode !== "near";
     locBtn.disabled = !(mode === "near" && !userLoc && !isSpinning);
@@ -565,22 +546,17 @@ function updateControlLocksByMode(){
   if (refreshBtn) refreshBtn.disabled = isSpinning;
   if (modeSelect) modeSelect.disabled = isSpinning;
 
+  updateUndoUI();
+
   if (mode === "near"){
     setFilterHint(
       userLoc
         ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`
         : "最近模式需要定位：請按「取得定位」，再按「重新整理」。"
     );
-    if (emptyText && parks.length === 0){
-      emptyText.textContent = userLoc
-        ? "請按「重新整理」刷新最近公園…"
-        : "最近模式需要定位：請按「取得定位」。";
-    }
   } else {
-    // 非 near 不強制蓋掉提示（你原本會清空，這裡維持偏接近舊版：不額外清空）
+    setFilterHint("");
   }
-
-  updateUndoUI();
 }
 
 function setUIState(){
@@ -721,7 +697,7 @@ function getNearestTopNames(limit){
     .map((name) => {
       const meta = parkMeta.get(name);
       if (!meta || !Number.isFinite(meta.lat) || !Number.isFinite(meta.lng)) return null;
-      if (Math.abs(meta.lat) > 90 || Math.abs(meta.lng) > 180) return null; // 不是 WGS84 就跳過
+      if (Math.abs(meta.lat) > 90 || Math.abs(meta.lng) > 180) return null;
       const km = haversineKm(userLoc.lat, userLoc.lng, meta.lat, meta.lng);
       return { name, km };
     })
@@ -757,8 +733,8 @@ function loadNewBatch(){
       selectedPark = null;
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
+      setEmptyText("最近模式需要定位：請按「取得定位」，再按「重新整理」。");
       setFilterHint("最近模式需要定位：請按「取得定位」，再按「重新整理」。");
-      setEmptyText("最近模式需要定位：請按「取得定位」。");
       renderAll();
       return;
     }
@@ -769,8 +745,8 @@ function loadNewBatch(){
       selectedPark = null;
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
-      setFilterHint("找不到可用座標（無法計算最近）。");
       setEmptyText("找不到可用座標（無法計算最近）。");
+      setFilterHint("找不到可用座標（無法計算最近）。");
       renderAll();
       return;
     }
@@ -781,8 +757,8 @@ function loadNewBatch(){
       selectedPark = null;
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
-      setFilterHint("沒有再更近了...");
       setEmptyText("沒有再更近了...");
+      setFilterHint("沒有再更近了...");
       renderAll();
       return;
     }
@@ -808,6 +784,7 @@ function loadNewBatch(){
 
     resetWheelInstant();
     rebuildWheel();
+    setEmptyText("");
     setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${parks.length} 個。`);
     renderAll();
     return;
@@ -832,6 +809,7 @@ function loadNewBatch(){
 
   resetWheelInstant();
   rebuildWheel();
+  setEmptyText("");
   renderAll();
 }
 
@@ -950,11 +928,7 @@ function preserveSelected(){
   renderAll();
 }
 
-/**
- * ✅ 改成「你那個能成功抓定位版本」的 requestLocation：
- * - 定位成功：如果此刻就在 near → 直接 loadNewBatch()
- * - 不在 near：只提示「切到距離我最近後按重新整理」
- */
+// ✅✅✅ 定位邏輯改成「可用版」：只在 near 模式才自動刷新
 function requestLocation(){
   if (!("geolocation" in navigator)){
     setFilterHint("你的瀏覽器不支援定位，無法使用『距離我最近』模式。");
@@ -986,11 +960,7 @@ function requestLocation(){
   );
 }
 
-/**
- * ✅ 改成「你那個能成功抓定位版本」的 refreshNow：
- * - near 且未定位：只提示並 return（不刷新）
- * - 其他：loadNewBatch + 提示已重新整理
- */
+// ✅✅✅ 重新整理邏輯改成「可用版」：near 且沒定位就提示先定位
 function refreshNow(){
   if (isSpinning) return;
 
@@ -998,7 +968,7 @@ function refreshNow(){
 
   if (mode === "near" && !userLoc){
     setFilterHint("最近模式需要定位：請先按「取得定位」。");
-    if (emptyText) emptyText.textContent = "最近模式需要定位：請按「取得定位」。";
+    setEmptyText("最近模式需要定位：請按「取得定位」。");
     return;
   }
 
@@ -1015,14 +985,28 @@ async function init(){
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
 
-  let parksObjs = [];
+  // ✅ 同時嘗試讀 full + names（如果都有，會用 name 合併，把 district/address 補齊）
+  const merged = new Map(); // name -> meta
   for (const url of DATA_URLS){
     try{
       const data = await fetchJson(url);
-      parksObjs = extractParksFromJson(data);
-      if (parksObjs.length) break;
+      const list = extractParksFromJson(data);
+
+      for (const p of list){
+        if (!p?.name) continue;
+        const prev = merged.get(p.name) || { name: p.name };
+        merged.set(p.name, {
+          name: p.name,
+          district: prev.district || p.district || "",
+          address: prev.address || p.address || "",
+          lat: (prev.lat ?? p.lat),
+          lng: (prev.lng ?? p.lng),
+        });
+      }
     }catch{}
   }
+
+  const parksObjs = [...merged.values()];
 
   parkMeta = new Map();
   for (const p of parksObjs){
@@ -1111,3 +1095,5 @@ async function init(){
 }
 
 init();
+
+
