@@ -403,6 +403,13 @@ body{
   text-align:center;
 }
 
+/* ✅ 收藏被放進 panel 時，去掉「上邊線/大間距」讓它更像 panel 的一段 */
+.panelCard .favSection{
+  margin-top: 10px;
+  border-top: 0;
+  padding-top: 0;
+}
+
 .emptyState{
   padding: 22px 0 6px;
   text-align:center;
@@ -557,5 +564,4 @@ svg text{
 
 /* 把輸入列整條移除 */
 .inputRow { display: none !important; }
-
 
