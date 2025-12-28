@@ -107,7 +107,7 @@ body{
 .headerRight{
   position:absolute;
   right: 0;
-  top: 60%;
+  top: 70%;
   transform: translateY(-50%);
   display:flex;
   flex-direction:column;
@@ -523,6 +523,7 @@ svg text{
   #spinText{ font-size: 16px; }
   .centerBtn{ width: 74px; height: 74px; }
 }
+
 
 
 
