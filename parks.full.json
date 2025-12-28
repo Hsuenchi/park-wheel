@@ -1,0 +1,4916 @@
+[
+  {
+    "sid": 157,
+    "name": "七虎公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=157"
+  },
+  {
+    "sid": 402,
+    "name": "七星公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=402"
+  },
+  {
+    "sid": 251,
+    "name": "八仙公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=251"
+  },
+  {
+    "sid": 542,
+    "name": "大豐公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=542"
+  },
+  {
+    "sid": 905,
+    "name": "中央簡易公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=905"
+  },
+  {
+    "sid": 446,
+    "name": "中庸1號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=446"
+  },
+  {
+    "sid": 523,
+    "name": "丹鳳公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=523"
+  },
+  {
+    "sid": 267,
+    "name": "公館公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=267"
+  },
+  {
+    "sid": 368,
+    "name": "天狗庵遺址",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=368"
+  },
+  {
+    "sid": 467,
+    "name": "文化1號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=467"
+  },
+  {
+    "sid": 522,
+    "name": "文化2號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=522"
+  },
+  {
+    "sid": 268,
+    "name": "文化3號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=268"
+  },
+  {
+    "sid": 835,
+    "name": "北投258號綠地(承德4號)",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=835"
+  },
+  {
+    "sid": 875,
+    "name": "北投2號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=875"
+  },
+  {
+    "sid": 786,
+    "name": "北投公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=786"
+  },
+  {
+    "sid": 857,
+    "name": "北投社三層崎公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=857"
+  },
+  {
+    "sid": 579,
+    "name": "石牌公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=579"
+  },
+  {
+    "sid": 44,
+    "name": "立農公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=44"
+  },
+  {
+    "sid": 760,
+    "name": "吉利公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=760"
+  },
+  {
+    "sid": 330,
+    "name": "同德公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=330"
+  },
+  {
+    "sid": 509,
+    "name": "地熱谷公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=509"
+  },
+  {
+    "sid": 228,
+    "name": "行義公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=228"
+  },
+  {
+    "sid": 360,
+    "name": "奇岩1號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=360"
+  },
+  {
+    "sid": 214,
+    "name": "奇岩二號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=214"
+  },
+  {
+    "sid": 261,
+    "name": "奇岩三號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=261"
+  },
+  {
+    "sid": 483,
+    "name": "東華公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=483"
+  },
+  {
+    "sid": 29,
+    "name": "林泉公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=29"
+  },
+  {
+    "sid": 141,
+    "name": "知行公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=141"
+  },
+  {
+    "sid": 907,
+    "name": "長安公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=907"
+  },
+  {
+    "sid": 597,
+    "name": "前山公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=597"
+  },
+  {
+    "sid": 585,
+    "name": "建民公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=585"
+  },
+  {
+    "sid": 171,
+    "name": "泉源47號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=171"
+  },
+  {
+    "sid": 142,
+    "name": "泉源48號公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=142"
+  },
+  {
+    "sid": 871,
+    "name": "洲美(公4)公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=871"
+  },
+  {
+    "sid": 572,
+    "name": "洲美蜆仔港公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=572"
+  },
+  {
+    "sid": 676,
+    "name": "致遠公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=676"
+  },
+  {
+    "sid": 84,
+    "name": "重三公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=84"
+  },
+  {
+    "sid": 745,
+    "name": "振華公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=745"
+  },
+  {
+    "sid": 701,
+    "name": "振興公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=701"
+  },
+  {
+    "sid": 50,
+    "name": "桂花公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=50"
+  },
+  {
+    "sid": 174,
+    "name": "桃源公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=174"
+  },
+  {
+    "sid": 674,
+    "name": "健行公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=674"
+  },
+  {
+    "sid": 59,
+    "name": "崇仰公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=59"
+  },
+  {
+    "sid": 576,
+    "name": "清江1公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=576"
+  },
+  {
+    "sid": 742,
+    "name": "清江二公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=742"
+  },
+  {
+    "sid": 797,
+    "name": "軟橋公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=797"
+  },
+  {
+    "sid": 906,
+    "name": "復興公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=906"
+  },
+  {
+    "sid": 514,
+    "name": "開明公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=514"
+  },
+  {
+    "sid": 497,
+    "name": "陽明公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=497"
+  },
+  {
+    "sid": 113,
+    "name": "新興公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=113"
+  },
+  {
+    "sid": 43,
+    "name": "溫泉綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=43"
+  },
+  {
+    "sid": 769,
+    "name": "聖景一公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=769"
+  },
+  {
+    "sid": 661,
+    "name": "聖景二公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=661"
+  },
+  {
+    "sid": 11,
+    "name": "聖景三公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=11"
+  },
+  {
+    "sid": 566,
+    "name": "榮光公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=566"
+  },
+  {
+    "sid": 747,
+    "name": "榮富公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=747"
+  },
+  {
+    "sid": 908,
+    "name": "榮華公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=908"
+  },
+  {
+    "sid": 867,
+    "name": "福星(公1)公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=867"
+  },
+  {
+    "sid": 279,
+    "name": "稻中公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=279"
+  },
+  {
+    "sid": 723,
+    "name": "稻香公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=723"
+  },
+  {
+    "sid": 975,
+    "name": "線形公園(一德里)",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=975"
+  },
+  {
+    "sid": 976,
+    "name": "線形公園(中央北路3段)",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=976"
+  },
+  {
+    "sid": 866,
+    "name": "線形公園-芝山明德段",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=866"
+  },
+  {
+    "sid": 272,
+    "name": "學園公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=272"
+  },
+  {
+    "sid": 904,
+    "name": "磺港公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=904"
+  },
+  {
+    "sid": 128,
+    "name": "豐年公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=128"
+  },
+  {
+    "sid": 480,
+    "name": "關渡公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=480"
+  },
+  {
+    "sid": 648,
+    "name": "觀海公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=648"
+  },
+  {
+    "sid": 232,
+    "name": "嗄嘮別公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=232"
+  },
+  {
+    "sid": 456,
+    "name": "大業綠地(北投163號)",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=456"
+  },
+  {
+    "sid": 602,
+    "name": "中和綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=602"
+  },
+  {
+    "sid": 370,
+    "name": "天溪綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=370"
+  },
+  {
+    "sid": 574,
+    "name": "文化綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=574"
+  },
+  {
+    "sid": 138,
+    "name": "北投106號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=138"
+  },
+  {
+    "sid": 540,
+    "name": "北投120號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=540"
+  },
+  {
+    "sid": 295,
+    "name": "北投121號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=295"
+  },
+  {
+    "sid": 181,
+    "name": "北投122號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=181"
+  },
+  {
+    "sid": 531,
+    "name": "北投123號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=531"
+  },
+  {
+    "sid": 520,
+    "name": "北投124號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=520"
+  },
+  {
+    "sid": 234,
+    "name": "北投135號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=234"
+  },
+  {
+    "sid": 176,
+    "name": "北投138號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=176"
+  },
+  {
+    "sid": 457,
+    "name": "北投139號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=457"
+  },
+  {
+    "sid": 68,
+    "name": "北投160號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=68"
+  },
+  {
+    "sid": 410,
+    "name": "北投161號綠地 (田心仔綠地)",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=410"
+  },
+  {
+    "sid": 397,
+    "name": "北投164號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=397"
+  },
+  {
+    "sid": 135,
+    "name": "北投165號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=135"
+  },
+  {
+    "sid": 351,
+    "name": "北投166號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=351"
+  },
+  {
+    "sid": 58,
+    "name": "北投167號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=58"
+  },
+  {
+    "sid": 139,
+    "name": "北投168號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=139"
+  },
+  {
+    "sid": 14,
+    "name": "北投169號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=14"
+  },
+  {
+    "sid": 305,
+    "name": "北投181號一德綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=305"
+  },
+  {
+    "sid": 622,
+    "name": "北投182號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=622"
+  },
+  {
+    "sid": 352,
+    "name": "北投183號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=352"
+  },
+  {
+    "sid": 632,
+    "name": "北投185號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=632"
+  },
+  {
+    "sid": 729,
+    "name": "北投186號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=729"
+  },
+  {
+    "sid": 471,
+    "name": "北投187號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=471"
+  },
+  {
+    "sid": 435,
+    "name": "北投188號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=435"
+  },
+  {
+    "sid": 417,
+    "name": "北投191號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=417"
+  },
+  {
+    "sid": 246,
+    "name": "北投192號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=246"
+  },
+  {
+    "sid": 501,
+    "name": "北投203號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=501"
+  },
+  {
+    "sid": 834,
+    "name": "北投257號綠地(承德3號)",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=834"
+  },
+  {
+    "sid": 418,
+    "name": "北投39號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=418"
+  },
+  {
+    "sid": 16,
+    "name": "北投62號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=16"
+  },
+  {
+    "sid": 628,
+    "name": "北投63號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=628"
+  },
+  {
+    "sid": 76,
+    "name": "北投64號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=76"
+  },
+  {
+    "sid": 238,
+    "name": "北投65號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=238"
+  },
+  {
+    "sid": 323,
+    "name": "北投66號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=323"
+  },
+  {
+    "sid": 343,
+    "name": "北投69號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=343"
+  },
+  {
+    "sid": 545,
+    "name": "北投90號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=545"
+  },
+  {
+    "sid": 180,
+    "name": "北投91號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=180"
+  },
+  {
+    "sid": 249,
+    "name": "北投92號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=249"
+  },
+  {
+    "sid": 484,
+    "name": "北投98號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=484"
+  },
+  {
+    "sid": 638,
+    "name": "永和綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=638"
+  },
+  {
+    "sid": 186,
+    "name": "永欣綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=186"
+  },
+  {
+    "sid": 836,
+    "name": "安明綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=836"
+  },
+  {
+    "sid": 675,
+    "name": "奇岩4號綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=675"
+  },
+  {
+    "sid": 672,
+    "name": "忠義公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=672"
+  },
+  {
+    "sid": 738,
+    "name": "承仙綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=738"
+  },
+  {
+    "sid": 382,
+    "name": "明德公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=382"
+  },
+  {
+    "sid": 717,
+    "name": "林投坑(一)綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=717"
+  },
+  {
+    "sid": 355,
+    "name": "林投坑(二)綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=355"
+  },
+  {
+    "sid": 826,
+    "name": "湖山綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=826"
+  },
+  {
+    "sid": 625,
+    "name": "番仔厝綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=625"
+  },
+  {
+    "sid": 160,
+    "name": "磅空頂綠地",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=160"
+  },
+  {
+    "sid": 637,
+    "name": "櫻花崗公園",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=637"
+  },
+  {
+    "sid": 604,
+    "name": "北投3號廣場",
+    "district": "北投區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=604"
+  },
+  {
+    "sid": 633,
+    "name": "41號公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=633"
+  },
+  {
+    "sid": 245,
+    "name": "士林官邸公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=245"
+  },
+  {
+    "sid": 980,
+    "name": "山仔后公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=980"
+  },
+  {
+    "sid": 586,
+    "name": "天母公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=586"
+  },
+  {
+    "sid": 784,
+    "name": "天和一號公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=784"
+  },
+  {
+    "sid": 439,
+    "name": "天和公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=439"
+  },
+  {
+    "sid": 103,
+    "name": "天壽公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=103"
+  },
+  {
+    "sid": 787,
+    "name": "天壽綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=787"
+  },
+  {
+    "sid": 877,
+    "name": "天壽綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=877"
+  },
+  {
+    "sid": 367,
+    "name": "天福2號公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=367"
+  },
+  {
+    "sid": 452,
+    "name": "外雙溪公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=452"
+  },
+  {
+    "sid": 609,
+    "name": "仰德一號公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=609"
+  },
+  {
+    "sid": 347,
+    "name": "仰德二號公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=347"
+  },
+  {
+    "sid": 294,
+    "name": "名山公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=294"
+  },
+  {
+    "sid": 191,
+    "name": "至善公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=191"
+  },
+  {
+    "sid": 626,
+    "name": "至誠公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=626"
+  },
+  {
+    "sid": 440,
+    "name": "至德園公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=440"
+  },
+  {
+    "sid": 177,
+    "name": "住六(公一)公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=177"
+  },
+  {
+    "sid": 562,
+    "name": "住六(公二)公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=562"
+  },
+  {
+    "sid": 700,
+    "name": "克強公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=700"
+  },
+  {
+    "sid": 79,
+    "name": "志成公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=79"
+  },
+  {
+    "sid": 39,
+    "name": "忠誠公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=39"
+  },
+  {
+    "sid": 715,
+    "name": "承德公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=715"
+  },
+  {
+    "sid": 762,
+    "name": "明勝公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=762"
+  },
+  {
+    "sid": 621,
+    "name": "東和公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=621"
+  },
+  {
+    "sid": 416,
+    "name": "社子公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=416"
+  },
+  {
+    "sid": 872,
+    "name": "社子島福安里堤防綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=872"
+  },
+  {
+    "sid": 962,
+    "name": "社正公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=962"
+  },
+  {
+    "sid": 682,
+    "name": "芝山公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=682"
+  },
+  {
+    "sid": 596,
+    "name": "花卉試驗中心",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=596"
+  },
+  {
+    "sid": 685,
+    "name": "前港公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=685"
+  },
+  {
+    "sid": 317,
+    "name": "後港公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=317"
+  },
+  {
+    "sid": 455,
+    "name": "美崙公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=455"
+  },
+  {
+    "sid": 200,
+    "name": "原住民文化主題公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=200"
+  },
+  {
+    "sid": 526,
+    "name": "海光公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=526"
+  },
+  {
+    "sid": 761,
+    "name": "基河公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=761"
+  },
+  {
+    "sid": 870,
+    "name": "基隆河沖洗溝加蓋綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=870"
+  },
+  {
+    "sid": 333,
+    "name": "華聲公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=333"
+  },
+  {
+    "sid": 316,
+    "name": "華齡公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=316"
+  },
+  {
+    "sid": 496,
+    "name": "新佳公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=496"
+  },
+  {
+    "sid": 783,
+    "name": "福中公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=783"
+  },
+  {
+    "sid": 290,
+    "name": "福志公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=290"
+  },
+  {
+    "sid": 221,
+    "name": "福林公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=221"
+  },
+  {
+    "sid": 184,
+    "name": "福華公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=184"
+  },
+  {
+    "sid": 737,
+    "name": "福順公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=737"
+  },
+  {
+    "sid": 741,
+    "name": "翠山公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=741"
+  },
+  {
+    "sid": 503,
+    "name": "德仁公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=503"
+  },
+  {
+    "sid": 426,
+    "name": "德行公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=426"
+  },
+  {
+    "sid": 865,
+    "name": "線形公園-前街",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=865"
+  },
+  {
+    "sid": 864,
+    "name": "線形公園-後街",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=864"
+  },
+  {
+    "sid": 863,
+    "name": "線形公園-劍潭",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=863"
+  },
+  {
+    "sid": 363,
+    "name": "衛理兒童遊戲場",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=363"
+  },
+  {
+    "sid": 419,
+    "name": "磺溪公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=419"
+  },
+  {
+    "sid": 469,
+    "name": "雙溪公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=469"
+  },
+  {
+    "sid": 1004,
+    "name": "雙溪濕地公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=1004"
+  },
+  {
+    "sid": 734,
+    "name": "蘭雅1號公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=734"
+  },
+  {
+    "sid": 840,
+    "name": "蘭雅公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=840"
+  },
+  {
+    "sid": 903,
+    "name": "蘭興公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=903"
+  },
+  {
+    "sid": 165,
+    "name": "209號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=165"
+  },
+  {
+    "sid": 722,
+    "name": "士林116號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=722"
+  },
+  {
+    "sid": 385,
+    "name": "士林117號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=385"
+  },
+  {
+    "sid": 771,
+    "name": "士林118號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=771"
+  },
+  {
+    "sid": 258,
+    "name": "士林120號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=258"
+  },
+  {
+    "sid": 453,
+    "name": "士林121號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=453"
+  },
+  {
+    "sid": 627,
+    "name": "士林128號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=627"
+  },
+  {
+    "sid": 274,
+    "name": "士林130號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=274"
+  },
+  {
+    "sid": 70,
+    "name": "士林131號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=70"
+  },
+  {
+    "sid": 32,
+    "name": "士林132號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=32"
+  },
+  {
+    "sid": 219,
+    "name": "士林136號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=219"
+  },
+  {
+    "sid": 555,
+    "name": "士林139號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=555"
+  },
+  {
+    "sid": 780,
+    "name": "士林151號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=780"
+  },
+  {
+    "sid": 63,
+    "name": "士林156號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=63"
+  },
+  {
+    "sid": 757,
+    "name": "士林173號綠地 (蘭興1號綠地)",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=757"
+  },
+  {
+    "sid": 712,
+    "name": "士林179號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=712"
+  },
+  {
+    "sid": 206,
+    "name": "士林197號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=206"
+  },
+  {
+    "sid": 666,
+    "name": "士林198號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=666"
+  },
+  {
+    "sid": 587,
+    "name": "士林199號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=587"
+  },
+  {
+    "sid": 326,
+    "name": "士林200號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=326"
+  },
+  {
+    "sid": 15,
+    "name": "士林201號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=15"
+  },
+  {
+    "sid": 143,
+    "name": "士林206綠地(番仔田綠地)",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=143"
+  },
+  {
+    "sid": 38,
+    "name": "士林207綠地(番仔田小綠地)",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=38"
+  },
+  {
+    "sid": 276,
+    "name": "士林208號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=276"
+  },
+  {
+    "sid": 639,
+    "name": "士林4號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=639"
+  },
+  {
+    "sid": 328,
+    "name": "士林68號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=328"
+  },
+  {
+    "sid": 751,
+    "name": "士林73號綠地 (天美綠地)",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=751"
+  },
+  {
+    "sid": 273,
+    "name": "士林75號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=273"
+  },
+  {
+    "sid": 277,
+    "name": "士林76號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=277"
+  },
+  {
+    "sid": 538,
+    "name": "士林79號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=538"
+  },
+  {
+    "sid": 151,
+    "name": "士林80天壽二號",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=151"
+  },
+  {
+    "sid": 655,
+    "name": "士林89號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=655"
+  },
+  {
+    "sid": 60,
+    "name": "天福綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=60"
+  },
+  {
+    "sid": 236,
+    "name": "永倫綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=236"
+  },
+  {
+    "sid": 303,
+    "name": "至臨綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=303"
+  },
+  {
+    "sid": 665,
+    "name": "東吳綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=665"
+  },
+  {
+    "sid": 617,
+    "name": "添壽一號綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=617"
+  },
+  {
+    "sid": 196,
+    "name": "聖山綠地",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=196"
+  },
+  {
+    "sid": 187,
+    "name": "福文公園",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=187"
+  },
+  {
+    "sid": 91,
+    "name": "士林3號廣場",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=91"
+  },
+  {
+    "sid": 708,
+    "name": "士林4號廣場",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=708"
+  },
+  {
+    "sid": 591,
+    "name": "天母廣場",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=591"
+  },
+  {
+    "sid": 61,
+    "name": "天生廣場",
+    "district": "士林區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=61"
+  },
+  {
+    "sid": 748,
+    "name": "一江公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=748"
+  },
+  {
+    "sid": 168,
+    "name": "八二三砲戰紀念公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=168"
+  },
+  {
+    "sid": 357,
+    "name": "力行三號公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=357"
+  },
+  {
+    "sid": 610,
+    "name": "下埤公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=610"
+  },
+  {
+    "sid": 57,
+    "name": "下塔悠公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=57"
+  },
+  {
+    "sid": 146,
+    "name": "上塔悠公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=146"
+  },
+  {
+    "sid": 785,
+    "name": "大佳社區公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=785"
+  },
+  {
+    "sid": 163,
+    "name": "大直公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=163"
+  },
+  {
+    "sid": 34,
+    "name": "中427公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=34"
+  },
+  {
+    "sid": 204,
+    "name": "中428公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=204"
+  },
+  {
+    "sid": 223,
+    "name": "中429公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=223"
+  },
+  {
+    "sid": 124,
+    "name": "中430公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=124"
+  },
+  {
+    "sid": 80,
+    "name": "中431公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=80"
+  },
+  {
+    "sid": 190,
+    "name": "中山21號廣場",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=190"
+  },
+  {
+    "sid": 746,
+    "name": "中吉公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=746"
+  },
+  {
+    "sid": 687,
+    "name": "中安公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=687"
+  },
+  {
+    "sid": 624,
+    "name": "中原公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=624"
+  },
+  {
+    "sid": 782,
+    "name": "仁德公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=782"
+  },
+  {
+    "sid": 554,
+    "name": "四平公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=554"
+  },
+  {
+    "sid": 679,
+    "name": "正守公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=679"
+  },
+  {
+    "sid": 35,
+    "name": "民享公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=35"
+  },
+  {
+    "sid": 755,
+    "name": "永安公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=755"
+  },
+  {
+    "sid": 106,
+    "name": "永直公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=106"
+  },
+  {
+    "sid": 250,
+    "name": "永靜公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=250"
+  },
+  {
+    "sid": 437,
+    "name": "伊通公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=437"
+  },
+  {
+    "sid": 280,
+    "name": "吉林公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=280"
+  },
+  {
+    "sid": 678,
+    "name": "合江公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=678"
+  },
+  {
+    "sid": 592,
+    "name": "朱昌公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=592"
+  },
+  {
+    "sid": 558,
+    "name": "朱厝崙公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=558"
+  },
+  {
+    "sid": 568,
+    "name": "朱崙公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=568"
+  },
+  {
+    "sid": 472,
+    "name": "江寧公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=472"
+  },
+  {
+    "sid": 518,
+    "name": "自強公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=518"
+  },
+  {
+    "sid": 77,
+    "name": "明水公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=77"
+  },
+  {
+    "sid": 431,
+    "name": "林森公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=431"
+  },
+  {
+    "sid": 441,
+    "name": "松江公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=441"
+  },
+  {
+    "sid": 372,
+    "name": "松錦1號公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=372"
+  },
+  {
+    "sid": 447,
+    "name": "松錦2號公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=447"
+  },
+  {
+    "sid": 90,
+    "name": "直安公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=90"
+  },
+  {
+    "sid": 53,
+    "name": "花博公園美術園區",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=53"
+  },
+  {
+    "sid": 172,
+    "name": "花博公園圓山園區",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=172"
+  },
+  {
+    "sid": 691,
+    "name": "花博公園新生園區",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=691"
+  },
+  {
+    "sid": 718,
+    "name": "金泰公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=718"
+  },
+  {
+    "sid": 669,
+    "name": "建興公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=669"
+  },
+  {
+    "sid": 306,
+    "name": "培英公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=306"
+  },
+  {
+    "sid": 296,
+    "name": "康樂公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=296"
+  },
+  {
+    "sid": 145,
+    "name": "復華公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=145"
+  },
+  {
+    "sid": 529,
+    "name": "晴光公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=529"
+  },
+  {
+    "sid": 393,
+    "name": "華山公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=393"
+  },
+  {
+    "sid": 421,
+    "name": "進安公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=421"
+  },
+  {
+    "sid": 56,
+    "name": "集英公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=56"
+  },
+  {
+    "sid": 839,
+    "name": "圓山自然景觀公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=839"
+  },
+  {
+    "sid": 71,
+    "name": "敬業公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=71"
+  },
+  {
+    "sid": 136,
+    "name": "新喜公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=136"
+  },
+  {
+    "sid": 560,
+    "name": "新祿公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=560"
+  },
+  {
+    "sid": 434,
+    "name": "新壽公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=434"
+  },
+  {
+    "sid": 379,
+    "name": "新興公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=379"
+  },
+  {
+    "sid": 512,
+    "name": "農安公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=512"
+  },
+  {
+    "sid": 647,
+    "name": "榮星花園公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=647"
+  },
+  {
+    "sid": 262,
+    "name": "聚葉公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=262"
+  },
+  {
+    "sid": 189,
+    "name": "劍潭公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=189"
+  },
+  {
+    "sid": 702,
+    "name": "德惠公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=702"
+  },
+  {
+    "sid": 117,
+    "name": "撫順公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=117"
+  },
+  {
+    "sid": 713,
+    "name": "興安公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=713"
+  },
+  {
+    "sid": 432,
+    "name": "興亞公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=432"
+  },
+  {
+    "sid": 662,
+    "name": "興國公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=662"
+  },
+  {
+    "sid": 464,
+    "name": "遼寧公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=464"
+  },
+  {
+    "sid": 281,
+    "name": "錦北公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=281"
+  },
+  {
+    "sid": 686,
+    "name": "錦州公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=686"
+  },
+  {
+    "sid": 123,
+    "name": "龍江公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=123"
+  },
+  {
+    "sid": 407,
+    "name": "雙城公園",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=407"
+  },
+  {
+    "sid": 324,
+    "name": "力行1號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=324"
+  },
+  {
+    "sid": 365,
+    "name": "力行2號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=365"
+  },
+  {
+    "sid": 499,
+    "name": "中山129號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=499"
+  },
+  {
+    "sid": 547,
+    "name": "中山161號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=547"
+  },
+  {
+    "sid": 731,
+    "name": "中山240號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=731"
+  },
+  {
+    "sid": 777,
+    "name": "中山381號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=777"
+  },
+  {
+    "sid": 88,
+    "name": "中山411號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=88"
+  },
+  {
+    "sid": 450,
+    "name": "中山412號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=450"
+  },
+  {
+    "sid": 776,
+    "name": "中山413號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=776"
+  },
+  {
+    "sid": 166,
+    "name": "中山414號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=166"
+  },
+  {
+    "sid": 87,
+    "name": "中山415號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=87"
+  },
+  {
+    "sid": 312,
+    "name": "中山416號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=312"
+  },
+  {
+    "sid": 656,
+    "name": "中山417號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=656"
+  },
+  {
+    "sid": 698,
+    "name": "中山418號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=698"
+  },
+  {
+    "sid": 158,
+    "name": "中山419號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=158"
+  },
+  {
+    "sid": 422,
+    "name": "中山420號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=422"
+  },
+  {
+    "sid": 342,
+    "name": "中山421號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=342"
+  },
+  {
+    "sid": 217,
+    "name": "中山422號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=217"
+  },
+  {
+    "sid": 321,
+    "name": "中山423號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=321"
+  },
+  {
+    "sid": 727,
+    "name": "中山424號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=727"
+  },
+  {
+    "sid": 537,
+    "name": "中山425號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=537"
+  },
+  {
+    "sid": 608,
+    "name": "中山426號綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=608"
+  },
+  {
+    "sid": 220,
+    "name": "長春綠地",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=220"
+  },
+  {
+    "sid": 307,
+    "name": "中山4號廣場",
+    "district": "中山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=307"
+  },
+  {
+    "sid": 239,
+    "name": "九華公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=239"
+  },
+  {
+    "sid": 515,
+    "name": "下灣公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=515"
+  },
+  {
+    "sid": 20,
+    "name": "上灣公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=20"
+  },
+  {
+    "sid": 832,
+    "name": "口湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=832"
+  },
+  {
+    "sid": 670,
+    "name": "大坑公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=670"
+  },
+  {
+    "sid": 818,
+    "name": "大港墘公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=818"
+  },
+  {
+    "sid": 301,
+    "name": "大湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=301"
+  },
+  {
+    "sid": 398,
+    "name": "山腳公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=398"
+  },
+  {
+    "sid": 433,
+    "name": "五分公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=433"
+  },
+  {
+    "sid": 102,
+    "name": "內湖125號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=102"
+  },
+  {
+    "sid": 218,
+    "name": "文心公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=218"
+  },
+  {
+    "sid": 599,
+    "name": "文湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=599"
+  },
+  {
+    "sid": 242,
+    "name": "文德3號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=242"
+  },
+  {
+    "sid": 598,
+    "name": "文德二號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=598"
+  },
+  {
+    "sid": 65,
+    "name": "仙樹公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=65"
+  },
+  {
+    "sid": 773,
+    "name": "北勢湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=773"
+  },
+  {
+    "sid": 108,
+    "name": "安泰公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=108"
+  },
+  {
+    "sid": 680,
+    "name": "安康公園(下)",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=680"
+  },
+  {
+    "sid": 51,
+    "name": "安康公園(上)",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=51"
+  },
+  {
+    "sid": 424,
+    "name": "安湖三號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=424"
+  },
+  {
+    "sid": 127,
+    "name": "安湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=127"
+  },
+  {
+    "sid": 993,
+    "name": "成功公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=993"
+  },
+  {
+    "sid": 28,
+    "name": "行善公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=28"
+  },
+  {
+    "sid": 643,
+    "name": "西安公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=643"
+  },
+  {
+    "sid": 706,
+    "name": "西安廣場",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=706"
+  },
+  {
+    "sid": 612,
+    "name": "西康二號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=612"
+  },
+  {
+    "sid": 690,
+    "name": "西康公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=690"
+  },
+  {
+    "sid": 600,
+    "name": "西湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=600"
+  },
+  {
+    "sid": 81,
+    "name": "扶輪親恩公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=81"
+  },
+  {
+    "sid": 7,
+    "name": "明美公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=7"
+  },
+  {
+    "sid": 95,
+    "name": "東湖一號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=95"
+  },
+  {
+    "sid": 530,
+    "name": "東湖二號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=530"
+  },
+  {
+    "sid": 588,
+    "name": "東湖四號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=588"
+  },
+  {
+    "sid": 498,
+    "name": "金瑞公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=498"
+  },
+  {
+    "sid": 704,
+    "name": "金龍公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=704"
+  },
+  {
+    "sid": 185,
+    "name": "長青公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=185"
+  },
+  {
+    "sid": 247,
+    "name": "南湖一號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=247"
+  },
+  {
+    "sid": 318,
+    "name": "洲子1號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=318"
+  },
+  {
+    "sid": 994,
+    "name": "洲子2號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=994"
+  },
+  {
+    "sid": 468,
+    "name": "美善公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=468"
+  },
+  {
+    "sid": 831,
+    "name": "畚箕湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=831"
+  },
+  {
+    "sid": 489,
+    "name": "康湖二號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=489"
+  },
+  {
+    "sid": 759,
+    "name": "康湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=759"
+  },
+  {
+    "sid": 732,
+    "name": "康寧公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=732"
+  },
+  {
+    "sid": 651,
+    "name": "清白公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=651"
+  },
+  {
+    "sid": 112,
+    "name": "港都公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=112"
+  },
+  {
+    "sid": 383,
+    "name": "港華一號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=383"
+  },
+  {
+    "sid": 369,
+    "name": "港華二號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=369"
+  },
+  {
+    "sid": 541,
+    "name": "港華三號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=541"
+  },
+  {
+    "sid": 652,
+    "name": "港華六號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=652"
+  },
+  {
+    "sid": 315,
+    "name": "港華四號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=315"
+  },
+  {
+    "sid": 688,
+    "name": "港墘公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=688"
+  },
+  {
+    "sid": 552,
+    "name": "游美公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=552"
+  },
+  {
+    "sid": 302,
+    "name": "湖山9號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=302"
+  },
+  {
+    "sid": 767,
+    "name": "湖山八號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=767"
+  },
+  {
+    "sid": 551,
+    "name": "湖山三號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=551"
+  },
+  {
+    "sid": 93,
+    "name": "湖山五號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=93"
+  },
+  {
+    "sid": 466,
+    "name": "湖山六號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=466"
+  },
+  {
+    "sid": 607,
+    "name": "湖山四號公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=607"
+  },
+  {
+    "sid": 230,
+    "name": "湖元公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=230"
+  },
+  {
+    "sid": 829,
+    "name": "湖畔公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=829"
+  },
+  {
+    "sid": 711,
+    "name": "湖聖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=711"
+  },
+  {
+    "sid": 94,
+    "name": "湖興公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=94"
+  },
+  {
+    "sid": 995,
+    "name": "湖濱公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=995"
+  },
+  {
+    "sid": 260,
+    "name": "湖寶公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=260"
+  },
+  {
+    "sid": 593,
+    "name": "週美綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=593"
+  },
+  {
+    "sid": 49,
+    "name": "陽光公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=49"
+  },
+  {
+    "sid": 646,
+    "name": "新明公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=646"
+  },
+  {
+    "sid": 54,
+    "name": "煙波庭公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=54"
+  },
+  {
+    "sid": 428,
+    "name": "瑞光公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=428"
+  },
+  {
+    "sid": 430,
+    "name": "瑞湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=430"
+  },
+  {
+    "sid": 293,
+    "name": "瑞陽公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=293"
+  },
+  {
+    "sid": 207,
+    "name": "碧山公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=207"
+  },
+  {
+    "sid": 488,
+    "name": "碧湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=488"
+  },
+  {
+    "sid": 703,
+    "name": "福壽公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=703"
+  },
+  {
+    "sid": 533,
+    "name": "翠湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=533"
+  },
+  {
+    "sid": 619,
+    "name": "樂活公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=619"
+  },
+  {
+    "sid": 482,
+    "name": "樂康公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=482"
+  },
+  {
+    "sid": 329,
+    "name": "環東公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=329"
+  },
+  {
+    "sid": 259,
+    "name": "麗湖公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=259"
+  },
+  {
+    "sid": 487,
+    "name": "內湖110號綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=487"
+  },
+  {
+    "sid": 30,
+    "name": "內湖117號綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=30"
+  },
+  {
+    "sid": 569,
+    "name": "內湖119號安興綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=569"
+  },
+  {
+    "sid": 125,
+    "name": "文德1號綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=125"
+  },
+  {
+    "sid": 52,
+    "name": "石潭公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=52"
+  },
+  {
+    "sid": 765,
+    "name": "康樂綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=765"
+  },
+  {
+    "sid": 724,
+    "name": "港華5號綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=724"
+  },
+  {
+    "sid": 573,
+    "name": "湖興綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=573"
+  },
+  {
+    "sid": 140,
+    "name": "紫陽綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=140"
+  },
+  {
+    "sid": 763,
+    "name": "潭美公園",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=763"
+  },
+  {
+    "sid": 75,
+    "name": "麗湖綠地",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=75"
+  },
+  {
+    "sid": 85,
+    "name": "治磐廣場",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=85"
+  },
+  {
+    "sid": 390,
+    "name": "港富廣場",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=390"
+  },
+  {
+    "sid": 55,
+    "name": "灣仔廣場",
+    "district": "內湖區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=55"
+  },
+  {
+    "sid": 291,
+    "name": "大同公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=291"
+  },
+  {
+    "sid": 478,
+    "name": "大稻埕公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=478"
+  },
+  {
+    "sid": 314,
+    "name": "大龍公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=314"
+  },
+  {
+    "sid": 442,
+    "name": "玉泉公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=442"
+  },
+  {
+    "sid": 556,
+    "name": "至聖公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=556"
+  },
+  {
+    "sid": 114,
+    "name": "忠和公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=114"
+  },
+  {
+    "sid": 461,
+    "name": "哈密公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=461"
+  },
+  {
+    "sid": 287,
+    "name": "建成公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=287"
+  },
+  {
+    "sid": 304,
+    "name": "迪化公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=304"
+  },
+  {
+    "sid": 838,
+    "name": "國順公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=838"
+  },
+  {
+    "sid": 341,
+    "name": "景化公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=341"
+  },
+  {
+    "sid": 486,
+    "name": "朝陽公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=486"
+  },
+  {
+    "sid": 271,
+    "name": "塔城公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=271"
+  },
+  {
+    "sid": 963,
+    "name": "德鄰公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=963"
+  },
+  {
+    "sid": 340,
+    "name": "蔣渭水紀念公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=340"
+  },
+  {
+    "sid": 986,
+    "name": "樹德公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=986"
+  },
+  {
+    "sid": 120,
+    "name": "歸綏戲曲公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=120"
+  },
+  {
+    "sid": 381,
+    "name": "蘭州公園",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=381"
+  },
+  {
+    "sid": 193,
+    "name": "大同249綠地",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=193"
+  },
+  {
+    "sid": 525,
+    "name": "大同250綠地",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=525"
+  },
+  {
+    "sid": 517,
+    "name": "大同251綠地",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=517"
+  },
+  {
+    "sid": 491,
+    "name": "敦煌1號綠地",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=491"
+  },
+  {
+    "sid": 720,
+    "name": "敦煌2號綠地",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=720"
+  },
+  {
+    "sid": 415,
+    "name": "大同16號廣場",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=415"
+  },
+  {
+    "sid": 510,
+    "name": "大稻埕廣場",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=510"
+  },
+  {
+    "sid": 78,
+    "name": "六藝廣場",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=78"
+  },
+  {
+    "sid": 211,
+    "name": "太原廣場",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=211"
+  },
+  {
+    "sid": 739,
+    "name": "永樂廣場",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=739"
+  },
+  {
+    "sid": 377,
+    "name": "保安廣場",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=377"
+  },
+  {
+    "sid": 794,
+    "name": "建成圓環",
+    "district": "大同區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=794"
+  },
+  {
+    "sid": 97,
+    "name": "八德公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=97"
+  },
+  {
+    "sid": 966,
+    "name": "三民公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=966"
+  },
+  {
+    "sid": 325,
+    "name": "三民公園A",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=325"
+  },
+  {
+    "sid": 493,
+    "name": "中華公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=493"
+  },
+  {
+    "sid": 1001,
+    "name": "民生公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=1001"
+  },
+  {
+    "sid": 788,
+    "name": "民有一號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=788"
+  },
+  {
+    "sid": 288,
+    "name": "民有二號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=288"
+  },
+  {
+    "sid": 659,
+    "name": "民有三號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=659"
+  },
+  {
+    "sid": 874,
+    "name": "民福綠地",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=874"
+  },
+  {
+    "sid": 957,
+    "name": "民權公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=957"
+  },
+  {
+    "sid": 373,
+    "name": "吉仁公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=373"
+  },
+  {
+    "sid": 570,
+    "name": "吉祥公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=570"
+  },
+  {
+    "sid": 155,
+    "name": "安平公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=155"
+  },
+  {
+    "sid": 161,
+    "name": "西松公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=161"
+  },
+  {
+    "sid": 459,
+    "name": "延壽一號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=459"
+  },
+  {
+    "sid": 47,
+    "name": "延壽二號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=47"
+  },
+  {
+    "sid": 650,
+    "name": "延壽三號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=650"
+  },
+  {
+    "sid": 796,
+    "name": "松基公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=796"
+  },
+  {
+    "sid": 860,
+    "name": "松榮公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=860"
+  },
+  {
+    "sid": 409,
+    "name": "長壽公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=409"
+  },
+  {
+    "sid": 380,
+    "name": "美仁一號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=380"
+  },
+  {
+    "sid": 22,
+    "name": "美仁二號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=22"
+  },
+  {
+    "sid": 137,
+    "name": "健康公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=137"
+  },
+  {
+    "sid": 719,
+    "name": "婦聯公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=719"
+  },
+  {
+    "sid": 506,
+    "name": "富民生態公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=506"
+  },
+  {
+    "sid": 226,
+    "name": "富錦一號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=226"
+  },
+  {
+    "sid": 110,
+    "name": "富錦二號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=110"
+  },
+  {
+    "sid": 445,
+    "name": "富錦三號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=445"
+  },
+  {
+    "sid": 532,
+    "name": "富錦五號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=532"
+  },
+  {
+    "sid": 396,
+    "name": "富錦六號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=396"
+  },
+  {
+    "sid": 92,
+    "name": "復盛公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=92"
+  },
+  {
+    "sid": 169,
+    "name": "復源公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=169"
+  },
+  {
+    "sid": 346,
+    "name": "敦中公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=346"
+  },
+  {
+    "sid": 253,
+    "name": "敦化公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=253"
+  },
+  {
+    "sid": 716,
+    "name": "敦北公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=716"
+  },
+  {
+    "sid": 100,
+    "name": "新中公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=100"
+  },
+  {
+    "sid": 40,
+    "name": "新東公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=40"
+  },
+  {
+    "sid": 444,
+    "name": "寧安公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=444"
+  },
+  {
+    "sid": 389,
+    "name": "精忠2號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=389"
+  },
+  {
+    "sid": 694,
+    "name": "精忠公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=694"
+  },
+  {
+    "sid": 462,
+    "name": "慶城公園 A",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=462"
+  },
+  {
+    "sid": 144,
+    "name": "撫遠公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=144"
+  },
+  {
+    "sid": 107,
+    "name": "舊宗1號公園 ( 新東農園 )",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=107"
+  },
+  {
+    "sid": 337,
+    "name": "舊宗2號公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=337"
+  },
+  {
+    "sid": 225,
+    "name": "鵬程公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=225"
+  },
+  {
+    "sid": 606,
+    "name": "寶清公園",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=606"
+  },
+  {
+    "sid": 353,
+    "name": "松山121號綠地三民圓環",
+    "district": "松山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=353"
+  },
+  {
+    "sid": 104,
+    "name": "大理公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=104"
+  },
+  {
+    "sid": 990,
+    "name": "日善公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=990"
+  },
+  {
+    "sid": 636,
+    "name": "寺前公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=636"
+  },
+  {
+    "sid": 311,
+    "name": "老松公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=311"
+  },
+  {
+    "sid": 133,
+    "name": "西園公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=133"
+  },
+  {
+    "sid": 813,
+    "name": "孝德公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=813"
+  },
+  {
+    "sid": 156,
+    "name": "和平青草園(原萬華402號公園)",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=156"
+  },
+  {
+    "sid": 26,
+    "name": "東園公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=26"
+  },
+  {
+    "sid": 584,
+    "name": "長沙公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=584"
+  },
+  {
+    "sid": 695,
+    "name": "長順公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=695"
+  },
+  {
+    "sid": 511,
+    "name": "青山公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=511"
+  },
+  {
+    "sid": 992,
+    "name": "青年公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=992"
+  },
+  {
+    "sid": 590,
+    "name": "保德公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=590"
+  },
+  {
+    "sid": 775,
+    "name": "柳鄉公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=775"
+  },
+  {
+    "sid": 611,
+    "name": "桂林公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=611"
+  },
+  {
+    "sid": 697,
+    "name": "華江一號公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=697"
+  },
+  {
+    "sid": 988,
+    "name": "華江七號公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=988"
+  },
+  {
+    "sid": 989,
+    "name": "華江二號公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=989"
+  },
+  {
+    "sid": 735,
+    "name": "華江八號公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=735"
+  },
+  {
+    "sid": 371,
+    "name": "華西公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=371"
+  },
+  {
+    "sid": 386,
+    "name": "新糖廍公園(糖廍文化園區)",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=386"
+  },
+  {
+    "sid": 99,
+    "name": "萬華51號公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=99"
+  },
+  {
+    "sid": 766,
+    "name": "壽德公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=766"
+  },
+  {
+    "sid": 502,
+    "name": "福星公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=502"
+  },
+  {
+    "sid": 594,
+    "name": "綠堤公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=594"
+  },
+  {
+    "sid": 772,
+    "name": "聚德公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=772"
+  },
+  {
+    "sid": 507,
+    "name": "艋舺公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=507"
+  },
+  {
+    "sid": 623,
+    "name": "糖廍公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=623"
+  },
+  {
+    "sid": 320,
+    "name": "錦德公園",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=320"
+  },
+  {
+    "sid": 443,
+    "name": "萬華266號綠地",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=443"
+  },
+  {
+    "sid": 405,
+    "name": "西本願寺（萬華406號）廣場",
+    "district": "萬華區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=405"
+  },
+  {
+    "sid": 374,
+    "name": "二二八和平公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=374"
+  },
+  {
+    "sid": 465,
+    "name": "中央藝文公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=465"
+  },
+  {
+    "sid": 1000,
+    "name": "中正403號公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=1000"
+  },
+  {
+    "sid": 344,
+    "name": "介壽公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=344"
+  },
+  {
+    "sid": 420,
+    "name": "文光公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=420"
+  },
+  {
+    "sid": 37,
+    "name": "文盛公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=37"
+  },
+  {
+    "sid": 882,
+    "name": "水源町公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=882"
+  },
+  {
+    "sid": 384,
+    "name": "永昌公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=384"
+  },
+  {
+    "sid": 115,
+    "name": "永福公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=115"
+  },
+  {
+    "sid": 595,
+    "name": "忠孝公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=595"
+  },
+  {
+    "sid": 358,
+    "name": "信愛公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=358"
+  },
+  {
+    "sid": 8,
+    "name": "南昌公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=8"
+  },
+  {
+    "sid": 74,
+    "name": "牯嶺公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=74"
+  },
+  {
+    "sid": 243,
+    "name": "連雲公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=243"
+  },
+  {
+    "sid": 645,
+    "name": "逸仙公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=645"
+  },
+  {
+    "sid": 764,
+    "name": "齊東公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=764"
+  },
+  {
+    "sid": 613,
+    "name": "黎明公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=613"
+  },
+  {
+    "sid": 338,
+    "name": "螢橋公園",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=338"
+  },
+  {
+    "sid": 470,
+    "name": "中正138號綠地",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=470"
+  },
+  {
+    "sid": 795,
+    "name": "北門廣場",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=795"
+  },
+  {
+    "sid": 391,
+    "name": "交通4號廣場",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=391"
+  },
+  {
+    "sid": 618,
+    "name": "交通8號廣場",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=618"
+  },
+  {
+    "sid": 793,
+    "name": "行旅廣場",
+    "district": "中正區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=793"
+  },
+  {
+    "sid": 653,
+    "name": "瑠公公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=653"
+  },
+  {
+    "sid": 412,
+    "name": "瑠公圳公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=412"
+  },
+  {
+    "sid": 614,
+    "name": "大安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=614"
+  },
+  {
+    "sid": 154,
+    "name": "大安森林公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=154"
+  },
+  {
+    "sid": 705,
+    "name": "大學公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=705"
+  },
+  {
+    "sid": 105,
+    "name": "仁慈公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=105"
+  },
+  {
+    "sid": 19,
+    "name": "仁愛公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=19"
+  },
+  {
+    "sid": 122,
+    "name": "仁愛圓環",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=122"
+  },
+  {
+    "sid": 689,
+    "name": "公館公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=689"
+  },
+  {
+    "sid": 543,
+    "name": "古風公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=543"
+  },
+  {
+    "sid": 13,
+    "name": "古莊公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=13"
+  },
+  {
+    "sid": 300,
+    "name": "四維公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=300"
+  },
+  {
+    "sid": 201,
+    "name": "平安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=201"
+  },
+  {
+    "sid": 336,
+    "name": "民榮公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=336"
+  },
+  {
+    "sid": 252,
+    "name": "民輝公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=252"
+  },
+  {
+    "sid": 188,
+    "name": "永康公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=188"
+  },
+  {
+    "sid": 549,
+    "name": "光信公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=549"
+  },
+  {
+    "sid": 298,
+    "name": "全安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=298"
+  },
+  {
+    "sid": 548,
+    "name": "安東公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=548"
+  },
+  {
+    "sid": 109,
+    "name": "安祥公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=109"
+  },
+  {
+    "sid": 414,
+    "name": "辛亥一號公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=414"
+  },
+  {
+    "sid": 42,
+    "name": "和平公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=42"
+  },
+  {
+    "sid": 476,
+    "name": "和安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=476"
+  },
+  {
+    "sid": 322,
+    "name": "居安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=322"
+  },
+  {
+    "sid": 752,
+    "name": "延吉公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=752"
+  },
+  {
+    "sid": 64,
+    "name": "昌隆198公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=64"
+  },
+  {
+    "sid": 451,
+    "name": "東豐公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=451"
+  },
+  {
+    "sid": 631,
+    "name": "法治公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=631"
+  },
+  {
+    "sid": 210,
+    "name": "臥龍公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=210"
+  },
+  {
+    "sid": 130,
+    "name": "虎嘯公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=130"
+  },
+  {
+    "sid": 837,
+    "name": "金山公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=837"
+  },
+  {
+    "sid": 843,
+    "name": "金杭公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=843"
+  },
+  {
+    "sid": 46,
+    "name": "金華公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=46"
+  },
+  {
+    "sid": 644,
+    "name": "附中公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=644"
+  },
+  {
+    "sid": 208,
+    "name": "青峰公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=208"
+  },
+  {
+    "sid": 194,
+    "name": "師大公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=194"
+  },
+  {
+    "sid": 728,
+    "name": "泰順公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=728"
+  },
+  {
+    "sid": 227,
+    "name": "通化公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=227"
+  },
+  {
+    "sid": 310,
+    "name": "富陽自然生態公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=310"
+  },
+  {
+    "sid": 376,
+    "name": "敦仁公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=376"
+  },
+  {
+    "sid": 248,
+    "name": "敦安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=248"
+  },
+  {
+    "sid": 195,
+    "name": "敦親公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=195"
+  },
+  {
+    "sid": 345,
+    "name": "新龍公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=345"
+  },
+  {
+    "sid": 362,
+    "name": "溫州公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=362"
+  },
+  {
+    "sid": 721,
+    "name": "瑞安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=721"
+  },
+  {
+    "sid": 199,
+    "name": "群賢公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=199"
+  },
+  {
+    "sid": 642,
+    "name": "誠安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=642"
+  },
+  {
+    "sid": 620,
+    "name": "嘉興公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=620"
+  },
+  {
+    "sid": 286,
+    "name": "寧馨公園A",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=286"
+  },
+  {
+    "sid": 684,
+    "name": "福州山公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=684"
+  },
+  {
+    "sid": 254,
+    "name": "德安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=254"
+  },
+  {
+    "sid": 212,
+    "name": "黎孝公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=212"
+  },
+  {
+    "sid": 858,
+    "name": "黎和生態公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=858"
+  },
+  {
+    "sid": 73,
+    "name": "錦安公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=73"
+  },
+  {
+    "sid": 436,
+    "name": "龍生公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=436"
+  },
+  {
+    "sid": 244,
+    "name": "龍門公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=244"
+  },
+  {
+    "sid": 24,
+    "name": "龍陣一號公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=24"
+  },
+  {
+    "sid": 270,
+    "name": "龍陣二號公園 A",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=270"
+  },
+  {
+    "sid": 982,
+    "name": "龍陣二號公園 B",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=982"
+  },
+  {
+    "sid": 237,
+    "name": "龍圖公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=237"
+  },
+  {
+    "sid": 965,
+    "name": "龍鳳公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=965"
+  },
+  {
+    "sid": 779,
+    "name": "臨江公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=779"
+  },
+  {
+    "sid": 964,
+    "name": "麗水公園",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=964"
+  },
+  {
+    "sid": 550,
+    "name": "大安125號綠地",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=550"
+  },
+  {
+    "sid": 131,
+    "name": "大安195號綠地",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=131"
+  },
+  {
+    "sid": 269,
+    "name": "黎和綠地",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=269"
+  },
+  {
+    "sid": 164,
+    "name": "錦華綠地",
+    "district": "大安區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=164"
+  },
+  {
+    "sid": 33,
+    "name": "三張里公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=33"
+  },
+  {
+    "sid": 98,
+    "name": "三犁公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=98"
+  },
+  {
+    "sid": 429,
+    "name": "三興公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=429"
+  },
+  {
+    "sid": 197,
+    "name": "中全公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=197"
+  },
+  {
+    "sid": 519,
+    "name": "中興公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=519"
+  },
+  {
+    "sid": 750,
+    "name": "五分埔公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=750"
+  },
+  {
+    "sid": 709,
+    "name": "五常公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=709"
+  },
+  {
+    "sid": 671,
+    "name": "四育公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=671"
+  },
+  {
+    "sid": 571,
+    "name": "永吉公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=571"
+  },
+  {
+    "sid": 559,
+    "name": "永春公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=559"
+  },
+  {
+    "sid": 851,
+    "name": "永春陂濕地公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=851"
+  },
+  {
+    "sid": 118,
+    "name": "永春崗公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=118"
+  },
+  {
+    "sid": 508,
+    "name": "交五",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=508"
+  },
+  {
+    "sid": 663,
+    "name": "安強公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=663"
+  },
+  {
+    "sid": 394,
+    "name": "吳興公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=394"
+  },
+  {
+    "sid": 681,
+    "name": "念儒公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=681"
+  },
+  {
+    "sid": 873,
+    "name": "林口2號綠地(松光)",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=873"
+  },
+  {
+    "sid": 733,
+    "name": "林口公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=733"
+  },
+  {
+    "sid": 31,
+    "name": "松友公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=31"
+  },
+  {
+    "sid": 378,
+    "name": "松壽廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=378"
+  },
+  {
+    "sid": 658,
+    "name": "松德公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=658"
+  },
+  {
+    "sid": 222,
+    "name": "虎林公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=222"
+  },
+  {
+    "sid": 392,
+    "name": "信義352號公園 (松智公園)",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=392"
+  },
+  {
+    "sid": 17,
+    "name": "信義安康公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=17"
+  },
+  {
+    "sid": 339,
+    "name": "春光公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=339"
+  },
+  {
+    "sid": 183,
+    "name": "革新公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=183"
+  },
+  {
+    "sid": 308,
+    "name": "泰和公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=308"
+  },
+  {
+    "sid": 454,
+    "name": "眷村文化公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=454"
+  },
+  {
+    "sid": 664,
+    "name": "富台公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=664"
+  },
+  {
+    "sid": 868,
+    "name": "富生1號公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=868"
+  },
+  {
+    "sid": 869,
+    "name": "富生2號公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=869"
+  },
+  {
+    "sid": 449,
+    "name": "富生公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=449"
+  },
+  {
+    "sid": 615,
+    "name": "惠安公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=615"
+  },
+  {
+    "sid": 475,
+    "name": "景平公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=475"
+  },
+  {
+    "sid": 575,
+    "name": "景勤1號公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=575"
+  },
+  {
+    "sid": 241,
+    "name": "景勤2號公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=241"
+  },
+  {
+    "sid": 563,
+    "name": "象山公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=563"
+  },
+  {
+    "sid": 768,
+    "name": "雅祥公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=768"
+  },
+  {
+    "sid": 581,
+    "name": "福祥公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=581"
+  },
+  {
+    "sid": 395,
+    "name": "福德公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=395"
+  },
+  {
+    "sid": 404,
+    "name": "黎忠公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=404"
+  },
+  {
+    "sid": 111,
+    "name": "黎富公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=111"
+  },
+  {
+    "sid": 583,
+    "name": "黎雙公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=583"
+  },
+  {
+    "sid": 852,
+    "name": "糶米公園",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=852"
+  },
+  {
+    "sid": 524,
+    "name": "太子綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=524"
+  },
+  {
+    "sid": 6,
+    "name": "交六",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=6"
+  },
+  {
+    "sid": 375,
+    "name": "松光綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=375"
+  },
+  {
+    "sid": 132,
+    "name": "松隆綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=132"
+  },
+  {
+    "sid": 213,
+    "name": "信義350綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=213"
+  },
+  {
+    "sid": 649,
+    "name": "信義351號綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=649"
+  },
+  {
+    "sid": 425,
+    "name": "信義353號綠地 (松仁綠地)",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=425"
+  },
+  {
+    "sid": 101,
+    "name": "信義354號綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=101"
+  },
+  {
+    "sid": 714,
+    "name": "信義355號綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=714"
+  },
+  {
+    "sid": 179,
+    "name": "信義356號綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=179"
+  },
+  {
+    "sid": 153,
+    "name": "信義382號綠地 (惠安水與綠生活綠地)",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=153"
+  },
+  {
+    "sid": 582,
+    "name": "崇德綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=582"
+  },
+  {
+    "sid": 264,
+    "name": "黎平綠地",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=264"
+  },
+  {
+    "sid": 23,
+    "name": "市民廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=23"
+  },
+  {
+    "sid": 149,
+    "name": "忠信廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=149"
+  },
+  {
+    "sid": 83,
+    "name": "信義20號廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=83"
+  },
+  {
+    "sid": 605,
+    "name": "信義21號廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=605"
+  },
+  {
+    "sid": 481,
+    "name": "信義廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=481"
+  },
+  {
+    "sid": 45,
+    "name": "厚生廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=45"
+  },
+  {
+    "sid": 740,
+    "name": "景聯廣場",
+    "district": "信義區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=740"
+  },
+  {
+    "sid": 539,
+    "name": "三重世貿公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=539"
+  },
+  {
+    "sid": 309,
+    "name": "中南公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=309"
+  },
+  {
+    "sid": 601,
+    "name": "中研公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=601"
+  },
+  {
+    "sid": 231,
+    "name": "中興公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=231"
+  },
+  {
+    "sid": 473,
+    "name": "六福公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=473"
+  },
+  {
+    "sid": 616,
+    "name": "四分河濱公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=616"
+  },
+  {
+    "sid": 774,
+    "name": "市民公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=774"
+  },
+  {
+    "sid": 630,
+    "name": "玉成公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=630"
+  },
+  {
+    "sid": 791,
+    "name": "玉東公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=791"
+  },
+  {
+    "sid": 683,
+    "name": "合成18號綠園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=683"
+  },
+  {
+    "sid": 460,
+    "name": "合成8號綠園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=460"
+  },
+  {
+    "sid": 474,
+    "name": "合成公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=474"
+  },
+  {
+    "sid": 233,
+    "name": "合樂公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=233"
+  },
+  {
+    "sid": 96,
+    "name": "百福公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=96"
+  },
+  {
+    "sid": 366,
+    "name": "幸福公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=366"
+  },
+  {
+    "sid": 255,
+    "name": "昆陽公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=255"
+  },
+  {
+    "sid": 401,
+    "name": "東坡公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=401"
+  },
+  {
+    "sid": 292,
+    "name": "東明公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=292"
+  },
+  {
+    "sid": 730,
+    "name": "東陽公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=730"
+  },
+  {
+    "sid": 48,
+    "name": "南汐公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=48"
+  },
+  {
+    "sid": 297,
+    "name": "南港公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=297"
+  },
+  {
+    "sid": 126,
+    "name": "南興公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=126"
+  },
+  {
+    "sid": 359,
+    "name": "後山埤公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=359"
+  },
+  {
+    "sid": 283,
+    "name": "胡適公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=283"
+  },
+  {
+    "sid": 516,
+    "name": "重陽公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=516"
+  },
+  {
+    "sid": 198,
+    "name": "理想公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=198"
+  },
+  {
+    "sid": 492,
+    "name": "瓶蓋印象公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=492"
+  },
+  {
+    "sid": 12,
+    "name": "港後公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=12"
+  },
+  {
+    "sid": 86,
+    "name": "湧聲公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=86"
+  },
+  {
+    "sid": 134,
+    "name": "新勝公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=134"
+  },
+  {
+    "sid": 327,
+    "name": "新富公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=327"
+  },
+  {
+    "sid": 790,
+    "name": "新新公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=790"
+  },
+  {
+    "sid": 406,
+    "name": "萬福公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=406"
+  },
+  {
+    "sid": 744,
+    "name": "經貿公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=744"
+  },
+  {
+    "sid": 494,
+    "name": "福山公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=494"
+  },
+  {
+    "sid": 266,
+    "name": "興南公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=266"
+  },
+  {
+    "sid": 116,
+    "name": "興華公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=116"
+  },
+  {
+    "sid": 862,
+    "name": "錫口廊道",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=862"
+  },
+  {
+    "sid": 41,
+    "name": "聯成公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=41"
+  },
+  {
+    "sid": 152,
+    "name": "舊莊公園",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=152"
+  },
+  {
+    "sid": 673,
+    "name": "九如綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=673"
+  },
+  {
+    "sid": 603,
+    "name": "四分綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=603"
+  },
+  {
+    "sid": 749,
+    "name": "成福綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=749"
+  },
+  {
+    "sid": 789,
+    "name": "成德綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=789"
+  },
+  {
+    "sid": 72,
+    "name": "東明綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=72"
+  },
+  {
+    "sid": 640,
+    "name": "東新綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=640"
+  },
+  {
+    "sid": 413,
+    "name": "南深綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=413"
+  },
+  {
+    "sid": 667,
+    "name": "南港29號綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=667"
+  },
+  {
+    "sid": 427,
+    "name": "南港65號園區綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=427"
+  },
+  {
+    "sid": 335,
+    "name": "新坡綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=335"
+  },
+  {
+    "sid": 205,
+    "name": "新南綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=205"
+  },
+  {
+    "sid": 692,
+    "name": "新陽綠地",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=692"
+  },
+  {
+    "sid": 256,
+    "name": "合心廣場",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=256"
+  },
+  {
+    "sid": 216,
+    "name": "南港五號廣場",
+    "district": "南港區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=216"
+  },
+  {
+    "sid": 147,
+    "name": "140高地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=147"
+  },
+  {
+    "sid": 36,
+    "name": "久康公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=36"
+  },
+  {
+    "sid": 162,
+    "name": "小坑1號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=162"
+  },
+  {
+    "sid": 356,
+    "name": "文山(景美)49號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=356"
+  },
+  {
+    "sid": 696,
+    "name": "文山木柵59號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=696"
+  },
+  {
+    "sid": 861,
+    "name": "文山森林公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=861"
+  },
+  {
+    "sid": 348,
+    "name": "木南公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=348"
+  },
+  {
+    "sid": 331,
+    "name": "木柵公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=331"
+  },
+  {
+    "sid": 485,
+    "name": "木新公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=485"
+  },
+  {
+    "sid": 693,
+    "name": "木榮公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=693"
+  },
+  {
+    "sid": 564,
+    "name": "水景公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=564"
+  },
+  {
+    "sid": 578,
+    "name": "仙岩公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=578"
+  },
+  {
+    "sid": 500,
+    "name": "光明公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=500"
+  },
+  {
+    "sid": 781,
+    "name": "光輝公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=781"
+  },
+  {
+    "sid": 859,
+    "name": "辛亥生態公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=859"
+  },
+  {
+    "sid": 561,
+    "name": "坡內坑公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=561"
+  },
+  {
+    "sid": 399,
+    "name": "忠順公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=399"
+  },
+  {
+    "sid": 403,
+    "name": "忠順萊茵公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=403"
+  },
+  {
+    "sid": 567,
+    "name": "明義公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=567"
+  },
+  {
+    "sid": 21,
+    "name": "芳寧公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=21"
+  },
+  {
+    "sid": 182,
+    "name": "保儀公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=182"
+  },
+  {
+    "sid": 215,
+    "name": "恆光公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=215"
+  },
+  {
+    "sid": 349,
+    "name": "原野運動公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=349"
+  },
+  {
+    "sid": 557,
+    "name": "博嘉公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=557"
+  },
+  {
+    "sid": 278,
+    "name": "景仁公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=278"
+  },
+  {
+    "sid": 62,
+    "name": "景行公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=62"
+  },
+  {
+    "sid": 129,
+    "name": "景美公園(原萬慶公園)",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=129"
+  },
+  {
+    "sid": 710,
+    "name": "景美運動公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=710"
+  },
+  {
+    "sid": 257,
+    "name": "景華公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=257"
+  },
+  {
+    "sid": 275,
+    "name": "景福公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=275"
+  },
+  {
+    "sid": 534,
+    "name": "景豐公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=534"
+  },
+  {
+    "sid": 285,
+    "name": "華興公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=285"
+  },
+  {
+    "sid": 654,
+    "name": "順興公園綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=654"
+  },
+  {
+    "sid": 10,
+    "name": "新榮公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=10"
+  },
+  {
+    "sid": 753,
+    "name": "椰城公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=753"
+  },
+  {
+    "sid": 82,
+    "name": "萬年1號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=82"
+  },
+  {
+    "sid": 778,
+    "name": "萬年2號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=778"
+  },
+  {
+    "sid": 495,
+    "name": "萬年3號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=495"
+  },
+  {
+    "sid": 202,
+    "name": "萬有1號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=202"
+  },
+  {
+    "sid": 725,
+    "name": "萬有2號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=725"
+  },
+  {
+    "sid": 400,
+    "name": "萬有3號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=400"
+  },
+  {
+    "sid": 458,
+    "name": "萬和1號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=458"
+  },
+  {
+    "sid": 67,
+    "name": "萬和2號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=67"
+  },
+  {
+    "sid": 350,
+    "name": "萬和3號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=350"
+  },
+  {
+    "sid": 580,
+    "name": "萬芳10號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=580"
+  },
+  {
+    "sid": 505,
+    "name": "萬芳11號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=505"
+  },
+  {
+    "sid": 411,
+    "name": "萬芳12號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=411"
+  },
+  {
+    "sid": 438,
+    "name": "萬芳13號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=438"
+  },
+  {
+    "sid": 9,
+    "name": "萬芳14號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=9"
+  },
+  {
+    "sid": 27,
+    "name": "萬芳1號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=27"
+  },
+  {
+    "sid": 490,
+    "name": "萬芳2號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=490"
+  },
+  {
+    "sid": 263,
+    "name": "萬芳3號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=263"
+  },
+  {
+    "sid": 535,
+    "name": "萬芳4號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=535"
+  },
+  {
+    "sid": 66,
+    "name": "萬芳6號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=66"
+  },
+  {
+    "sid": 284,
+    "name": "萬芳7號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=284"
+  },
+  {
+    "sid": 18,
+    "name": "萬芳8號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=18"
+  },
+  {
+    "sid": 641,
+    "name": "萬芳9號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=641"
+  },
+  {
+    "sid": 463,
+    "name": "萬盛公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=463"
+  },
+  {
+    "sid": 167,
+    "name": "萬壽1號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=167"
+  },
+  {
+    "sid": 150,
+    "name": "萬壽2號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=150"
+  },
+  {
+    "sid": 668,
+    "name": "萬壽3號公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=668"
+  },
+  {
+    "sid": 823,
+    "name": "萬興櫻花生態景觀公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=823"
+  },
+  {
+    "sid": 726,
+    "name": "試院公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=726"
+  },
+  {
+    "sid": 148,
+    "name": "福興公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=148"
+  },
+  {
+    "sid": 589,
+    "name": "樟林公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=589"
+  },
+  {
+    "sid": 743,
+    "name": "樟新公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=743"
+  },
+  {
+    "sid": 770,
+    "name": "樟樹公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=770"
+  },
+  {
+    "sid": 178,
+    "name": "樟興公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=178"
+  },
+  {
+    "sid": 229,
+    "name": "興旺公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=229"
+  },
+  {
+    "sid": 240,
+    "name": "興家公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=240"
+  },
+  {
+    "sid": 756,
+    "name": "興泰公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=756"
+  },
+  {
+    "sid": 119,
+    "name": "興隆公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=119"
+  },
+  {
+    "sid": 629,
+    "name": "興福公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=629"
+  },
+  {
+    "sid": 89,
+    "name": "興德綠色步道",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=89"
+  },
+  {
+    "sid": 577,
+    "name": "興豐公園",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=577"
+  },
+  {
+    "sid": 504,
+    "name": "文山50號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=504"
+  },
+  {
+    "sid": 265,
+    "name": "文山木柵60號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=265"
+  },
+  {
+    "sid": 536,
+    "name": "木柵14號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=536"
+  },
+  {
+    "sid": 553,
+    "name": "木柵17號(秀明綠地)",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=553"
+  },
+  {
+    "sid": 699,
+    "name": "木柵49號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=699"
+  },
+  {
+    "sid": 677,
+    "name": "指南綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=677"
+  },
+  {
+    "sid": 479,
+    "name": "軍功綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=479"
+  },
+  {
+    "sid": 736,
+    "name": "清溪綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=736"
+  },
+  {
+    "sid": 173,
+    "name": "景美29號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=173"
+  },
+  {
+    "sid": 521,
+    "name": "景美30號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=521"
+  },
+  {
+    "sid": 334,
+    "name": "景美32號綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=334"
+  },
+  {
+    "sid": 387,
+    "name": "萬利綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=387"
+  },
+  {
+    "sid": 448,
+    "name": "萬利綠地",
+    "district": "文山區",
+    "detailUrl": "https://parks.gov.taipei/parks/m2/pkl_parks_m2C.php?sid=448"
+  }
+]
