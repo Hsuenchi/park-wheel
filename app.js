@@ -44,9 +44,9 @@ const loveCloseBtn = $("#loveCloseBtn");
 
 // constants
 const BATCH_SIZE = 6;
-const NEAR_TOP_N = 18; // ✅ 30 → 18（你要的）
-
+const NEAR_TOP_N = 18; // ✅ 最近 18 個 → 隨機抽 6
 const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
+
 const CUSTOM_KEY = "tripweb_custom_parks_v1";
 
 const WIN_KEY    = "tripweb_won_parks_v1";
@@ -72,6 +72,7 @@ let userLoc = null;
 let favorites = [];
 let history = [];
 
+/** 色盤：淡藍灰 / 淡粉灰 / 淡黃 / 淡綠 */
 const colors = [
   { start: "#BFC8D7", end: "#A8B3C5" },
   { start: "#E2D2D2", end: "#D1C0C0" },
@@ -144,35 +145,30 @@ function toNumberMaybe(v){
 }
 
 /**
- * ✅ 最關鍵：讓它能吃官方 parks.full.json
- * - 支援 { result: { records: [] } }、{ records: [] }、{ data: [] }、GeoJSON features
- * - 支援 pm_Latitude / pm_Longitude
- * - district 抓不到時：從 address 抓 XX區
+ * extractParksFromJson
+ * - 支援 array / {records} / {result:{records}} / {data} / GeoJSON features
+ * - 對你原始 full.json：name/district/detailUrl 一樣吃得下
  */
 function extractParksFromJson(data){
-  // 1) normalize array
   let arr = data;
 
   if (data && !Array.isArray(data) && typeof data === "object"){
     if (Array.isArray(data.records)) arr = data.records;
     else if (data.result && Array.isArray(data.result.records)) arr = data.result.records;
     else if (Array.isArray(data.data)) arr = data.data;
-    else if (Array.isArray(data.features)) arr = data.features; // GeoJSON
+    else if (Array.isArray(data.features)) arr = data.features;
   }
 
   if (!Array.isArray(arr) || arr.length === 0) return [];
 
-  // ["公園A","公園B"...]
   if (typeof arr[0] === "string"){
     return uniqueStrings(arr).map((name) => ({ name }));
   }
 
-  // [{...},{...}]
   if (typeof arr[0] === "object" && arr[0]){
     const out = [];
 
     for (const raw of arr){
-      // GeoJSON 可能會把欄位放在 properties
       const obj = raw && raw.properties ? raw.properties : raw;
 
       const name = getFirstString(obj, [
@@ -186,18 +182,16 @@ function extractParksFromJson(data){
         "pm_Address","pm_address"
       ]);
 
-      // district 先抓欄位
       let district = getFirstString(obj, [
         "district","District","行政區","區","town","addrDistrict",
         "pm_area","pm_district","pm_District"
       ]);
-      // 抓不到就從地址抓「XX區」
       if (!district && address){
         const m = String(address).match(/([一-龥]{1,4}區)/);
         if (m) district = m[1];
       }
 
-      // ✅ 官方欄位
+      // 你的原始 full.json 沒座標也 OK（lat/lng 會是 undefined）
       let lat = toNumberMaybe(
         obj.pm_Latitude ?? obj.pm_lat ?? obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y
       );
@@ -222,7 +216,6 @@ function extractParksFromJson(data){
       });
     }
 
-    // 去重（name）
     const seen = new Set();
     const dedup = [];
     for (const p of out){
@@ -500,7 +493,8 @@ function updateControlLocksByMode(){
   if (districtGroup) districtGroup.hidden = mode !== "district";
 
   if (mode === "near") {
-    setFilterHint(userLoc ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。` : "最近模式需要定位：請按「取得定位」。");
+    // 文字由 near cache 狀態決定（下方會更新）
+    if (!userLoc) setFilterHint("最近模式需要定位：請按「取得定位」。");
   }
 
   updateUndoUI();
@@ -627,7 +621,7 @@ function rebuildWheel(){
 }
 
 // =========================
-// Distance (含 TWD97 X/Y 轉換)
+// Distance
 // =========================
 function haversineKm(lat1, lng1, lat2, lng2){
   const R = 6371;
@@ -639,86 +633,102 @@ function haversineKm(lat1, lng1, lat2, lng2){
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
 }
-function looksLikeTWD97XY(x, y){
-  return Number.isFinite(x) && Number.isFinite(y) && x > 100000 && x < 500000 && y > 2400000 && y < 3000000;
-}
-function twd97ToWgs84(x, y){
-  const a = 6378137.0;
-  const b = 6356752.314245;
-  const long0 = 121 * Math.PI / 180;
-  const k0 = 0.9999;
-  const dx = 250000;
 
-  const e = Math.sqrt(1 - (b*b)/(a*a));
-  const xAdj = x - dx;
-  const M = y / k0;
+// =========================
+// Near (OSM Overpass)：不靠 parks.full.json 座標
+// =========================
+const NEAR_RADIUS_M = 3500; // 搜尋半徑：2.5~5km 可自行調
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
 
-  const mu = M / (a * (1 - (e**2)/4 - 3*(e**4)/64 - 5*(e**6)/256));
-  const e1 = (1 - Math.sqrt(1 - e*e)) / (1 + Math.sqrt(1 - e*e));
+let nearNamesCache = null;   // 最近 18 個公園名稱（string[]）
+let nearLoading = false;
 
-  let phi1 = mu
-    + (3*e1/2 - 27*(e1**3)/32) * Math.sin(2*mu)
-    + (21*(e1**2)/16 - 55*(e1**4)/32) * Math.sin(4*mu)
-    + (151*(e1**3)/96) * Math.sin(6*mu)
-    + (1097*(e1**4)/512) * Math.sin(8*mu);
+async function overpassFetch(query) {
+  const body = "data=" + encodeURIComponent(query);
+  let lastErr = null;
 
-  const e2 = (e*e)/(1 - e*e);
-  const N1 = a / Math.sqrt(1 - e*e * Math.sin(phi1)**2);
-  const T1 = Math.tan(phi1)**2;
-  const C1 = e2 * Math.cos(phi1)**2;
-  const R1 = a * (1 - e*e) / (1 - e*e * Math.sin(phi1)**2) ** 1.5;
-  const D = xAdj / (N1 * k0);
-
-  const lat = phi1 - (N1*Math.tan(phi1)/R1) * (
-    D*D/2
-    - (5 + 3*T1 + 10*C1 - 4*C1*C1 - 9*e2) * (D**4)/24
-    + (61 + 90*T1 + 298*C1 + 45*T1*T1 - 252*e2 - 3*C1*C1) * (D**6)/720
-  );
-
-  const lon = long0 + (
-    D
-    - (1 + 2*T1 + C1) * (D**3)/6
-    + (5 - 2*C1 + 28*T1 - 3*C1*C1 + 8*e2 + 24*T1*T1) * (D**5)/120
-  ) / Math.cos(phi1);
-
-  return { lat: lat * 180/Math.PI, lng: lon * 180/Math.PI };
-}
-
-function getWgs84LatLng(meta){
-  if (!meta) return null;
-  const lat = meta.lat;
-  const lng = meta.lng;
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-
-  if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return { lat, lng };
-
-  // lat=Y, lng=X 的情況
-  if (looksLikeTWD97XY(lng, lat)){
-    const r = twd97ToWgs84(lng, lat);
-    meta.lat = r.lat;
-    meta.lng = r.lng;
-    return r;
+  for (const url of OVERPASS_ENDPOINTS) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+          "accept": "application/json"
+        },
+        body
+      });
+      if (!res.ok) throw new Error(`Overpass HTTP ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      lastErr = e;
+    }
   }
-  return null;
+  throw lastErr || new Error("Overpass failed");
 }
 
-// ✅ 取得「最近 18 個」的名字清單
-function getNearestTopNames(limit){
-  if (!userLoc) return null;
+async function buildNearCache() {
+  if (!userLoc || nearLoading) return;
+  nearLoading = true;
+  nearNamesCache = null;
+  setFilterHint("已定位：正在抓附近公園…");
 
-  const withCoord = masterPool
-    .map((name) => {
-      const meta = parkMeta.get(name);
-      const ll = getWgs84LatLng(meta);
-      if (!ll) return null;
-      const km = haversineKm(userLoc.lat, userLoc.lng, ll.lat, ll.lng);
-      return { name, km };
-    })
-    .filter(Boolean)
-    .sort((a,b)=>a.km-b.km);
+  try {
+    const q = `
+      [out:json][timeout:15];
+      (
+        node["leisure"="park"](around:${NEAR_RADIUS_M},${userLoc.lat},${userLoc.lng});
+        way["leisure"="park"](around:${NEAR_RADIUS_M},${userLoc.lat},${userLoc.lng});
+        relation["leisure"="park"](around:${NEAR_RADIUS_M},${userLoc.lat},${userLoc.lng});
+      );
+      out center tags;
+    `;
 
-  if (withCoord.length === 0) return [];
-  return withCoord.slice(0, limit).map(x => x.name);
+    const data = await overpassFetch(q);
+    const els = Array.isArray(data?.elements) ? data.elements : [];
+
+    const items = [];
+    for (const el of els) {
+      const name = normalizeName(
+        el?.tags?.name || el?.tags?.["name:zh"] || el?.tags?.["name:zh-Hant"]
+      );
+      if (!name) continue;
+
+      const lat = Number.isFinite(el.lat) ? el.lat : el?.center?.lat;
+      const lng = Number.isFinite(el.lon) ? el.lon : el?.center?.lon;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+
+      const km = haversineKm(userLoc.lat, userLoc.lng, lat, lng);
+      items.push({ name, lat, lng, km });
+    }
+
+    items.sort((a, b) => a.km - b.km);
+
+    const top = items.slice(0, NEAR_TOP_N);
+    nearNamesCache = top.map(x => x.name);
+
+    // ✅ 把座標塞進 parkMeta，讓「打開地圖」更準
+    for (const p of top) {
+      if (!parkMeta.has(p.name)) parkMeta.set(p.name, { name: p.name });
+      const meta = parkMeta.get(p.name) || { name: p.name };
+      meta.lat = p.lat;
+      meta.lng = p.lng;
+      parkMeta.set(p.name, meta);
+    }
+
+    if (nearNamesCache.length === 0) {
+      setFilterHint("附近查不到公園（地圖資料可能較少）。你仍可用 隨機/依行政區。");
+    } else {
+      setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`);
+    }
+  } catch (e) {
+    nearNamesCache = null;
+    setFilterHint("附近公園查詢失敗（網路/資料源限制）。你仍可用 隨機/依行政區。");
+  } finally {
+    nearLoading = false;
+  }
 }
 
 // =========================
@@ -743,9 +753,9 @@ function loadNewBatch(){
   const mode = modeSelect ? modeSelect.value : "all";
   const sealedSet = loadSet(SEALED_KEY);
 
-  let basePool = [];
-  if (mode === "near"){
-    if (!userLoc){
+  // ---------- near ----------
+  if (mode === "near") {
+    if (!userLoc) {
       parks = [];
       selectedPark = null;
       setFilterHint("最近模式需要定位：請按「取得定位」。");
@@ -755,21 +765,37 @@ function loadNewBatch(){
       return;
     }
 
-    basePool = getNearestTopNames(NEAR_TOP_N);
-
-    if (basePool.length === 0){
+    // 需要先抓附近公園（第一次進 near）
+    if (!nearNamesCache && !nearLoading) {
+      buildNearCache();
       parks = [];
       selectedPark = null;
-      setFilterHint("找不到可用座標（無法計算最近）。");
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
       renderAll();
       return;
     }
 
-    // ✅ 如果最近18個都封印了，就顯示「沒有再更近了...」
+    // 抓取中
+    if (!nearNamesCache && nearLoading) {
+      setFilterHint("已定位：正在抓附近公園…");
+      return;
+    }
+
+    const basePool = nearNamesCache ? nearNamesCache.slice() : [];
+
+    if (basePool.length === 0) {
+      parks = [];
+      selectedPark = null;
+      setFilterHint("附近查不到公園（地圖資料可能較少）。");
+      resetWheelInstant();
+      if (wheelSvg) wheelSvg.innerHTML = "";
+      renderAll();
+      return;
+    }
+
     const remainingNear = basePool.filter(n => !sealedSet.has(n));
-    if (remainingNear.length === 0){
+    if (remainingNear.length === 0) {
       parks = [];
       selectedPark = null;
       setFilterHint("沒有再更近了...");
@@ -779,19 +805,18 @@ function loadNewBatch(){
       return;
     }
 
-    // ✅ 隨機抽 6（若不足 6，用已封印的補格子維持 6 格）
     const maxCount = Math.min(BATCH_SIZE, basePool.length);
 
     const primaryCount = Math.min(maxCount, remainingNear.length);
     const primary = pickRandomUnique(remainingNear, primaryCount);
 
     let batch = primary.slice();
-    if (batch.length < maxCount){
+    if (batch.length < maxCount) {
       const need = maxCount - batch.length;
-      const fillerCandidates = basePool.filter(n => !batch.includes(n)); // 允許 sealed 作填充
+      const fillerCandidates = basePool.filter(n => !batch.includes(n));
       const filler = pickRandomUnique(fillerCandidates, need);
       batch = uniqueStrings(batch.concat(filler));
-      while (batch.length < maxCount && basePool.length > 0){
+      while (batch.length < maxCount && basePool.length > 0) {
         batch.push(basePool[Math.floor(Math.random() * basePool.length)]);
       }
       batch = batch.slice(0, maxCount);
@@ -806,8 +831,8 @@ function loadNewBatch(){
     return;
   }
 
-  // 非 near
-  basePool = getFilteredPoolNamesNonNear();
+  // ---------- non-near ----------
+  const basePool = getFilteredPoolNamesNonNear();
   const remaining = basePool.filter(n => !sealedSet.has(n));
   if (remaining.length === 0){
     parks = [];
@@ -952,6 +977,10 @@ function requestLocation(){
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+
+      // ✅ 每次重新定位都重抓附近公園
+      buildNearCache();
+
       updateControlLocksByMode();
       if (!isSpinning && modeSelect?.value === "near") loadNewBatch();
       else setFilterHint("已取得定位。切到『距離我最近』即可使用。");
@@ -1083,7 +1112,6 @@ async function init(){
 }
 
 init();
-
 
 
 
