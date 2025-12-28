@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>公園轉盤選擇器</title>
+  <title>公園轉盤</title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
   <meta name="apple-mobile-web-app-title" content="公園轉盤">
@@ -29,11 +29,12 @@
           </button>
         </div>
 
-        <h1>公園轉盤選擇器</h1>
+        <!-- ✅ 1) 標題改成「公園轉盤」 -->
+        <h1>公園轉盤</h1>
 
-        <!-- ✅ 右邊：紀錄 -->
+        <!-- ✅ 右邊：記錄 -->
         <div class="headerActions headerActionsRight" aria-label="右側工具">
-          <button id="recordBtn" class="btn btn-record" type="button" title="查看紀錄">紀錄</button>
+          <button id="recordBtn" class="btn btn-record" type="button" title="查看記錄">記錄</button>
         </div>
       </header>
 
@@ -128,29 +129,32 @@
         <p id="emptyText">正在載入公園資料…</p>
       </section>
 
-      <section id="favSection" class="favSection">
-        <header class="favHeader">
-          <h2 class="favTitle">學姊喜歡的公園</h2>
-          <button id="favClearBtn" class="btn btn-favClear" type="button" title="清空收藏">
-            清空
-          </button>
-        </header>
+      <!-- ✅ 4) 收藏區塊：從底部移除，改到「記錄」面板內 -->
 
-        <ul id="favList" class="favList" aria-label="收藏清單"></ul>
-        <p id="favEmpty" class="favEmpty">（還沒有收藏）</p>
-      </section>
-
-      <div id="recordPanel" class="panel hidden" role="dialog" aria-modal="true" aria-label="轉盤紀錄">
+      <div id="recordPanel" class="panel hidden" role="dialog" aria-modal="true" aria-label="轉盤記錄">
         <div class="panelCard">
           <div class="panelHeader">
-            <h3 class="panelTitle">紀錄</h3>
-            <button id="recordCloseBtn" class="btn btn-panelClose" type="button" aria-label="關閉紀錄">關閉</button>
+            <h3 class="panelTitle">記錄</h3>
+            <button id="recordCloseBtn" class="btn btn-panelClose" type="button" aria-label="關閉記錄">關閉</button>
           </div>
 
           <p class="panelHint">✅ 重複只記一次｜🗑 刪除後此公園會重新變成「可被抽到」</p>
 
+          <!-- ✅ 3) 改名＋✅ 4) 放在記錄下方（點記錄才展開） -->
+          <section id="favSection" class="favSection">
+            <header class="favHeader">
+              <h2 class="favTitle">喜歡的公園</h2>
+              <button id="favClearBtn" class="btn btn-favClear" type="button" title="清空收藏">
+                清空
+              </button>
+            </header>
+
+            <ul id="favList" class="favList" aria-label="收藏清單"></ul>
+            <p id="favEmpty" class="favEmpty">（還沒有收藏）</p>
+          </section>
+
           <ul id="recordList" class="recordList"></ul>
-          <p id="recordEmpty" class="recordEmpty">（還沒有紀錄）</p>
+          <p id="recordEmpty" class="recordEmpty">（還沒有記錄）</p>
         </div>
       </div>
 
@@ -167,7 +171,6 @@
   <script src="./app.js" defer></script>
 </body>
 </html>
-
 
 
 
