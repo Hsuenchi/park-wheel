@@ -1,13 +1,9 @@
-<!-- index.html -->
 <!doctype html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>公園轉盤</title>
-
-  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
-  <meta name="apple-mobile-web-app-title" content="公園轉盤">
 
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -20,38 +16,25 @@
   <main class="page">
     <section class="card">
       <header class="header">
-        <!-- ✅ 左邊：返回箭頭（恢復） -->
-        <div class="headerActions headerActionsLeft" aria-label="左側工具">
-          <button id="undoBtn" class="btn btn-undo" type="button" title="恢復上一個動作" aria-label="恢復上一個動作">
-            <svg class="undoIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M15 6L9 12L15 18" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
+        <!-- 左上：返回箭頭（恢復） -->
+        <button id="undoBtn" class="iconBtn" type="button" aria-label="恢復上一個動作" title="恢復">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
 
-        <!-- ✅ 1) 標題改成「公園轉盤」 -->
         <h1>公園轉盤</h1>
 
-        <!-- ✅ 右邊：記錄 -->
-        <div class="headerActions headerActionsRight" aria-label="右側工具">
-          <button id="recordBtn" class="btn btn-record" type="button" title="查看記錄">記錄</button>
+        <!-- 右上：記錄 + 收藏 -->
+        <div class="headerRight">
+          <button id="recordBtn" class="pillBtn" type="button">記錄</button>
+          <button id="favPanelBtn" class="pillBtn pillBtn-heart" type="button">收藏</button>
         </div>
       </header>
 
-      <section class="inputRow">
-        <input id="parkInput" type="text" placeholder="輸入公園名稱..." autocomplete="off" />
-        <button id="addBtn" class="btn btn-add" type="button" aria-label="加入">
-          <span class="btnIcon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-          加入
-        </button>
-      </section>
-
+      <!-- Filters -->
       <section class="filterRow" aria-label="篩選">
-        <div class="filterGroup" id="modeGroup">
+        <div class="filterGroup">
           <label class="filterLabel" for="modeSelect">模式</label>
           <select id="modeSelect" class="filterSelect">
             <option value="all" selected>隨機</option>
@@ -60,17 +43,18 @@
           </select>
         </div>
 
-        <div class="filterGroup" id="districtGroup">
+        <div class="filterGroup" id="districtGroup" hidden>
           <label class="filterLabel" for="districtSelect">行政區</label>
           <select id="districtSelect" class="filterSelect"></select>
         </div>
 
-        <button id="locBtn" class="btn btn-loc" type="button" title="需要定位權限">
+        <button id="locBtn" class="btn btn-loc" type="button" title="需要定位權限" hidden>
           取得定位
         </button>
 
-        <button id="resetNoRepeatBtn" class="btn btn-reset" type="button" title="清除不重複紀錄">
-          重置不重複
+        <!-- ✅ 以前的「重置不重複」改成「重新整理」 -->
+        <button id="refreshBtn" class="btn btn-reset" type="button" title="重新整理（例如定位後刷新最近公園）">
+          重新整理
         </button>
 
         <p id="filterHint" class="filterHint" aria-live="polite"></p>
@@ -83,7 +67,7 @@
 
             <div id="wheelRotator" class="wheelRotator">
               <svg id="wheelSvg" class="wheelSvg" viewBox="0 0 400 400" aria-label="轉盤"></svg>
-              <button id="centerBtn" class="centerBtn" type="button" aria-label="中心按鈕" disabled aria-hidden="true"></button>
+              <button class="centerBtn" type="button" aria-hidden="true" disabled></button>
             </div>
           </div>
         </div>
@@ -112,12 +96,12 @@
               打開地圖
             </a>
 
-            <button id="preserveBtn" class="btn btn-preserve hidden" type="button" title="不要封印這個公園，之後仍可再抽到">
+            <button id="preserveBtn" class="btn btn-preserve hidden" type="button" title="不要封印這個公園，也不記錄">
               保留
             </button>
 
-            <button id="favBtn" class="btn btn-fav hidden" type="button" title="把這個公園收藏起來">
-              <span class="heart" aria-hidden="true">♥</span> 收藏
+            <button id="favBtn" class="btn btn-fav hidden" type="button" title="加入收藏">
+              ♥
             </button>
           </div>
 
@@ -128,51 +112,52 @@
       <section id="emptyState" class="emptyState">
         <p id="emptyText">正在載入公園資料…</p>
       </section>
-
-      <!-- ✅ 4) 收藏區塊：從底部移除，改到「記錄」面板內 -->
-
-      <div id="recordPanel" class="panel hidden" role="dialog" aria-modal="true" aria-label="轉盤記錄">
-        <div class="panelCard">
-          <div class="panelHeader">
-            <h3 class="panelTitle">記錄</h3>
-            <button id="recordCloseBtn" class="btn btn-panelClose" type="button" aria-label="關閉記錄">關閉</button>
-          </div>
-
-          <p class="panelHint">✅ 重複只記一次｜🗑 刪除後此公園會重新變成「可被抽到」</p>
-
-          <!-- ✅ 3) 改名＋✅ 4) 放在記錄下方（點記錄才展開） -->
-          <section id="favSection" class="favSection">
-            <header class="favHeader">
-              <h2 class="favTitle">喜歡的公園</h2>
-              <button id="favClearBtn" class="btn btn-favClear" type="button" title="清空收藏">
-                清空
-              </button>
-            </header>
-
-            <ul id="favList" class="favList" aria-label="收藏清單"></ul>
-            <p id="favEmpty" class="favEmpty">（還沒有收藏）</p>
-          </section>
-
-          <ul id="recordList" class="recordList"></ul>
-          <p id="recordEmpty" class="recordEmpty">（還沒有記錄）</p>
-        </div>
-      </div>
-
-      <div id="loveModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="完成訊息">
-        <div class="modalCard">
-          <p class="modalText">人瑄學姊笑起來真的很好看，我很喜歡學姊</p>
-          <button id="loveCloseBtn" class="btn btn-modalClose" type="button">知道了</button>
-        </div>
-      </div>
-
     </section>
   </main>
+
+  <!-- ✅ 記錄面板 -->
+  <section id="recordPanel" class="panelOverlay hidden" aria-hidden="true">
+    <div class="panelCard" role="dialog" aria-label="紀錄">
+      <div class="panelHeader">
+        <div class="panelTitle">紀錄</div>
+        <div class="panelHeaderActions">
+          <!-- ✅ 一鍵刪除＝舊「重置不重複」 -->
+          <button id="recordClearBtn" class="btnMini" type="button">一鍵刪除</button>
+          <button id="recordCloseBtn" class="iconBtnSmall" type="button" aria-label="關閉">×</button>
+        </div>
+      </div>
+
+      <p id="recordEmpty" class="panelEmpty">(還沒有紀錄)</p>
+      <ul id="recordList" class="panelList"></ul>
+    </div>
+  </section>
+
+  <!-- ✅ 收藏面板（你要的：在記錄下方的收藏 UI） -->
+  <section id="favPanel" class="panelOverlay hidden" aria-hidden="true">
+    <div class="panelCard" role="dialog" aria-label="收藏">
+      <div class="panelHeader">
+        <div class="panelTitle">收藏</div>
+        <div class="panelHeaderActions">
+          <button id="favPanelClearBtn" class="btnMini" type="button">清空</button>
+          <button id="favPanelCloseBtn" class="iconBtnSmall" type="button" aria-label="關閉">×</button>
+        </div>
+      </div>
+
+      <p id="favPanelEmpty" class="panelEmpty">(還沒有收藏)</p>
+      <ul id="favPanelList" class="panelList"></ul>
+    </div>
+  </section>
+
+  <!-- love modal（保留你原本的彩蛋結構，若沒有也不會壞） -->
+  <section id="loveModal" class="modalOverlay hidden" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-label="彩蛋">
+      <p class="modalText">人瑄學姊笑起來真的很好看，我很喜歡學姊</p>
+      <button id="loveCloseBtn" class="btn btn-spin" type="button">知道了</button>
+    </div>
+  </section>
 
   <script src="./app.js" defer></script>
 </body>
 </html>
-
-
-
 
 
