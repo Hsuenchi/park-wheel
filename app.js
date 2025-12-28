@@ -451,7 +451,7 @@ function deleteRecordAndUnseal(name){
   saveSet(SEALED_KEY, sealed);
   saveSet(WIN_KEY, won);
 
-  setFilterHint(`已刪除紀錄「${n}」：它已重新變成可被抽到。`);
+  setFilterHint(`已刪除記錄「${n}」：它已重新變成可被抽到。`);
   renderRecord();
   if (!isSpinning) loadNewBatch();
 }
@@ -493,7 +493,6 @@ function updateControlLocksByMode(){
   if (districtGroup) districtGroup.hidden = mode !== "district";
 
   if (mode === "near") {
-    // 文字由 near cache 狀態決定（下方會更新）
     if (!userLoc) setFilterHint("最近模式需要定位：請按「取得定位」。");
   }
 
@@ -673,7 +672,9 @@ async function buildNearCache() {
   if (!userLoc || nearLoading) return;
   nearLoading = true;
   nearNamesCache = null;
-  setFilterHint("已定位：正在抓附近公園…");
+
+  // ✅ 2) 改成只顯示「已定位」
+  setFilterHint("已定位");
 
   try {
     const q = `
@@ -721,7 +722,8 @@ async function buildNearCache() {
     if (nearNamesCache.length === 0) {
       setFilterHint("附近查不到公園（地圖資料可能較少）。你仍可用 隨機/依行政區。");
     } else {
-      setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`);
+      // ✅ 2) 成功後也只顯示「已定位」
+      setFilterHint("已定位");
     }
   } catch (e) {
     nearNamesCache = null;
@@ -778,7 +780,8 @@ function loadNewBatch(){
 
     // 抓取中
     if (!nearNamesCache && nearLoading) {
-      setFilterHint("已定位：正在抓附近公園…");
+      // ✅ 2) 抓取中也維持簡潔
+      setFilterHint("已定位");
       return;
     }
 
@@ -826,7 +829,10 @@ function loadNewBatch(){
     selectedPark = null;
     resetWheelInstant();
     rebuildWheel();
-    setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${parks.length} 個。`);
+
+    // ✅ 2) 這裡原本是「已定位：從最近18...」→ 改成「已定位」
+    setFilterHint("已定位");
+
     renderAll();
     return;
   }
@@ -983,7 +989,10 @@ function requestLocation(){
 
       updateControlLocksByMode();
       if (!isSpinning && modeSelect?.value === "near") loadNewBatch();
-      else setFilterHint("已取得定位。切到『距離我最近』即可使用。");
+      else {
+        // ✅ 2) 成功後簡化
+        setFilterHint("已定位");
+      }
     },
     () => {
       userLoc = null;
