@@ -107,12 +107,13 @@ body{
 .headerRight{
   position:absolute;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 12px;        /* ✅ 往下移：你可改 8~16px */
+  transform: none;  /* ✅ 不要再用 translateY */
   display:flex;
   flex-direction:column;
   gap: 10px;
 }
+
 
 .pillBtn{
   border:0;
@@ -521,4 +522,5 @@ svg text{
   #spinText{ font-size: 16px; }
   .centerBtn{ width: 74px; height: 74px; }
 }
+
 
