@@ -1,44 +1,47 @@
 const $ = (sel) => document.querySelector(sel);
 
+// DOM
 const emptyState = $("#emptyState");
 const emptyText = $("#emptyText");
+
 const wheelSection = $("#wheelSection");
 const wheelRotator = $("#wheelRotator");
 const wheelSvg = $("#wheelSvg");
 
 const spinBtn = $("#spinBtn");
 const spinText = $("#spinText");
+const newBatchBtn = $("#btnNewBatch");
 
 const resultBox = $("#result");
 const resultName = $("#resultName");
-const newBatchBtn = $("#btnNewBatch");
-
 const mapBtn = $("#mapBtn");
+
 const modeSelect = $("#modeSelect");
 const districtGroup = $("#districtGroup");
 const districtSelect = $("#districtSelect");
 const locBtn = $("#locBtn");
-const refreshBtn = $("#resetNoRepeatBtn"); // ✅ 這顆已改成「重新整理」
+const refreshBtn = $("#refreshBtn");
 const filterHint = $("#filterHint");
 
 const preserveBtn = $("#preserveBtn");
 const favBtn = $("#favBtn");
 
-// top panels
+// panels
 const undoBtn = $("#undoBtn");
+
 const recordBtn = $("#recordBtn");
 const recordPanel = $("#recordPanel");
 const recordCloseBtn = $("#recordCloseBtn");
+const recordClearBtn = $("#recordClearBtn");
 const recordList = $("#recordList");
 const recordEmpty = $("#recordEmpty");
-const recordClearBtn = $("#recordClearBtn");
 
 const favPanelBtn = $("#favPanelBtn");
 const favPanel = $("#favPanel");
-const favCloseBtn = $("#favCloseBtn");
-const favList = $("#favList");
-const favEmpty = $("#favEmpty");
-const favClearBtn = $("#favClearBtn");
+const favPanelCloseBtn = $("#favPanelCloseBtn");
+const favPanelClearBtn = $("#favPanelClearBtn");
+const favPanelList = $("#favPanelList");
+const favPanelEmpty = $("#favPanelEmpty");
 
 const loveModal = $("#loveModal");
 const loveCloseBtn = $("#loveCloseBtn");
@@ -47,7 +50,6 @@ const loveCloseBtn = $("#loveCloseBtn");
 const BATCH_SIZE = 6;
 const NEAR_TOP_N = 18;
 const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
-const CUSTOM_KEY = "tripweb_custom_parks_v1";
 
 const WIN_KEY    = "tripweb_won_parks_v1";
 const SEALED_KEY = "tripweb_sealed_parks_v1";
@@ -63,12 +65,9 @@ let rotation = 0;
 let selectedPark = null;
 
 let masterPool = [];
-let customParks = [];
 let parkMeta = new Map();
-
 let userLoc = null;
 
-// favorites + history
 let favorites = [];
 let history = [];
 
@@ -101,6 +100,13 @@ function uniqueStrings(arr){
   return out;
 }
 
+function setEmptyText(msg){
+  if (emptyText) emptyText.textContent = msg;
+}
+function setFilterHint(msg=""){
+  if (filterHint) filterHint.textContent = msg;
+}
+
 function loadSet(key){
   try{
     const raw = localStorage.getItem(key);
@@ -121,7 +127,7 @@ function saveArray(key, arr){ localStorage.setItem(key, JSON.stringify(uniqueStr
 
 async function fetchJson(url){
   const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(Failed: ${url});
+  if (!res.ok) throw new Error(`Failed: ${url}`);
   return await res.json();
 }
 
@@ -143,26 +149,44 @@ function toNumberMaybe(v){
   return Number.isFinite(n) ? n : undefined;
 }
 
-/**
- * 支援官方 full.json 常見結構 + pm_Latitude/pm_Longitude
- * district 取不到 → 從 address 抓 XX區
- */
+// ✅ 你目前的 extractParksFromJson 會呼叫它，但你原檔沒定義會直接噴錯
+function looksLikeTWD97XY(x, y){
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+  // 台灣 TWD97 TM2 常見範圍大約：
+  // X: 100000~400000, Y: 2400000~2900000
+  return x > 100000 && x < 400000 && y > 2400000 && y < 2900000;
+}
+
+// ✅ 支援官方 parks.full.json（records/result.records/features）+ pm_Latitude/pm_Longitude
 function extractParksFromJson(data){
+  // 1) normalize array
   let arr = data;
 
   if (data && !Array.isArray(data) && typeof data === "object"){
     if (Array.isArray(data.records)) arr = data.records;
     else if (data.result && Array.isArray(data.result.records)) arr = data.result.records;
     else if (Array.isArray(data.data)) arr = data.data;
-    else if (Array.isArray(data.features)) arr = data.features;
+    else if (Array.isArray(data.features)) arr = data.features; // GeoJSON
   }
 
   if (!Array.isArray(arr) || arr.length === 0) return [];
 
+  // ["公園A","公園B"...]
   if (typeof arr[0] === "string"){
     return uniqueStrings(arr).map((name) => ({ name }));
   }
 
+  // helper：抓數字欄位
+  const getNum = (obj, keys) => {
+    for (const k of keys){
+      const v = obj?.[k];
+      const n = toNumberMaybe(v);
+      if (Number.isFinite(n)) return n;
+    }
+    return undefined;
+  };
+
+  // [{...},{...}]
   if (typeof arr[0] === "object" && arr[0]){
     const out = [];
 
@@ -189,18 +213,30 @@ function extractParksFromJson(data){
         if (m) district = m[1];
       }
 
-      let lat = toNumberMaybe(
-        obj.pm_Latitude ?? obj.pm_lat ?? obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y
-      );
-      let lng = toNumberMaybe(
-        obj.pm_Longitude ?? obj.pm_lon ?? obj.lng ?? obj.longitude ?? obj.Longitude ?? obj.經度 ?? obj.X ?? obj.x
-      );
+      // ✅ 先吃 WGS84 經緯度欄位
+      let lat = getNum(obj, [
+        "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度","Y","y"
+      ]);
+      let lng = getNum(obj, [
+        "pm_Longitude","pm_longitude","pm_lng","pm_lon","Longitude","longitude","lng","經度","X","x"
+      ]);
 
-      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw && raw.geometry && Array.isArray(raw.geometry.coordinates)){
+      // ✅ 再補：如果資料其實是 TWD97 X/Y（常見欄位）
+      let x = getNum(obj, ["pm_X","pm_x","X","x","twd97X","TWD97X","座標X"]);
+      let y = getNum(obj, ["pm_Y","pm_y","Y","y","twd97Y","TWD97Y","座標Y"]);
+
+      // GeoJSON geometry.coordinates = [lng, lat]
+      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw?.geometry?.coordinates && Array.isArray(raw.geometry.coordinates)){
         const glng = toNumberMaybe(raw.geometry.coordinates[0]);
         const glat = toNumberMaybe(raw.geometry.coordinates[1]);
         if (!Number.isFinite(lat) && Number.isFinite(glat)) lat = glat;
         if (!Number.isFinite(lng) && Number.isFinite(glng)) lng = glng;
+      }
+
+      // 如果 lat/lng 取不到，但 x/y 像 TWD97：先塞進去避免空值（但 near 仍會因非WGS84而跳過）
+      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && looksLikeTWD97XY(x, y)){
+        lat = y;   // Y
+        lng = x;   // X
       }
 
       out.push({
@@ -212,6 +248,7 @@ function extractParksFromJson(data){
       });
     }
 
+    // 去重（name）
     const seen = new Set();
     const dedup = [];
     for (const p of out){
@@ -234,7 +271,6 @@ function shuffledCopy(arr){
   }
   return a;
 }
-
 function pickRandomUnique(all, count){
   return shuffledCopy(all).slice(0, Math.min(count, all.length));
 }
@@ -248,20 +284,14 @@ function resetWheelInstant(){
   wheelRotator.style.transition = "";
 }
 
-function setFilterHint(msg=""){
-  if (!filterHint) return;
-  filterHint.textContent = msg;
-}
-
 function buildMapUrl(name){
   const meta = parkMeta.get(name);
-  if (meta && Number.isFinite(meta.lat) && Number.isFinite(meta.lng)){
-    return https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(${meta.lat},${meta.lng})};
+  if (meta && Number.isFinite(meta.lat) && Number.isFinite(meta.lng) && Math.abs(meta.lat) <= 90 && Math.abs(meta.lng) <= 180){
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${meta.lat},${meta.lng}`)}`;
   }
-  const query = meta?.address ? ${name} ${meta.address} : name;
-  return https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)};
+  const query = meta?.address ? `${name} ${meta.address}` : name;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
-
 function setMapBtn(name){
   if (!mapBtn) return;
   if (!name){
@@ -296,7 +326,11 @@ function pushUndo(label=""){
   saveUndoStack(stack);
   updateUndoUI();
 }
-
+function updateUndoUI(){
+  if (!undoBtn) return;
+  const stack = loadUndoStack();
+  undoBtn.disabled = isSpinning || stack.length === 0;
+}
 function undoOnce(){
   const stack = loadUndoStack();
   const snap = stack.pop();
@@ -318,12 +352,6 @@ function undoOnce(){
 
   setFilterHint("已恢復上一個動作。");
   updateUndoUI();
-}
-
-function updateUndoUI(){
-  if (!undoBtn) return;
-  const stack = loadUndoStack();
-  undoBtn.disabled = isSpinning || stack.length === 0;
 }
 
 // =========================
@@ -350,73 +378,63 @@ function toggleFavorite(name){
   else favorites.unshift(n);
   favorites = uniqueStrings(favorites);
   saveFavorites();
-  renderFavorites();
-  renderRecord();
+  renderFavPanel();
+  renderRecordPanel();
 }
 
-function renderFavorites(){
-  if (!favList || !favEmpty) return;
-  favList.innerHTML = "";
-  favEmpty.classList.toggle("hidden", favorites.length > 0);
-
-  for (const name of favorites){
-    const li = document.createElement("li");
-    li.className = "favItem";
-
-    const left = document.createElement("div");
-    left.className = "favName";
-    left.textContent = name;
-
-    const actions = document.createElement("div");
-    actions.className = "favActions";
-
-    const open = document.createElement("a");
-    open.className = "favOpen";
-    open.href = buildMapUrl(name);
-    open.target = "_blank";
-    open.rel = "noopener noreferrer";
-    open.textContent = "地圖";
-
-    const rm = document.createElement("button");
-    rm.className = "favRemove";
-    rm.type = "button";
-    rm.textContent = "移除";
-    rm.dataset.removeFav = name;
-
-    actions.appendChild(open);
-    actions.appendChild(rm);
-
-    li.appendChild(left);
-    li.appendChild(actions);
-    favList.appendChild(li);
-  }
+function clearFavorites(){
+  if (favorites.length === 0) return;
+  pushUndo("fav_clear");
+  favorites = [];
+  saveFavorites();
+  renderFavPanel();
+  renderRecordPanel();
 }
 
-function renderRecord(){
+function openRecordPanel(){
+  recordPanel?.classList.remove("hidden");
+  recordPanel?.setAttribute("aria-hidden","false");
+  renderRecordPanel();
+}
+function closeRecordPanel(){
+  recordPanel?.classList.add("hidden");
+  recordPanel?.setAttribute("aria-hidden","true");
+}
+function openFavPanel(){
+  favPanel?.classList.remove("hidden");
+  favPanel?.setAttribute("aria-hidden","false");
+  renderFavPanel();
+}
+function closeFavPanel(){
+  favPanel?.classList.add("hidden");
+  favPanel?.setAttribute("aria-hidden","true");
+}
+
+function renderRecordPanel(){
   if (!recordList || !recordEmpty) return;
   recordList.innerHTML = "";
   recordEmpty.classList.toggle("hidden", history.length > 0);
 
   for (const name of history){
     const li = document.createElement("li");
-    li.className = "recordItem";
+    li.className = "panelItem";
 
     const nm = document.createElement("div");
-    nm.className = "recordName";
+    nm.className = "itemName";
     nm.textContent = name;
 
     const acts = document.createElement("div");
-    acts.className = "recordActions";
+    acts.className = "itemActions";
 
     const fav = document.createElement("button");
     fav.type = "button";
-    fav.className = "btn-recFav" + (isFav(name) ? " isOn" : "");
+    fav.className = "itemHeart" + (isFav(name) ? " isOn" : "");
     fav.textContent = "♥";
     fav.dataset.favToggle = name;
 
     const del = document.createElement("button");
     del.type = "button";
-    del.className = "btn-recDel";
+    del.className = "itemBtn";
     del.textContent = "刪除";
     del.dataset.recDelete = name;
 
@@ -429,20 +447,42 @@ function renderRecord(){
   }
 }
 
-function openRecordPanel(){
-  recordPanel?.classList.remove("hidden");
-  renderRecord();
-}
-function closeRecordPanel(){
-  recordPanel?.classList.add("hidden");
-}
+function renderFavPanel(){
+  if (!favPanelList || !favPanelEmpty) return;
+  favPanelList.innerHTML = "";
+  favPanelEmpty.classList.toggle("hidden", favorites.length > 0);
 
-function openFavPanel(){
-  favPanel?.classList.remove("hidden");
-  renderFavorites();
-}
-function closeFavPanel(){
-  favPanel?.classList.add("hidden");
+  for (const name of favorites){
+    const li = document.createElement("li");
+    li.className = "panelItem";
+
+    const nm = document.createElement("div");
+    nm.className = "itemName";
+    nm.textContent = name;
+
+    const acts = document.createElement("div");
+    acts.className = "itemActions";
+
+    const open = document.createElement("a");
+    open.className = "itemMap";
+    open.href = buildMapUrl(name);
+    open.target = "_blank";
+    open.rel = "noopener noreferrer";
+    open.textContent = "地圖";
+
+    const rm = document.createElement("button");
+    rm.className = "itemBtn";
+    rm.type = "button";
+    rm.textContent = "移除";
+    rm.dataset.favRemove = name;
+
+    acts.appendChild(open);
+    acts.appendChild(rm);
+
+    li.appendChild(nm);
+    li.appendChild(acts);
+    favPanelList.appendChild(li);
+  }
 }
 
 function deleteRecordAndUnseal(name){
@@ -461,29 +501,29 @@ function deleteRecordAndUnseal(name){
   saveSet(SEALED_KEY, sealed);
   saveSet(WIN_KEY, won);
 
-  setFilterHint(已刪除紀錄「${n}」：它已重新變成可被抽到。);
-  renderRecord();
+  setFilterHint(`已刪除紀錄：${n}（已重新可被抽到）`);
+  renderRecordPanel();
   if (!isSpinning) loadNewBatch();
 }
 
-/** ✅ 記錄面板：一鍵刪除（= 舊「重置不重複」功能） */
-function resetNoRepeatInRecordPanel(){
-  pushUndo("reset_no_repeat_full");
-  localStorage.removeItem(WIN_KEY);
-  localStorage.removeItem(SEALED_KEY);
-  localStorage.removeItem(LOVE_SHOWN_KEY);
+// ✅ 一鍵刪除（舊重置不重複）
+function clearAllRecordsAndResetNoRepeat(){
+  pushUndo("record_clear_all");
 
   history = [];
   saveHistory();
 
-  setFilterHint("已重置不重複（可重新抽全部）。");
-  renderRecord();
+  localStorage.removeItem(WIN_KEY);
+  localStorage.removeItem(SEALED_KEY);
+  localStorage.removeItem(LOVE_SHOWN_KEY);
+
+  setFilterHint("已一鍵刪除。");
+  renderRecordPanel();
   if (!isSpinning) loadNewBatch();
-  updateUndoUI();
 }
 
 // =========================
-// Mode UI locks
+// Mode UI
 // =========================
 function updateDistrictOptions(){
   if (!districtSelect) return;
@@ -504,26 +544,40 @@ function updateDistrictOptions(){
   }
 }
 
+/**
+ * ✅ 改成「你那個能成功抓定位版本」的鎖定/提示邏輯：
+ * - loc 只有 near 模式顯示；定位成功後變暗不可按
+ * - near 模式提示：未定位 →「請按取得定位，再按重新整理」
+ * - near 模式且 parks 空時，emptyText 也同步提示
+ */
 function updateControlLocksByMode(){
   const mode = modeSelect ? modeSelect.value : "all";
   const hasDistrictData = districtSelect && districtSelect.options && districtSelect.options.length > 0;
 
-  // district 只有在 district 模式可用
+  if (districtGroup) districtGroup.hidden = mode !== "district";
   if (districtSelect) districtSelect.disabled = !(mode === "district" && hasDistrictData && !isSpinning);
 
-  // loc 只有在 near 模式可見；定位成功後變暗不可按
   if (locBtn){
     locBtn.hidden = mode !== "near";
     locBtn.disabled = !(mode === "near" && !userLoc && !isSpinning);
   }
 
-  if (districtGroup) districtGroup.hidden = mode !== "district";
+  if (refreshBtn) refreshBtn.disabled = isSpinning;
+  if (modeSelect) modeSelect.disabled = isSpinning;
 
   if (mode === "near"){
-    setFilterHint(userLoc ? 已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。 : "最近模式需要定位：請按「取得定位」，再按「重新整理」。");
+    setFilterHint(
+      userLoc
+        ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`
+        : "最近模式需要定位：請按「取得定位」，再按「重新整理」。"
+    );
     if (emptyText && parks.length === 0){
-      emptyText.textContent = userLoc ? "請按「重新整理」刷新最近公園…" : "最近模式需要定位：請按「取得定位」。";
+      emptyText.textContent = userLoc
+        ? "請按「重新整理」刷新最近公園…"
+        : "最近模式需要定位：請按「取得定位」。";
     }
+  } else {
+    // 非 near 不強制蓋掉提示（你原本會清空，這裡維持偏接近舊版：不額外清空）
   }
 
   updateUndoUI();
@@ -556,8 +610,7 @@ function setUIState(){
 
 function renderAll(){
   setUIState();
-  renderFavorites();
-  renderRecord();
+  // panels 是打開時才 render，避免每次都重排
 }
 
 // =========================
@@ -571,7 +624,7 @@ function arcPath(cx, cy, r, startAngle, endAngle){
   const start = polarToXY(cx, cy, r, startAngle);
   const end = polarToXY(cx, cy, r, endAngle);
   const largeArcFlag = (endAngle - startAngle) > 180 ? 1 : 0;
-  return M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z;
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z`;
 }
 function rebuildWheel(){
   if (!wheelSvg) return;
@@ -586,7 +639,7 @@ function rebuildWheel(){
 
   const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
   filter.setAttribute("id", "textShadow");
-  filter.innerHTML = <feDropShadow dx="0" dy="1.2" stdDeviation="0.6" flood-color="rgba(0,0,0,0.35)"/>;
+  filter.innerHTML = `<feDropShadow dx="0" dy="1.2" stdDeviation="0.6" flood-color="rgba(0,0,0,0.35)"/>`;
   defs.appendChild(filter);
 
   parks.forEach((name, i) => {
@@ -594,7 +647,7 @@ function rebuildWheel(){
     const endAngle = startAngle + segmentAngle;
 
     const grad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-    grad.setAttribute("id", gradient-${i});
+    grad.setAttribute("id", `gradient-${i}`);
     grad.setAttribute("x1", "0%");
     grad.setAttribute("y1", "0%");
     grad.setAttribute("x2", "100%");
@@ -614,7 +667,7 @@ function rebuildWheel(){
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", arcPath(cx, cy, r, startAngle, endAngle));
-    path.setAttribute("fill", url(#gradient-${i}));
+    path.setAttribute("fill", `url(#gradient-${i})`);
     path.setAttribute("stroke", "white");
     path.setAttribute("stroke-width", "3");
     wheelSvg.appendChild(path);
@@ -627,7 +680,7 @@ function rebuildWheel(){
     text.setAttribute("x", String(Math.round(p.x)));
     text.setAttribute("y", String(Math.round(p.y)));
     text.setAttribute("fill", "white");
-    text.setAttribute("font-family", "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui);
+    text.setAttribute("font-family", `"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui`);
     text.setAttribute("font-weight", "800");
 
     const len = name.length;
@@ -639,7 +692,7 @@ function rebuildWheel(){
     text.setAttribute("text-anchor", "middle");
     text.setAttribute("dominant-baseline", "middle");
     text.setAttribute("filter", "url(#textShadow)");
-    text.setAttribute("transform", rotate(${midAngle + 90}, ${Math.round(p.x)}, ${Math.round(p.y)}));
+    text.setAttribute("transform", `rotate(${midAngle + 90}, ${Math.round(p.x)}, ${Math.round(p.y)})`);
 
     const MAX = 12;
     text.textContent = (name.length > MAX) ? (name.slice(0, MAX) + "…") : name;
@@ -648,7 +701,7 @@ function rebuildWheel(){
 }
 
 // =========================
-// Distance + nearest
+// Distance (最近18 → 隨機6)
 // =========================
 function haversineKm(lat1, lng1, lat2, lng2){
   const R = 6371;
@@ -662,12 +715,13 @@ function haversineKm(lat1, lng1, lat2, lng2){
 }
 
 function getNearestTopNames(limit){
-  if (!userLoc) return null;
+  if (!userLoc) return [];
 
   const withCoord = masterPool
     .map((name) => {
       const meta = parkMeta.get(name);
       if (!meta || !Number.isFinite(meta.lat) || !Number.isFinite(meta.lng)) return null;
+      if (Math.abs(meta.lat) > 90 || Math.abs(meta.lng) > 180) return null; // 不是 WGS84 就跳過
       const km = haversineKm(userLoc.lat, userLoc.lng, meta.lat, meta.lng);
       return { name, km };
     })
@@ -678,9 +732,6 @@ function getNearestTopNames(limit){
   return withCoord.slice(0, limit).map(x => x.name);
 }
 
-// =========================
-// Filters (non-near)
-// =========================
 function getFilteredPoolNamesNonNear(){
   const mode = modeSelect ? modeSelect.value : "all";
   if (mode === "district"){
@@ -700,28 +751,26 @@ function loadNewBatch(){
   const mode = modeSelect ? modeSelect.value : "all";
   const sealedSet = loadSet(SEALED_KEY);
 
-  // near
   if (mode === "near"){
     if (!userLoc){
       parks = [];
       selectedPark = null;
-      setFilterHint("最近模式需要定位：請按「取得定位」，再按「重新整理」。");
-      if (emptyText) emptyText.textContent = "最近模式需要定位：請按「取得定位」。";
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
+      setFilterHint("最近模式需要定位：請按「取得定位」，再按「重新整理」。");
+      setEmptyText("最近模式需要定位：請按「取得定位」。");
       renderAll();
       return;
     }
 
     const basePool = getNearestTopNames(NEAR_TOP_N);
-
     if (basePool.length === 0){
       parks = [];
       selectedPark = null;
-      setFilterHint("找不到可用座標（無法計算最近）。");
-      if (emptyText) emptyText.textContent = "找不到可用座標（無法計算最近）。";
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
+      setFilterHint("找不到可用座標（無法計算最近）。");
+      setEmptyText("找不到可用座標（無法計算最近）。");
       renderAll();
       return;
     }
@@ -730,16 +779,15 @@ function loadNewBatch(){
     if (remainingNear.length === 0){
       parks = [];
       selectedPark = null;
-      setFilterHint("沒有再更近了...");
-      if (emptyText) emptyText.textContent = "沒有再更近了...";
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
+      setFilterHint("沒有再更近了...");
+      setEmptyText("沒有再更近了...");
       renderAll();
       return;
     }
 
     const maxCount = Math.min(BATCH_SIZE, basePool.length);
-
     const primaryCount = Math.min(maxCount, remainingNear.length);
     const primary = pickRandomUnique(remainingNear, primaryCount);
 
@@ -757,9 +805,10 @@ function loadNewBatch(){
 
     parks = batch;
     selectedPark = null;
+
     resetWheelInstant();
     rebuildWheel();
-    setFilterHint(已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${parks.length} 個。);
+    setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${parks.length} 個。`);
     renderAll();
     return;
   }
@@ -767,19 +816,20 @@ function loadNewBatch(){
   // non-near
   const basePool = getFilteredPoolNamesNonNear();
   const remaining = basePool.filter(n => !sealedSet.has(n));
+
   if (remaining.length === 0){
     parks = [];
     selectedPark = null;
-    setFilterHint("🎉 這個篩選範圍內都已抽過（封印完）！請到『記錄』按一鍵刪除，或刪除單筆讓它回來。");
-    if (emptyText) emptyText.textContent = "沒有可抽的公園了（可到記錄一鍵刪除或刪除單筆）。";
     resetWheelInstant();
     if (wheelSvg) wheelSvg.innerHTML = "";
+    setEmptyText("這個範圍都抽過了（可到『記錄』→『一鍵刪除』重置）");
     renderAll();
     return;
   }
 
   parks = pickRandomUnique(remaining, Math.min(BATCH_SIZE, remaining.length));
   selectedPark = null;
+
   resetWheelInstant();
   rebuildWheel();
   renderAll();
@@ -789,7 +839,7 @@ function loadNewBatch(){
 // Spin
 // =========================
 function spin(){
-  if (isSpinning || parks.length === 0) return;
+  if (isSpinning || parks.length === 0 || !wheelRotator) return;
 
   isSpinning = true;
   selectedPark = null;
@@ -818,7 +868,7 @@ function spin(){
   const totalRotation = rotation + (spins * 360) + delta;
 
   wheelRotator.style.transition = "transform 3800ms cubic-bezier(0.12, 0.78, 0.18, 1)";
-  wheelRotator.style.transform = rotate(${totalRotation}deg);
+  wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
   window.setTimeout(() => {
     const normalized = ((totalRotation % 360) + 360) % 360;
@@ -845,26 +895,28 @@ function spin(){
 
     const BOUNCE = 7;
     wheelRotator.style.transition = "transform 140ms ease-out";
-    wheelRotator.style.transform = rotate(${totalRotation + BOUNCE}deg);
+    wheelRotator.style.transform = `rotate(${totalRotation + BOUNCE}deg)`;
 
     window.setTimeout(() => {
       wheelRotator.style.transition = "transform 220ms ease-in";
-      wheelRotator.style.transform = rotate(${totalRotation}deg);
+      wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
       window.setTimeout(() => {
         rotation = normalized;
         wheelRotator.style.transition = "none";
-        wheelRotator.style.transform = rotate(${rotation}deg);
+        wheelRotator.style.transform = `rotate(${rotation}deg)`;
         wheelRotator.offsetHeight;
         wheelRotator.style.transition = "";
 
         selectedPark = picked;
         isSpinning = false;
 
+        // 彩蛋：全抽完
         const already = localStorage.getItem(LOVE_SHOWN_KEY) === "1";
         if (!already && loadSet(SEALED_KEY).size >= masterPool.length){
           localStorage.setItem(LOVE_SHOWN_KEY, "1");
           loveModal?.classList.remove("hidden");
+          loveModal?.setAttribute("aria-hidden","false");
         }
 
         renderAll();
@@ -894,11 +946,15 @@ function preserveSelected(){
   history = history.filter(x => x !== name);
   saveHistory();
 
-  // ✅ 你要簡化提示
   setFilterHint("已保留");
   renderAll();
 }
 
+/**
+ * ✅ 改成「你那個能成功抓定位版本」的 requestLocation：
+ * - 定位成功：如果此刻就在 near → 直接 loadNewBatch()
+ * - 不在 near：只提示「切到距離我最近後按重新整理」
+ */
 function requestLocation(){
   if (!("geolocation" in navigator)){
     setFilterHint("你的瀏覽器不支援定位，無法使用『距離我最近』模式。");
@@ -930,7 +986,11 @@ function requestLocation(){
   );
 }
 
-/** ✅ 主畫面「重新整理」：刷新目前模式（near 定位後按一下就出） */
+/**
+ * ✅ 改成「你那個能成功抓定位版本」的 refreshNow：
+ * - near 且未定位：只提示並 return（不刷新）
+ * - 其他：loadNewBatch + 提示已重新整理
+ */
 function refreshNow(){
   if (isSpinning) return;
 
@@ -950,18 +1010,10 @@ function refreshNow(){
 // Init
 // =========================
 async function init(){
-  if (emptyText) emptyText.textContent = "正在載入公園資料…";
+  setEmptyText("正在載入公園資料…");
 
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
-
-  customParks = (() => {
-    try{
-      const raw = localStorage.getItem(CUSTOM_KEY);
-      const arr = raw ? JSON.parse(raw) : [];
-      return uniqueStrings(Array.isArray(arr) ? arr : []);
-    }catch{ return []; }
-  })();
 
   let parksObjs = [];
   for (const url of DATA_URLS){
@@ -978,20 +1030,16 @@ async function init(){
     parkMeta.set(p.name, p);
   }
 
-  const jsonNames = parksObjs.map(p => p.name);
-  masterPool = uniqueStrings([...jsonNames, ...customParks]);
-
-  for (const n of customParks){
-    if (!parkMeta.has(n)) parkMeta.set(n, { name: n });
-  }
+  masterPool = uniqueStrings(parksObjs.map(p => p.name));
 
   if (masterPool.length === 0){
-    if (emptyText) emptyText.textContent = "找不到公園資料（請確認 parks.full.json 或 parks.names.json 存在）";
+    setEmptyText("找不到公園資料（請確認 parks.full.json 或 parks.names.json 存在）");
     setUIState();
     return;
   }
 
   updateDistrictOptions();
+  updateControlLocksByMode();
   loadNewBatch();
   renderAll();
 
@@ -1001,45 +1049,21 @@ async function init(){
   preserveBtn?.addEventListener("click", (e) => { e.preventDefault(); preserveSelected(); });
   favBtn?.addEventListener("click", (e) => { e.preventDefault(); if (selectedPark) toggleFavorite(selectedPark); });
 
-  // ✅ 收藏面板
-  favPanelBtn?.addEventListener("click", openFavPanel);
-  favCloseBtn?.addEventListener("click", closeFavPanel);
-  favPanel?.addEventListener("click", (e) => { if (e.target === favPanel) closeFavPanel(); });
-
-  favList?.addEventListener("click", (e) => {
-    const t = e.target;
-    if (!(t instanceof HTMLElement)) return;
-    const name = t.dataset.removeFav;
-    if (name){
-      pushUndo("fav_remove");
-      favorites = favorites.filter(x => x !== name);
-      saveFavorites();
-      renderFavorites();
-      renderRecord();
-    }
-  });
-  favClearBtn?.addEventListener("click", () => {
-    if (favorites.length === 0) return;
-    pushUndo("fav_clear");
-    favorites = [];
-    saveFavorites();
-    renderFavorites();
-    renderRecord();
-  });
-
-  // ✅ 模式 / 行政區 / 定位 / 重新整理
   modeSelect?.addEventListener("change", () => {
     updateControlLocksByMode();
     if (!isSpinning) loadNewBatch();
   });
   districtSelect?.addEventListener("change", () => { if (!isSpinning) loadNewBatch(); });
+
   locBtn?.addEventListener("click", requestLocation);
   refreshBtn?.addEventListener("click", refreshNow);
 
-  // ✅ 記錄面板
+  // record panel events
   recordBtn?.addEventListener("click", openRecordPanel);
   recordCloseBtn?.addEventListener("click", closeRecordPanel);
   recordPanel?.addEventListener("click", (e) => { if (e.target === recordPanel) closeRecordPanel(); });
+
+  recordClearBtn?.addEventListener("click", clearAllRecordsAndResetNoRepeat);
 
   recordList?.addEventListener("click", (e) => {
     const t = e.target;
@@ -1050,24 +1074,40 @@ async function init(){
     if (delName){ deleteRecordAndUnseal(delName); return; }
   });
 
-  // ✅ 一鍵刪除（重置不重複）在記錄裡
-  recordClearBtn?.addEventListener("click", resetNoRepeatInRecordPanel);
+  // fav panel events
+  favPanelBtn?.addEventListener("click", openFavPanel);
+  favPanelCloseBtn?.addEventListener("click", closeFavPanel);
+  favPanel?.addEventListener("click", (e) => { if (e.target === favPanel) closeFavPanel(); });
 
-  // undo
+  favPanelClearBtn?.addEventListener("click", clearFavorites);
+
+  favPanelList?.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    const rm = t.dataset.favRemove;
+    if (rm){
+      pushUndo("fav_remove");
+      favorites = favorites.filter(x => x !== rm);
+      saveFavorites();
+      renderFavPanel();
+      renderRecordPanel();
+    }
+  });
+
   undoBtn?.addEventListener("click", undoOnce);
-
-  // love modal
-  loveCloseBtn?.addEventListener("click", () => loveModal?.classList.add("hidden"));
-  loveModal?.addEventListener("click", (e) => { if (e.target === loveModal) loveModal.classList.add("hidden"); });
-
   updateUndoUI();
-  updateControlLocksByMode();
+
+  // love modal close
+  loveCloseBtn?.addEventListener("click", () => {
+    loveModal?.classList.add("hidden");
+    loveModal?.setAttribute("aria-hidden","true");
+  });
+  loveModal?.addEventListener("click", (e) => {
+    if (e.target === loveModal){
+      loveModal.classList.add("hidden");
+      loveModal.setAttribute("aria-hidden","true");
+    }
+  });
 }
 
 init();
-
-
-
-
-
-
