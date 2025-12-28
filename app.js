@@ -143,29 +143,86 @@ function toNumberMaybe(v){
   return Number.isFinite(n) ? n : undefined;
 }
 
+/**
+ * ✅ 最關鍵：讓它能吃官方 parks.full.json
+ * - 支援 { result: { records: [] } }、{ records: [] }、{ data: [] }、GeoJSON features
+ * - 支援 pm_Latitude / pm_Longitude
+ * - district 抓不到時：從 address 抓 XX區
+ */
 function extractParksFromJson(data){
-  if (!Array.isArray(data) || data.length === 0) return [];
+  // 1) normalize array
+  let arr = data;
 
-  if (typeof data[0] === "string"){
-    return uniqueStrings(data).map((name) => ({ name }));
+  if (data && !Array.isArray(data) && typeof data === "object"){
+    if (Array.isArray(data.records)) arr = data.records;
+    else if (data.result && Array.isArray(data.result.records)) arr = data.result.records;
+    else if (Array.isArray(data.data)) arr = data.data;
+    else if (Array.isArray(data.features)) arr = data.features; // GeoJSON
   }
 
-  if (typeof data[0] === "object" && data[0]){
+  if (!Array.isArray(arr) || arr.length === 0) return [];
+
+  // ["公園A","公園B"...]
+  if (typeof arr[0] === "string"){
+    return uniqueStrings(arr).map((name) => ({ name }));
+  }
+
+  // [{...},{...}]
+  if (typeof arr[0] === "object" && arr[0]){
     const out = [];
-    for (const obj of data){
-      const name = getFirstString(obj, ["name","Name","公園名稱","公園名","parkName","title"]);
+
+    for (const raw of arr){
+      // GeoJSON 可能會把欄位放在 properties
+      const obj = raw && raw.properties ? raw.properties : raw;
+
+      const name = getFirstString(obj, [
+        "name","Name","公園名稱","公園名","parkName","title",
+        "pm_ParkName","pm_parkname","ParkName"
+      ]);
       if (!name) continue;
 
-      const district = getFirstString(obj, ["district","District","行政區","區","town","addrDistrict"]);
-      const address  = getFirstString(obj, ["address","Address","地址","addr","location","位置"]);
+      const address = getFirstString(obj, [
+        "address","Address","地址","addr","location","位置",
+        "pm_Address","pm_address"
+      ]);
 
-      // 常見欄位：lat/lng 或 經度/緯度 或 X/Y（台北資料很常是 X/Y）
-      const lat = toNumberMaybe(obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y);
-      const lng = toNumberMaybe(obj.lng ?? obj.longitude ?? obj.Longitude ?? obj.經度 ?? obj.X ?? obj.x);
+      // district 先抓欄位
+      let district = getFirstString(obj, [
+        "district","District","行政區","區","town","addrDistrict",
+        "pm_area","pm_district","pm_District"
+      ]);
+      // 抓不到就從地址抓「XX區」
+      if (!district && address){
+        const m = String(address).match(/([一-龥]{1,4}區)/);
+        if (m) district = m[1];
+      }
 
-      out.push({ name: normalizeName(name), district: normalizeName(district), address: normalizeName(address), lat, lng });
+      // ✅ 官方欄位
+      let lat = toNumberMaybe(
+        obj.pm_Latitude ?? obj.pm_lat ?? obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y
+      );
+      let lng = toNumberMaybe(
+        obj.pm_Longitude ?? obj.pm_lon ?? obj.lng ?? obj.longitude ?? obj.Longitude ?? obj.經度 ?? obj.X ?? obj.x
+      );
+
+      // GeoJSON geometry.coordinates = [lng, lat]
+      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw && raw.geometry && Array.isArray(raw.geometry.coordinates)){
+        const glng = toNumberMaybe(raw.geometry.coordinates[0]);
+        const glat = toNumberMaybe(raw.geometry.coordinates[1]);
+        if (!Number.isFinite(lat) && Number.isFinite(glat)) lat = glat;
+        if (!Number.isFinite(lng) && Number.isFinite(glng)) lng = glng;
+      }
+
+      out.push({
+        name: normalizeName(name),
+        district: normalizeName(district),
+        address: normalizeName(address),
+        lat,
+        lng,
+      });
     }
 
+    // 去重（name）
     const seen = new Set();
     const dedup = [];
     for (const p of out){
@@ -272,6 +329,7 @@ function undoOnce(){
   setFilterHint("已恢復上一個動作。");
   updateUndoUI();
 }
+
 function updateUndoUI(){
   if (!undoBtn) return;
   const stack = loadUndoStack();
@@ -450,25 +508,25 @@ function updateControlLocksByMode(){
 
 function setUIState(){
   const hasParks = parks.length > 0;
-  emptyState.classList.toggle("hidden", hasParks);
-  wheelSection.classList.toggle("hidden", !hasParks);
+  emptyState?.classList.toggle("hidden", hasParks);
+  wheelSection?.classList.toggle("hidden", !hasParks);
 
-  parkInput.disabled = isSpinning;
-  addBtn.disabled = isSpinning;
-  spinBtn.disabled = isSpinning || !hasParks;
+  if (parkInput) parkInput.disabled = isSpinning;
+  if (addBtn) addBtn.disabled = isSpinning;
+  if (spinBtn) spinBtn.disabled = isSpinning || !hasParks;
   if (newBatchBtn) newBatchBtn.disabled = isSpinning || masterPool.length === 0;
 
-  spinText.textContent = isSpinning ? "轉動中..." : "開始轉動！";
+  if (spinText) spinText.textContent = isSpinning ? "轉動中..." : "開始轉動！";
   updateControlLocksByMode();
 
   if (!selectedPark || isSpinning){
-    resultBox.classList.add("hidden");
+    resultBox?.classList.add("hidden");
     setMapBtn(null);
     preserveBtn?.classList.add("hidden");
     favBtn?.classList.add("hidden");
   } else {
-    resultBox.classList.remove("hidden");
-    resultName.textContent = selectedPark;
+    resultBox?.classList.remove("hidden");
+    if (resultName) resultName.textContent = selectedPark;
     setMapBtn(selectedPark);
     preserveBtn?.classList.remove("hidden");
     favBtn?.classList.remove("hidden");
@@ -495,6 +553,7 @@ function arcPath(cx, cy, r, startAngle, endAngle){
   return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z`;
 }
 function rebuildWheel(){
+  if (!wheelSvg) return;
   wheelSvg.innerHTML = "";
   if (parks.length === 0) return;
 
@@ -624,6 +683,7 @@ function twd97ToWgs84(x, y){
 
   return { lat: lat * 180/Math.PI, lng: lon * 180/Math.PI };
 }
+
 function getWgs84LatLng(meta){
   if (!meta) return null;
   const lat = meta.lat;
@@ -690,7 +750,7 @@ function loadNewBatch(){
       selectedPark = null;
       setFilterHint("最近模式需要定位：請按「取得定位」。");
       resetWheelInstant();
-      wheelSvg.innerHTML = "";
+      if (wheelSvg) wheelSvg.innerHTML = "";
       renderAll();
       return;
     }
@@ -702,7 +762,7 @@ function loadNewBatch(){
       selectedPark = null;
       setFilterHint("找不到可用座標（無法計算最近）。");
       resetWheelInstant();
-      wheelSvg.innerHTML = "";
+      if (wheelSvg) wheelSvg.innerHTML = "";
       renderAll();
       return;
     }
@@ -714,7 +774,7 @@ function loadNewBatch(){
       selectedPark = null;
       setFilterHint("沒有再更近了...");
       resetWheelInstant();
-      wheelSvg.innerHTML = "";
+      if (wheelSvg) wheelSvg.innerHTML = "";
       renderAll();
       return;
     }
@@ -754,7 +814,7 @@ function loadNewBatch(){
     selectedPark = null;
     setFilterHint("🎉 這個篩選範圍內都已抽過（封印完）！請按『重置不重複』或切換模式。");
     resetWheelInstant();
-    wheelSvg.innerHTML = "";
+    if (wheelSvg) wheelSvg.innerHTML = "";
     renderAll();
     return;
   }
@@ -917,45 +977,6 @@ function resetNoRepeat(){
 }
 
 // =========================
-// UI helpers (record panel + others)
-// =========================
-function openRecordPanel(){ recordPanel?.classList.remove("hidden"); renderRecord(); }
-function closeRecordPanel(){ recordPanel?.classList.add("hidden"); }
-
-function setUIState(){
-  const hasParks = parks.length > 0;
-  emptyState.classList.toggle("hidden", hasParks);
-  wheelSection.classList.toggle("hidden", !hasParks);
-
-  parkInput.disabled = isSpinning;
-  addBtn.disabled = isSpinning;
-  spinBtn.disabled = isSpinning || !hasParks;
-  if (newBatchBtn) newBatchBtn.disabled = isSpinning || masterPool.length === 0;
-
-  spinText.textContent = isSpinning ? "轉動中..." : "開始轉動！";
-  updateControlLocksByMode();
-
-  if (!selectedPark || isSpinning){
-    resultBox.classList.add("hidden");
-    setMapBtn(null);
-    preserveBtn?.classList.add("hidden");
-    favBtn?.classList.add("hidden");
-  } else {
-    resultBox.classList.remove("hidden");
-    resultName.textContent = selectedPark;
-    setMapBtn(selectedPark);
-    preserveBtn?.classList.remove("hidden");
-    favBtn?.classList.remove("hidden");
-  }
-}
-
-function renderAll(){
-  setUIState();
-  renderFavorites();
-  renderRecord();
-}
-
-// =========================
 // Init
 // =========================
 async function init(){
@@ -1004,7 +1025,7 @@ async function init(){
   loadNewBatch();
   renderAll();
 
-  spinBtn.addEventListener("click", spin);
+  spinBtn?.addEventListener("click", spin);
   newBatchBtn?.addEventListener("click", () => { if (!isSpinning) loadNewBatch(); });
 
   preserveBtn?.addEventListener("click", (e) => { e.preventDefault(); preserveSelected(); });
@@ -1062,7 +1083,6 @@ async function init(){
 }
 
 init();
-
 
 
 
