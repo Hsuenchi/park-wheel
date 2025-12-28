@@ -151,21 +151,34 @@ function toNumberMaybe(v){
 
 // ✅ 支援官方 parks.full.json（records/result.records/features）+ pm_Latitude/pm_Longitude
 function extractParksFromJson(data){
+  // 1) normalize array
   let arr = data;
 
   if (data && !Array.isArray(data) && typeof data === "object"){
     if (Array.isArray(data.records)) arr = data.records;
     else if (data.result && Array.isArray(data.result.records)) arr = data.result.records;
     else if (Array.isArray(data.data)) arr = data.data;
-    else if (Array.isArray(data.features)) arr = data.features;
+    else if (Array.isArray(data.features)) arr = data.features; // GeoJSON
   }
 
   if (!Array.isArray(arr) || arr.length === 0) return [];
 
+  // ["公園A","公園B"...]
   if (typeof arr[0] === "string"){
     return uniqueStrings(arr).map((name) => ({ name }));
   }
 
+  // helper：抓數字欄位
+  const getNum = (obj, keys) => {
+    for (const k of keys){
+      const v = obj?.[k];
+      const n = toNumberMaybe(v);
+      if (Number.isFinite(n)) return n;
+    }
+    return undefined;
+  };
+
+  // [{...},{...}]
   if (typeof arr[0] === "object" && arr[0]){
     const out = [];
 
@@ -192,19 +205,32 @@ function extractParksFromJson(data){
         if (m) district = m[1];
       }
 
-      let lat = toNumberMaybe(
-        obj.pm_Latitude ?? obj.pm_lat ?? obj.lat ?? obj.latitude ?? obj.Latitude ?? obj.緯度 ?? obj.Y ?? obj.y
-      );
-      let lng = toNumberMaybe(
-        obj.pm_Longitude ?? obj.pm_lon ?? obj.lng ?? obj.longitude ?? obj.Longitude ?? obj.經度 ?? obj.X ?? obj.x
-      );
+      // ✅ 先吃 WGS84 經緯度欄位
+      let lat = getNum(obj, [
+        "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度","Y","y"
+      ]);
+      let lng = getNum(obj, [
+        "pm_Longitude","pm_longitude","pm_lng","pm_lon","Longitude","longitude","lng","經度","X","x"
+      ]);
 
-      // GeoJSON geometry.coordinates = [lng,lat]
-      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw && raw.geometry && Array.isArray(raw.geometry.coordinates)){
+      // ✅ 再補：如果資料其實是 TWD97 X/Y（常見欄位）
+      //    注意：TWD97 的 x/y 是 250000 / 2700000 這種大數
+      let x = getNum(obj, ["pm_X","pm_x","X","x","twd97X","TWD97X","座標X"]);
+      let y = getNum(obj, ["pm_Y","pm_y","Y","y","twd97Y","TWD97Y","座標Y"]);
+
+      // GeoJSON geometry.coordinates = [lng, lat]
+      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw?.geometry?.coordinates && Array.isArray(raw.geometry.coordinates)){
         const glng = toNumberMaybe(raw.geometry.coordinates[0]);
         const glat = toNumberMaybe(raw.geometry.coordinates[1]);
         if (!Number.isFinite(lat) && Number.isFinite(glat)) lat = glat;
         if (!Number.isFinite(lng) && Number.isFinite(glng)) lng = glng;
+      }
+
+      // ✅ 如果 lat/lng 不像經緯度，但 x/y 看起來像 TWD97，就把它塞成 (lat=Y, lng=X)
+      //    讓你後面 getWgs84LatLng() 去轉成 WGS84
+      if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && looksLikeTWD97XY(x, y)){
+        lat = y;   // 先塞進去（Y）
+        lng = x;   // 先塞進去（X）
       }
 
       out.push({
@@ -216,6 +242,7 @@ function extractParksFromJson(data){
       });
     }
 
+    // 去重（name）
     const seen = new Set();
     const dedup = [];
     for (const p of out){
@@ -229,6 +256,7 @@ function extractParksFromJson(data){
 
   return [];
 }
+
 
 function shuffledCopy(arr){
   const a = arr.slice();
@@ -1042,6 +1070,7 @@ async function init(){
 }
 
 init();
+
 
 
 
