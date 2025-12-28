@@ -149,6 +149,14 @@ function toNumberMaybe(v){
   return Number.isFinite(n) ? n : undefined;
 }
 
+// ✅ 你目前的 extractParksFromJson 會呼叫它，但你原檔沒定義會直接噴錯
+function looksLikeTWD97XY(x, y){
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+  // 台灣 TWD97 TM2 常見範圍大約：
+  // X: 100000~400000, Y: 2400000~2900000
+  return x > 100000 && x < 400000 && y > 2400000 && y < 2900000;
+}
+
 // ✅ 支援官方 parks.full.json（records/result.records/features）+ pm_Latitude/pm_Longitude
 function extractParksFromJson(data){
   // 1) normalize array
@@ -214,7 +222,6 @@ function extractParksFromJson(data){
       ]);
 
       // ✅ 再補：如果資料其實是 TWD97 X/Y（常見欄位）
-      //    注意：TWD97 的 x/y 是 250000 / 2700000 這種大數
       let x = getNum(obj, ["pm_X","pm_x","X","x","twd97X","TWD97X","座標X"]);
       let y = getNum(obj, ["pm_Y","pm_y","Y","y","twd97Y","TWD97Y","座標Y"]);
 
@@ -226,11 +233,10 @@ function extractParksFromJson(data){
         if (!Number.isFinite(lng) && Number.isFinite(glng)) lng = glng;
       }
 
-      // ✅ 如果 lat/lng 不像經緯度，但 x/y 看起來像 TWD97，就把它塞成 (lat=Y, lng=X)
-      //    讓你後面 getWgs84LatLng() 去轉成 WGS84
+      // 如果 lat/lng 取不到，但 x/y 像 TWD97：先塞進去避免空值（但 near 仍會因非WGS84而跳過）
       if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && looksLikeTWD97XY(x, y)){
-        lat = y;   // 先塞進去（Y）
-        lng = x;   // 先塞進去（X）
+        lat = y;   // Y
+        lng = x;   // X
       }
 
       out.push({
@@ -256,7 +262,6 @@ function extractParksFromJson(data){
 
   return [];
 }
-
 
 function shuffledCopy(arr){
   const a = arr.slice();
@@ -539,6 +544,12 @@ function updateDistrictOptions(){
   }
 }
 
+/**
+ * ✅ 改成「你那個能成功抓定位版本」的鎖定/提示邏輯：
+ * - loc 只有 near 模式顯示；定位成功後變暗不可按
+ * - near 模式提示：未定位 →「請按取得定位，再按重新整理」
+ * - near 模式且 parks 空時，emptyText 也同步提示
+ */
 function updateControlLocksByMode(){
   const mode = modeSelect ? modeSelect.value : "all";
   const hasDistrictData = districtSelect && districtSelect.options && districtSelect.options.length > 0;
@@ -546,19 +557,30 @@ function updateControlLocksByMode(){
   if (districtGroup) districtGroup.hidden = mode !== "district";
   if (districtSelect) districtSelect.disabled = !(mode === "district" && hasDistrictData && !isSpinning);
 
-  if (locBtn) locBtn.hidden = mode !== "near";
-  if (locBtn) locBtn.disabled = !(mode === "near" && !userLoc && !isSpinning);
+  if (locBtn){
+    locBtn.hidden = mode !== "near";
+    locBtn.disabled = !(mode === "near" && !userLoc && !isSpinning);
+  }
 
   if (refreshBtn) refreshBtn.disabled = isSpinning;
   if (modeSelect) modeSelect.disabled = isSpinning;
 
-  updateUndoUI();
-
   if (mode === "near"){
-    setFilterHint(userLoc ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。` : "最近模式需要定位：請按「取得定位」，或定位後按「重新整理」。");
+    setFilterHint(
+      userLoc
+        ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`
+        : "最近模式需要定位：請按「取得定位」，再按「重新整理」。"
+    );
+    if (emptyText && parks.length === 0){
+      emptyText.textContent = userLoc
+        ? "請按「重新整理」刷新最近公園…"
+        : "最近模式需要定位：請按「取得定位」。";
+    }
   } else {
-    setFilterHint("");
+    // 非 near 不強制蓋掉提示（你原本會清空，這裡維持偏接近舊版：不額外清空）
   }
+
+  updateUndoUI();
 }
 
 function setUIState(){
@@ -735,7 +757,8 @@ function loadNewBatch(){
       selectedPark = null;
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
-      setEmptyText("最近模式需要定位：請按「取得定位」，或定位後按「重新整理」。");
+      setFilterHint("最近模式需要定位：請按「取得定位」，再按「重新整理」。");
+      setEmptyText("最近模式需要定位：請按「取得定位」。");
       renderAll();
       return;
     }
@@ -746,6 +769,7 @@ function loadNewBatch(){
       selectedPark = null;
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
+      setFilterHint("找不到可用座標（無法計算最近）。");
       setEmptyText("找不到可用座標（無法計算最近）。");
       renderAll();
       return;
@@ -757,6 +781,7 @@ function loadNewBatch(){
       selectedPark = null;
       resetWheelInstant();
       if (wheelSvg) wheelSvg.innerHTML = "";
+      setFilterHint("沒有再更近了...");
       setEmptyText("沒有再更近了...");
       renderAll();
       return;
@@ -783,6 +808,7 @@ function loadNewBatch(){
 
     resetWheelInstant();
     rebuildWheel();
+    setFilterHint(`已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${parks.length} 個。`);
     renderAll();
     return;
   }
@@ -920,14 +946,18 @@ function preserveSelected(){
   history = history.filter(x => x !== name);
   saveHistory();
 
-  // ✅ 你要的提示
   setFilterHint("已保留");
   renderAll();
 }
 
+/**
+ * ✅ 改成「你那個能成功抓定位版本」的 requestLocation：
+ * - 定位成功：如果此刻就在 near → 直接 loadNewBatch()
+ * - 不在 near：只提示「切到距離我最近後按重新整理」
+ */
 function requestLocation(){
   if (!("geolocation" in navigator)){
-    setFilterHint("你的瀏覽器不支援定位。");
+    setFilterHint("你的瀏覽器不支援定位，無法使用『距離我最近』模式。");
     return;
   }
 
@@ -939,30 +969,41 @@ function requestLocation(){
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       updateControlLocksByMode();
 
-      // ✅ 你要的：拿到定位後不用切模式，直接刷新（尤其 near）
-      loadNewBatch();
-      setFilterHint("已取得定位：已重新整理。");
-
-      // 定位成功後，locBtn 會變暗不可按（updateControlLocksByMode 已做到）
+      // ✅ 如果此刻就在 near，定位成功後立刻刷新一批（不用切模式）
+      if (!isSpinning && modeSelect?.value === "near"){
+        loadNewBatch();
+      } else {
+        setFilterHint("已取得定位：切到『距離我最近』後按「重新整理」。");
+      }
     },
     () => {
       userLoc = null;
       if (locBtn) locBtn.disabled = false;
-      setFilterHint("定位失敗或你拒絕定位權限。");
+      setFilterHint("定位失敗或你拒絕定位權限。你仍可使用隨機/行政區模式。");
       updateControlLocksByMode();
     },
     { enableHighAccuracy: true, timeout: 9000, maximumAge: 300000 }
   );
 }
 
+/**
+ * ✅ 改成「你那個能成功抓定位版本」的 refreshNow：
+ * - near 且未定位：只提示並 return（不刷新）
+ * - 其他：loadNewBatch + 提示已重新整理
+ */
 function refreshNow(){
-  // ✅ 重新整理：不清紀錄、不清封印，只是刷新畫面/最近列表
-  loadNewBatch();
-  if (modeSelect?.value === "near" && !userLoc){
-    setFilterHint("最近模式需要定位：請按「取得定位」。");
-  } else {
-    setFilterHint("已重新整理。");
+  if (isSpinning) return;
+
+  const mode = modeSelect?.value ?? "all";
+
+  if (mode === "near" && !userLoc){
+    setFilterHint("最近模式需要定位：請先按「取得定位」。");
+    if (emptyText) emptyText.textContent = "最近模式需要定位：請按「取得定位」。";
+    return;
   }
+
+  loadNewBatch();
+  setFilterHint("已重新整理。");
 }
 
 // =========================
