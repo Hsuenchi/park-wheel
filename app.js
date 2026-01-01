@@ -289,15 +289,24 @@ function setMapBtn(name){
 }
 
 // =========================
-// SFX (每格「噠」 + 停下「登愣」)
+// SFX (每格「搭」樣本2 + 停下「登愣」)
 // =========================
 let audioCtx = null;
 let sfxUnlocked = false;
+let sfxMaster = null;
+
+// ✅ 「搭」的整體音量（樣本2：建議 0.12~0.18）
+const TICK_VOLUME = 0.15;
+// ✅ 避免 tick 疊音刺耳
+let tickCooldownUntil = 0;
 
 function ensureAudio(){
   if (!audioCtx){
     const AC = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AC();
+    sfxMaster = audioCtx.createGain();
+    sfxMaster.gain.value = 1.0;
+    sfxMaster.connect(audioCtx.destination);
   }
   return audioCtx;
 }
@@ -307,6 +316,17 @@ async function unlockAudio(){
   try{
     const ctx = ensureAudio();
     if (ctx.state === "suspended") await ctx.resume();
+
+    // 小脈衝：更穩定解鎖
+    const t = ctx.currentTime;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.connect(sfxMaster);
+    const o = ctx.createOscillator();
+    o.frequency.value = 440;
+    o.connect(g);
+    o.start(t); o.stop(t + 0.01);
+
     sfxUnlocked = true;
   }catch{}
 }
@@ -335,70 +355,57 @@ function getRotationDeg(el){
   return 0;
 }
 
-// 木頭「噠」：清脆、不悶
+function makeNoiseBuffer(ctx, dur){
+  const sr = ctx.sampleRate;
+  const len = Math.max(1, Math.floor(sr * dur));
+  const b = ctx.createBuffer(1, len, sr);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < len; i++){
+    const env = 1 - i / len;                 // 漸弱避免尖峰
+    d[i] = (Math.random() * 2 - 1) * env;
+  }
+  return b;
+}
+
+// ✅ 樣本2：更悶、更不刺耳的「搭」
 function playWoodTick(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
-  const t = ctx.currentTime;
 
-  const tickVol = 0.16;
+  const now = ctx.currentTime;
+  if (now < tickCooldownUntil) return;
+  tickCooldownUntil = now + 0.030;
 
-  const click = ctx.createOscillator();
-  click.type = "square";
-  click.frequency.setValueAtTime(1900, t);
+  const t = now;
 
-  const clickGain = ctx.createGain();
-  clickGain.gain.setValueAtTime(0.0001, t);
-  clickGain.gain.exponentialRampToValueAtTime(0.12 * tickVol / 0.16, t + 0.0015);
-  clickGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.010);
-
-  const dur = 0.016;
-  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++){
-    data[i] = (Math.random() * 2 - 1) * (1 - i / data.length) * 0.9;
-  }
-  const noise = ctx.createBufferSource();
-  noise.buffer = buffer;
-
-  const hp = ctx.createBiquadFilter();
-  hp.type = "highpass";
-  hp.frequency.value = 600;
+  const src = ctx.createBufferSource();
+  src.buffer = makeNoiseBuffer(ctx, 0.028);
 
   const bp = ctx.createBiquadFilter();
   bp.type = "bandpass";
-  bp.frequency.value = 2550 + Math.random() * 650;
-  bp.Q.value = 8.2;
+  bp.frequency.value = 1050;   // 越低越悶
+  bp.Q.value = 4.8;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 8200;
-  lp.Q.value = 0.7;
+  lp.frequency.value = 2800;   // ✅ 降一點更不刺耳
+  lp.Q.value = 0.8;
 
-  const gain = ctx.createGain();
-  const v = tickVol * (0.85 + Math.random() * 0.25);
-  gain.gain.setValueAtTime(0.0001, t);
-  gain.gain.exponentialRampToValueAtTime(v, t + 0.003);
-  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.028);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(TICK_VOLUME, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
 
-  click.connect(clickGain);
-  clickGain.connect(hp);
+  src.connect(bp);
+  bp.connect(lp);
+  lp.connect(g);
+  g.connect(sfxMaster);
 
-  noise.connect(bp);
-  bp.connect(hp);
-
-  hp.connect(lp);
-  lp.connect(gain);
-  gain.connect(ctx.destination);
-
-  click.start(t);
-  click.stop(t + 0.02);
-
-  noise.start(t);
-  noise.stop(t + 0.05);
+  src.start(t);
+  src.stop(t + 0.08);
 }
 
-// 停下「登愣！」：兩段式、不刺
+// 停下「登愣！」：兩段式、不刺（也走 master）
 function playDengLeng(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
@@ -407,7 +414,7 @@ function playDengLeng(){
   const vol = 0.22;
 
   const f1 = 660;  // 登
-  const f2 = 990;  // 愣（想更可愛可試 1040 / 1100）
+  const f2 = 990;  // 愣
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
@@ -426,7 +433,7 @@ function playDengLeng(){
   fb.gain.value = 0.14;
 
   lp.connect(out);
-  out.connect(ctx.destination);
+  out.connect(sfxMaster);
 
   lp.connect(delay);
   delay.connect(fb);
@@ -464,7 +471,7 @@ function playDengLeng(){
 }
 
 /**
- * ✅ 每跨過一格就噠：用 rAF 追 CSS transition 的即時角度
+ * ✅ 每跨過一格就搭：用 rAF 追 CSS transition 的即時角度
  * sliceDeg = 360 / parks.length
  * durationMs = 3800 (主轉動時間)
  *
@@ -1038,7 +1045,7 @@ function loadNewBatch(){
 }
 
 // =========================
-// Spin (✅ 每格噠 + 停下登愣)
+// Spin (✅ 每格搭 + 停下登愣)
 // =========================
 function spin(){
   if (isSpinning || parks.length === 0 || !wheelRotator) return;
@@ -1054,7 +1061,7 @@ function spin(){
   const slice = 360 / n;
   const SPIN_MS = 3800;
 
-  // ✅ 開始每格噠（會回傳 stop function）
+  // ✅ 開始每格搭（會回傳 stop function）
   let stopTicks = startSegmentTicks(SPIN_MS, slice);
 
   const wonSet = loadSet(WIN_KEY);
@@ -1221,6 +1228,9 @@ async function init(){
 
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
+
+  // ✅ iOS：第一次觸碰頁面就解鎖音效（讓你不用一定要先按 spin 才有聲）
+  window.addEventListener("pointerdown", unlockAudio, { once: true, passive: true });
 
   // ✅ 同時嘗試讀 full + names（如果都有，會用 name 合併，把 district/address 補齊）
   const merged = new Map(); // name -> meta
