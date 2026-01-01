@@ -296,7 +296,7 @@ let sfxUnlocked = false;
 let sfxMaster = null;
 
 // ✅ 「搭」的整體音量（樣本2：建議 0.12~0.18）
-const TICK_VOLUME = 0.15;
+const TICK_VOLUME = 0.24;
 // ✅ 避免 tick 疊音刺耳
 let tickCooldownUntil = 0;
 
@@ -1342,3 +1342,4 @@ async function init(){
 }
 
 init();
+
