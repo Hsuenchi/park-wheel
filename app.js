@@ -152,7 +152,6 @@ function toNumberMaybe(v){
 // ✅ 支援官方 parks.full.json（records/result.records/features/純陣列）
 // ✅ 支援欄位：pm_name / pm_location / pm_Latitude / pm_Longitude
 function extractParksFromJson(data){
-  // 1) normalize array
   let arr = data;
 
   if (data && !Array.isArray(data) && typeof data === "object"){
@@ -164,12 +163,10 @@ function extractParksFromJson(data){
 
   if (!Array.isArray(arr) || arr.length === 0) return [];
 
-  // ["公園A","公園B"...]
   if (typeof arr[0] === "string"){
     return uniqueStrings(arr).map((name) => ({ name }));
   }
 
-  // helper：抓數字欄位
   const getNum = (obj, keys) => {
     for (const k of keys){
       const v = obj?.[k];
@@ -179,7 +176,6 @@ function extractParksFromJson(data){
     return undefined;
   };
 
-  // [{...},{...}]
   if (typeof arr[0] === "object" && arr[0]){
     const out = [];
 
@@ -188,14 +184,14 @@ function extractParksFromJson(data){
 
       const name = getFirstString(obj, [
         "name","Name","公園名稱","公園名","parkName","title",
-        "pm_name","pm_Name",                      // ✅ 官方 parks.full.json
+        "pm_name","pm_Name",
         "pm_ParkName","pm_parkname","ParkName"
       ]);
       if (!name) continue;
 
       const address = getFirstString(obj, [
         "address","Address","地址","addr","location","位置",
-        "pm_location","pm_Location",              // ✅ 官方 parks.full.json
+        "pm_location","pm_Location",
         "pm_Address","pm_address"
       ]);
 
@@ -208,7 +204,6 @@ function extractParksFromJson(data){
         if (m) district = m[1];
       }
 
-      // ✅ 先吃 WGS84 經緯度欄位（官方：pm_Latitude/pm_Longitude）
       let lat = getNum(obj, [
         "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度"
       ]);
@@ -216,7 +211,6 @@ function extractParksFromJson(data){
         "pm_Longitude","pm_longitude","pm_lng","pm_lon","Longitude","longitude","lng","經度"
       ]);
 
-      // GeoJSON geometry.coordinates = [lng, lat]
       if ((!Number.isFinite(lat) || !Number.isFinite(lng)) && raw?.geometry?.coordinates && Array.isArray(raw.geometry.coordinates)){
         const glng = toNumberMaybe(raw.geometry.coordinates[0]);
         const glat = toNumberMaybe(raw.geometry.coordinates[1]);
@@ -233,7 +227,6 @@ function extractParksFromJson(data){
       });
     }
 
-    // 去重（name）
     const seen = new Set();
     const dedup = [];
     for (const p of out){
@@ -289,24 +282,15 @@ function setMapBtn(name){
 }
 
 // =========================
-// SFX (每格「搭」樣本2 + 停下「登愣」)
+// SFX (樣本4：每格「噠」比較不刺、但不悶 + 停下「登愣」)
 // =========================
 let audioCtx = null;
 let sfxUnlocked = false;
-let sfxMaster = null;
-
-// ✅ 「搭」的整體音量（樣本2：建議 0.12~0.18）
-const TICK_VOLUME = 0.24;
-// ✅ 避免 tick 疊音刺耳
-let tickCooldownUntil = 0;
 
 function ensureAudio(){
   if (!audioCtx){
     const AC = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AC();
-    sfxMaster = audioCtx.createGain();
-    sfxMaster.gain.value = 1.0;
-    sfxMaster.connect(audioCtx.destination);
   }
   return audioCtx;
 }
@@ -316,22 +300,11 @@ async function unlockAudio(){
   try{
     const ctx = ensureAudio();
     if (ctx.state === "suspended") await ctx.resume();
-
-    // 小脈衝：更穩定解鎖
-    const t = ctx.currentTime;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.connect(sfxMaster);
-    const o = ctx.createOscillator();
-    o.frequency.value = 440;
-    o.connect(g);
-    o.start(t); o.stop(t + 0.01);
-
     sfxUnlocked = true;
   }catch{}
 }
 
-// 取得目前 wheelRotator 的「即時角度」（CSS transition 中也抓得到）
+// 取得 wheelRotator 即時角度（transition 中也抓得到）
 function getRotationDeg(el){
   const tr = getComputedStyle(el).transform;
   if (!tr || tr === "none") return 0;
@@ -355,57 +328,101 @@ function getRotationDeg(el){
   return 0;
 }
 
-function makeNoiseBuffer(ctx, dur){
-  const sr = ctx.sampleRate;
-  const len = Math.max(1, Math.floor(sr * dur));
-  const b = ctx.createBuffer(1, len, sr);
-  const d = b.getChannelData(0);
-  for (let i = 0; i < len; i++){
-    const env = 1 - i / len;                 // 漸弱避免尖峰
-    d[i] = (Math.random() * 2 - 1) * env;
-  }
-  return b;
-}
-
-// ✅ 樣本2：更悶、更不刺耳的「搭」
+/**
+ * ✅ 樣本4「噠」：木頭彈片感（不刺、不悶）
+ * 做法：短噪音 + 低比例的短音高頻「敲擊」，
+ *       用 bandpass 讓聲音集中在木頭的共鳴區，再用 gentle saturate。
+ */
 function playWoodTick(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
+  const t = ctx.currentTime;
 
-  const now = ctx.currentTime;
-  if (now < tickCooldownUntil) return;
-  tickCooldownUntil = now + 0.030;
+  // --- 你要調音色/音量，最常改這三個 ---
+  const VOL = 0.14;       // 音量（覺得變小聲就加到 0.16~0.20）
+  const CENTER = 1400;    // 共鳴中心（大：更亮；小：更木、更不刺）建議 1200~1800
+  const Q = 7.0;          // 共鳴尖銳度（大：更脆；小：更柔）建議 5~9
+  // --------------------------------------
 
-  const t = now;
+  // 1) 噪音瞬態（像木頭摩擦/彈片）
+  const dur = 0.020;
+  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++){
+    const k = 1 - i / data.length;
+    // 低一點的噪音量，避免刺耳
+    data[i] = (Math.random() * 2 - 1) * (k * k) * 0.55;
+  }
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
 
-  const src = ctx.createBufferSource();
-  src.buffer = makeNoiseBuffer(ctx, 0.028);
+  // 2) 很短的「敲擊音」補存在感（用 triangle，比 square 不刺）
+  const o = ctx.createOscillator();
+  o.type = "triangle";
+  o.frequency.setValueAtTime(2100 + Math.random() * 120, t);
+
+  const og = ctx.createGain();
+  og.gain.setValueAtTime(0.0001, t);
+  og.gain.exponentialRampToValueAtTime(0.065, t + 0.0025);
+  og.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+
+  // 3) 濾波：高通去悶、帶通做木頭共鳴、低通防刺
+  const hp = ctx.createBiquadFilter();
+  hp.type = "highpass";
+  hp.frequency.value = 320; // 太悶就提高到 450~650
 
   const bp = ctx.createBiquadFilter();
   bp.type = "bandpass";
-  bp.frequency.value = 1050;   // 越低越悶
-  bp.Q.value = 4.8;
+  bp.frequency.value = CENTER + (Math.random() * 90 - 45);
+  bp.Q.value = Q;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 2800;   // ✅ 降一點更不刺耳
-  lp.Q.value = 0.8;
+  lp.frequency.value = 5200; // 太刺耳就降到 4200~4800
 
+  // 4) 音量包絡
   const g = ctx.createGain();
   g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(TICK_VOLUME, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(VOL, t + 0.003);
   g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
 
-  src.connect(bp);
-  bp.connect(lp);
-  lp.connect(g);
-  g.connect(sfxMaster);
+  // 5) 很輕的 soft saturate（用 waveshaper）
+  const shaper = ctx.createWaveShaper();
+  shaper.curve = makeSoftClipCurve(1.8);
+  shaper.oversample = "2x";
 
-  src.start(t);
-  src.stop(t + 0.08);
+  // routing
+  noise.connect(bp);
+  o.connect(og);
+
+  // 把敲擊音混入帶通（讓它也走木頭共鳴）
+  og.connect(bp);
+
+  bp.connect(hp);
+  hp.connect(lp);
+  lp.connect(shaper);
+  shaper.connect(g);
+  g.connect(ctx.destination);
+
+  noise.start(t);
+  noise.stop(t + 0.060);
+
+  o.start(t);
+  o.stop(t + 0.03);
 }
 
-// 停下「登愣！」：兩段式、不刺（也走 master）
+function makeSoftClipCurve(amount = 1.6){
+  const n = 1024;
+  const curve = new Float32Array(n);
+  const k = amount * 10;
+  for (let i = 0; i < n; i++){
+    const x = (i * 2) / (n - 1) - 1;
+    curve[i] = ((1 + k) * x) / (1 + k * Math.abs(x));
+  }
+  return curve;
+}
+
+// 停下「登愣！」：兩段式、不刺
 function playDengLeng(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
@@ -433,7 +450,7 @@ function playDengLeng(){
   fb.gain.value = 0.14;
 
   lp.connect(out);
-  out.connect(sfxMaster);
+  out.connect(ctx.destination);
 
   lp.connect(delay);
   delay.connect(fb);
@@ -471,11 +488,7 @@ function playDengLeng(){
 }
 
 /**
- * ✅ 每跨過一格就搭：用 rAF 追 CSS transition 的即時角度
- * sliceDeg = 360 / parks.length
- * durationMs = 3800 (主轉動時間)
- *
- * 回傳 stop()，方便中途取消
+ * ✅ 每跨過一格就噠：用 rAF 追 CSS transition 的即時角度
  */
 function startSegmentTicks(durationMs, sliceDeg){
   if (!wheelRotator) return () => {};
@@ -492,7 +505,6 @@ function startSegmentTicks(durationMs, sliceDeg){
     const now = performance.now();
     const angle = getRotationDeg(wheelRotator);
 
-    // unwrap（避免 359→0 跳動）
     let delta = angle - prevAngle;
     if (delta < -180) delta += 360;
     if (delta > 180) delta -= 360;
@@ -502,7 +514,6 @@ function startSegmentTicks(durationMs, sliceDeg){
     const bucket = Math.floor(unwrapped / sliceDeg);
     const diff = bucket - prevBucket;
 
-    // diff 可能 >1（轉很快時一幀跨過多格），就補齊 tick 次數
     if (diff > 0){
       for (let i = 0; i < diff; i++) playWoodTick();
       prevBucket = bucket;
@@ -516,7 +527,6 @@ function startSegmentTicks(durationMs, sliceDeg){
   };
 
   rafId = requestAnimationFrame(step);
-
   return () => { if (rafId) cancelAnimationFrame(rafId); };
 }
 
@@ -723,7 +733,6 @@ function deleteRecordAndUnseal(name){
   if (!isSpinning) loadNewBatch();
 }
 
-// ✅ 一鍵刪除（舊重置不重複）
 function clearAllRecordsAndResetNoRepeat(){
   pushUndo("record_clear_all");
 
@@ -768,7 +777,6 @@ function updateControlLocksByMode(){
   if (districtGroup) districtGroup.hidden = mode !== "district";
   if (districtSelect) districtSelect.disabled = !(mode === "district" && hasDistrictData && !isSpinning);
 
-  // ✅ 跟可用版一致：loc 只在 near 可見；定位成功後變暗不可按
   if (locBtn){
     locBtn.hidden = mode !== "near";
     locBtn.disabled = !(mode === "near" && !userLoc && !isSpinning);
@@ -817,7 +825,6 @@ function setUIState(){
 
 function renderAll(){
   setUIState();
-  // panels 是打開時才 render，避免每次都重排
 }
 
 // =========================
@@ -1021,7 +1028,6 @@ function loadNewBatch(){
     return;
   }
 
-  // non-near
   const basePool = getFilteredPoolNamesNonNear();
   const remaining = basePool.filter(n => !sealedSet.has(n));
 
@@ -1045,7 +1051,7 @@ function loadNewBatch(){
 }
 
 // =========================
-// Spin (✅ 每格搭 + 停下登愣)
+// Spin (✅ 每格噠 + 停下登愣)
 // =========================
 function spin(){
   if (isSpinning || parks.length === 0 || !wheelRotator) return;
@@ -1061,7 +1067,6 @@ function spin(){
   const slice = 360 / n;
   const SPIN_MS = 3800;
 
-  // ✅ 開始每格搭（會回傳 stop function）
   let stopTicks = startSegmentTicks(SPIN_MS, slice);
 
   const wonSet = loadSet(WIN_KEY);
@@ -1129,11 +1134,9 @@ function spin(){
         selectedPark = picked;
         isSpinning = false;
 
-        // ✅ 停下來：停止 tick + 播「登愣」
         stopTicks?.();
         playDengLeng();
 
-        // 彩蛋：全抽完
         const already = localStorage.getItem(LOVE_SHOWN_KEY) === "1";
         if (!already && loadSet(SEALED_KEY).size >= masterPool.length){
           localStorage.setItem(LOVE_SHOWN_KEY, "1");
@@ -1164,7 +1167,6 @@ function preserveSelected(){
   saveSet(SEALED_KEY, sealedSet);
   saveSet(WIN_KEY, wonSet);
 
-  // 保留：不留紀錄
   history = history.filter(x => x !== name);
   saveHistory();
 
@@ -1172,7 +1174,7 @@ function preserveSelected(){
   renderAll();
 }
 
-// ✅✅✅ 定位邏輯改成「可用版」：只在 near 模式才自動刷新
+// ✅✅✅ 定位邏輯：只在 near 模式才自動刷新
 function requestLocation(){
   if (!("geolocation" in navigator)){
     setFilterHint("你的瀏覽器不支援定位，無法使用『距離我最近』模式。");
@@ -1187,7 +1189,6 @@ function requestLocation(){
       userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       updateControlLocksByMode();
 
-      // ✅ 如果此刻就在 near，定位成功後立刻刷新一批（不用切模式）
       if (!isSpinning && modeSelect?.value === "near"){
         loadNewBatch();
       } else {
@@ -1204,7 +1205,6 @@ function requestLocation(){
   );
 }
 
-// ✅✅✅ 重新整理邏輯改成「可用版」：near 且沒定位就提示先定位
 function refreshNow(){
   if (isSpinning) return;
 
@@ -1229,10 +1229,7 @@ async function init(){
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
 
-  // ✅ iOS：第一次觸碰頁面就解鎖音效（讓你不用一定要先按 spin 才有聲）
-  window.addEventListener("pointerdown", unlockAudio, { once: true, passive: true });
-
-  // ✅ 同時嘗試讀 full + names（如果都有，會用 name 合併，把 district/address 補齊）
+  // ✅ 同時讀 full + names（用 name 合併，把 district/address 補齊）
   const merged = new Map(); // name -> meta
   for (const url of DATA_URLS){
     try{
@@ -1273,6 +1270,10 @@ async function init(){
   updateControlLocksByMode();
   loadNewBatch();
   renderAll();
+
+  // ✅ 額外：第一次觸碰畫面也解鎖音訊（iOS 更穩）
+  document.addEventListener("touchstart", unlockAudio, { passive: true, once: true });
+  document.addEventListener("mousedown", unlockAudio, { passive: true, once: true });
 
   spinBtn?.addEventListener("click", spin);
   newBatchBtn?.addEventListener("click", () => { if (!isSpinning) loadNewBatch(); });
@@ -1342,4 +1343,3 @@ async function init(){
 }
 
 init();
-
