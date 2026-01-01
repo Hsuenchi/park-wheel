@@ -204,7 +204,6 @@ function extractParksFromJson(data){
         "pm_area","pm_district","pm_District"
       ]);
       if (!district && address){
-        // ✅ 台北市行政區 1~3 個字 + 區（避免抓到「位於北投區」那種）
         const m = String(address).match(/([一-龥]{1,3}區)/);
         if (m) district = m[1];
       }
@@ -287,6 +286,231 @@ function setMapBtn(name){
   }
   mapBtn.href = buildMapUrl(name);
   mapBtn.setAttribute("aria-disabled", "false");
+}
+
+// =========================
+// SFX (每格「噠」 + 停下「登愣」)
+// =========================
+let audioCtx = null;
+let sfxUnlocked = false;
+
+function ensureAudio(){
+  if (!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AC();
+  }
+  return audioCtx;
+}
+
+// iOS 需要使用者手勢解鎖
+async function unlockAudio(){
+  try{
+    const ctx = ensureAudio();
+    if (ctx.state === "suspended") await ctx.resume();
+    sfxUnlocked = true;
+  }catch{}
+}
+
+// 取得目前 wheelRotator 的「即時角度」（CSS transition 中也抓得到）
+function getRotationDeg(el){
+  const tr = getComputedStyle(el).transform;
+  if (!tr || tr === "none") return 0;
+
+  if (tr.startsWith("matrix(")){
+    const v = tr.slice(7, -1).split(",").map(Number);
+    const a = v[0], b = v[1];
+    let deg = Math.atan2(b, a) * 180 / Math.PI;
+    if (deg < 0) deg += 360;
+    return deg;
+  }
+
+  if (tr.startsWith("matrix3d(")){
+    const v = tr.slice(9, -1).split(",").map(Number);
+    const a = v[0], b = v[1];
+    let deg = Math.atan2(b, a) * 180 / Math.PI;
+    if (deg < 0) deg += 360;
+    return deg;
+  }
+
+  return 0;
+}
+
+// 木頭「噠」：清脆、不悶
+function playWoodTick(){
+  if (!sfxUnlocked) return;
+  const ctx = ensureAudio();
+  const t = ctx.currentTime;
+
+  const tickVol = 0.16;
+
+  const click = ctx.createOscillator();
+  click.type = "square";
+  click.frequency.setValueAtTime(1900, t);
+
+  const clickGain = ctx.createGain();
+  clickGain.gain.setValueAtTime(0.0001, t);
+  clickGain.gain.exponentialRampToValueAtTime(0.12 * tickVol / 0.16, t + 0.0015);
+  clickGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.010);
+
+  const dur = 0.016;
+  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++){
+    data[i] = (Math.random() * 2 - 1) * (1 - i / data.length) * 0.9;
+  }
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+
+  const hp = ctx.createBiquadFilter();
+  hp.type = "highpass";
+  hp.frequency.value = 600;
+
+  const bp = ctx.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.frequency.value = 2550 + Math.random() * 650;
+  bp.Q.value = 8.2;
+
+  const lp = ctx.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 8200;
+  lp.Q.value = 0.7;
+
+  const gain = ctx.createGain();
+  const v = tickVol * (0.85 + Math.random() * 0.25);
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.exponentialRampToValueAtTime(v, t + 0.003);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.028);
+
+  click.connect(clickGain);
+  clickGain.connect(hp);
+
+  noise.connect(bp);
+  bp.connect(hp);
+
+  hp.connect(lp);
+  lp.connect(gain);
+  gain.connect(ctx.destination);
+
+  click.start(t);
+  click.stop(t + 0.02);
+
+  noise.start(t);
+  noise.stop(t + 0.05);
+}
+
+// 停下「登愣！」：兩段式、不刺
+function playDengLeng(){
+  if (!sfxUnlocked) return;
+  const ctx = ensureAudio();
+  const t0 = ctx.currentTime;
+
+  const vol = 0.22;
+
+  const f1 = 660;  // 登
+  const f2 = 990;  // 愣（想更可愛可試 1040 / 1100）
+
+  const lp = ctx.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 4200;
+  lp.Q.value = 0.6;
+
+  const out = ctx.createGain();
+  out.gain.setValueAtTime(0.0001, t0);
+  out.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
+  out.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.80);
+
+  const delay = ctx.createDelay(0.2);
+  delay.delayTime.value = 0.065;
+
+  const fb = ctx.createGain();
+  fb.gain.value = 0.14;
+
+  lp.connect(out);
+  out.connect(ctx.destination);
+
+  lp.connect(delay);
+  delay.connect(fb);
+  fb.connect(delay);
+  delay.connect(out);
+
+  function tone(at, freq, dur, peak){
+    const o = ctx.createOscillator();
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, at);
+
+    const o2 = ctx.createOscillator();
+    o2.type = "sine";
+    o2.frequency.setValueAtTime(freq * 2, at);
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.exponentialRampToValueAtTime(peak, at + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.0001, at);
+    g2.gain.exponentialRampToValueAtTime(peak * 0.18, at + 0.008);
+    g2.gain.exponentialRampToValueAtTime(0.0001, at + Math.min(dur, 0.22));
+
+    o.connect(g);   g.connect(lp);
+    o2.connect(g2); g2.connect(lp);
+
+    o.start(at);  o.stop(at + dur + 0.03);
+    o2.start(at); o2.stop(at + Math.min(dur, 0.25) + 0.03);
+  }
+
+  tone(t0,        f1, 0.12, 0.22);
+  tone(t0 + 0.10, f2, 0.22, 0.28);
+}
+
+/**
+ * ✅ 每跨過一格就噠：用 rAF 追 CSS transition 的即時角度
+ * sliceDeg = 360 / parks.length
+ * durationMs = 3800 (主轉動時間)
+ *
+ * 回傳 stop()，方便中途取消
+ */
+function startSegmentTicks(durationMs, sliceDeg){
+  if (!wheelRotator) return () => {};
+  let prevAngle = getRotationDeg(wheelRotator);
+  let unwrapped = 0;
+  let prevBucket = 0;
+
+  const startTime = performance.now();
+  let rafId = 0;
+
+  const step = () => {
+    if (!isSpinning) return;
+
+    const now = performance.now();
+    const angle = getRotationDeg(wheelRotator);
+
+    // unwrap（避免 359→0 跳動）
+    let delta = angle - prevAngle;
+    if (delta < -180) delta += 360;
+    if (delta > 180) delta -= 360;
+
+    unwrapped += delta;
+
+    const bucket = Math.floor(unwrapped / sliceDeg);
+    const diff = bucket - prevBucket;
+
+    // diff 可能 >1（轉很快時一幀跨過多格），就補齊 tick 次數
+    if (diff > 0){
+      for (let i = 0; i < diff; i++) playWoodTick();
+      prevBucket = bucket;
+    }
+
+    prevAngle = angle;
+
+    if (now - startTime <= durationMs + 120){
+      rafId = requestAnimationFrame(step);
+    }
+  };
+
+  rafId = requestAnimationFrame(step);
+
+  return () => { if (rafId) cancelAnimationFrame(rafId); };
 }
 
 // =========================
@@ -814,10 +1038,13 @@ function loadNewBatch(){
 }
 
 // =========================
-// Spin
+// Spin (✅ 每格噠 + 停下登愣)
 // =========================
 function spin(){
   if (isSpinning || parks.length === 0 || !wheelRotator) return;
+
+  // ✅ iOS：必須在使用者點擊事件內解鎖
+  unlockAudio();
 
   isSpinning = true;
   selectedPark = null;
@@ -825,12 +1052,17 @@ function spin(){
 
   const n = parks.length;
   const slice = 360 / n;
+  const SPIN_MS = 3800;
+
+  // ✅ 開始每格噠（會回傳 stop function）
+  let stopTicks = startSegmentTicks(SPIN_MS, slice);
 
   const wonSet = loadSet(WIN_KEY);
   const sealedSet0 = loadSet(SEALED_KEY);
 
   let candidates = parks.filter(p => !wonSet.has(p) && !sealedSet0.has(p));
   if (candidates.length === 0){
+    stopTicks?.();
     isSpinning = false;
     setFilterHint("轉過這個了! 請再轉一次或換一批!");
     renderAll();
@@ -855,6 +1087,7 @@ function spin(){
 
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)){
+      stopTicks?.();
       isSpinning = false;
       setFilterHint("轉過這個了! 請再轉一次或換一批!");
       renderAll();
@@ -888,6 +1121,10 @@ function spin(){
 
         selectedPark = picked;
         isSpinning = false;
+
+        // ✅ 停下來：停止 tick + 播「登愣」
+        stopTicks?.();
+        playDengLeng();
 
         // 彩蛋：全抽完
         const already = localStorage.getItem(LOVE_SHOWN_KEY) === "1";
@@ -1095,5 +1332,3 @@ async function init(){
 }
 
 init();
-
-
