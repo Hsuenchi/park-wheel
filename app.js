@@ -282,7 +282,7 @@ function setMapBtn(name){
 }
 
 // =========================
-// SFX (樣本4：每格「噠」比較不刺、但不悶 + 停下「登愣」)
+// SFX（改成「試聽頁樣本4：木片啪感」）
 // =========================
 let audioCtx = null;
 let sfxUnlocked = false;
@@ -329,86 +329,75 @@ function getRotationDeg(el){
 }
 
 /**
- * ✅ 樣本4「噠」：木頭彈片感（不刺、不悶）
- * 做法：短噪音 + 低比例的短音高頻「敲擊」，
- *       用 bandpass 讓聲音集中在木頭的共鳴區，再用 gentle saturate。
+ * ✅ 套用你貼的試聽頁「樣本4：木片啪感」
+ * 結構：低頻瞬態(三角波) + 一點高頻木質(短噪音 bandpass→lowpass)
  */
 function playWoodTick(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
   const t = ctx.currentTime;
 
-  // --- 你要調音色/音量，最常改這三個 ---
-  const VOL = 0.14;       // 音量（覺得變小聲就加到 0.16~0.20）
-  const CENTER = 1400;    // 共鳴中心（大：更亮；小：更木、更不刺）建議 1200~1800
-  const Q = 7.0;          // 共鳴尖銳度（大：更脆；小：更柔）建議 5~9
-  // --------------------------------------
+  // === 你最常調這三個 ===
+  const VOL = 0.18;          // 整體音量（覺得變小聲→0.20~0.26）
+  const WOOD_F = 1700;       // 木質共鳴中心（更亮→1900~2200；更溫→1300~1600）
+  const LP_CUTOFF = 3800;    // 刺耳控制（太刺→2800~3400；太悶→4000~5200）
+  // =======================
 
-  // 1) 噪音瞬態（像木頭摩擦/彈片）
-  const dur = 0.020;
-  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++){
-    const k = 1 - i / data.length;
-    // 低一點的噪音量，避免刺耳
-    data[i] = (Math.random() * 2 - 1) * (k * k) * 0.55;
-  }
-  const noise = ctx.createBufferSource();
-  noise.buffer = buffer;
+  // 輸出包絡（讓 tick 乾淨不拖尾）
+  const out = ctx.createGain();
+  out.gain.setValueAtTime(0.0001, t);
+  out.gain.exponentialRampToValueAtTime(VOL, t + 0.002);
+  out.gain.exponentialRampToValueAtTime(0.0001, t + 0.060);
+  out.connect(ctx.destination);
 
-  // 2) 很短的「敲擊音」補存在感（用 triangle，比 square 不刺）
+  // 1) 低頻瞬態：triangle 往下滑音（木片「啪」的底）
   const o = ctx.createOscillator();
   o.type = "triangle";
-  o.frequency.setValueAtTime(2100 + Math.random() * 120, t);
+  o.frequency.setValueAtTime(260, t);
+  o.frequency.exponentialRampToValueAtTime(180, t + 0.030);
 
   const og = ctx.createGain();
   og.gain.setValueAtTime(0.0001, t);
-  og.gain.exponentialRampToValueAtTime(0.065, t + 0.0025);
-  og.gain.exponentialRampToValueAtTime(0.0001, t + 0.012);
+  og.gain.exponentialRampToValueAtTime(0.22, t + 0.002);
+  og.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
 
-  // 3) 濾波：高通去悶、帶通做木頭共鳴、低通防刺
-  const hp = ctx.createBiquadFilter();
-  hp.type = "highpass";
-  hp.frequency.value = 320; // 太悶就提高到 450~650
+  o.connect(og);
+  og.connect(out);
+
+  // 2) 高頻木質：短噪音 + bandpass + lowpass（木質脆感）
+  const dur = 0.018;
+  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++){
+    const env = 1 - i / data.length; // 衰減避免刺
+    data[i] = (Math.random() * 2 - 1) * env;
+  }
+
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
 
   const bp = ctx.createBiquadFilter();
   bp.type = "bandpass";
-  bp.frequency.value = CENTER + (Math.random() * 90 - 45);
-  bp.Q.value = Q;
+  bp.frequency.value = WOOD_F;
+  bp.Q.value = 5.2;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 5200; // 太刺耳就降到 4200~4800
+  lp.frequency.value = LP_CUTOFF;
 
-  // 4) 音量包絡
-  const g = ctx.createGain();
-  g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(VOL, t + 0.003);
-  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+  const ng = ctx.createGain();
+  ng.gain.setValueAtTime(0.0001, t);
+  ng.gain.exponentialRampToValueAtTime(0.35, t + 0.003);
+  ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.040);
 
-  // 5) 很輕的 soft saturate（用 waveshaper）
-  const shaper = ctx.createWaveShaper();
-  shaper.curve = makeSoftClipCurve(1.8);
-  shaper.oversample = "2x";
-
-  // routing
   noise.connect(bp);
-  o.connect(og);
+  bp.connect(lp);
+  lp.connect(ng);
+  ng.connect(out);
 
-  // 把敲擊音混入帶通（讓它也走木頭共鳴）
-  og.connect(bp);
-
-  bp.connect(hp);
-  hp.connect(lp);
-  lp.connect(shaper);
-  shaper.connect(g);
-  g.connect(ctx.destination);
-
-  noise.start(t);
-  noise.stop(t + 0.060);
-
-  o.start(t);
-  o.stop(t + 0.03);
+  // start/stop
+  o.start(t);      o.stop(t + 0.08);
+  noise.start(t);  noise.stop(t + 0.06);
 }
 
 function makeSoftClipCurve(amount = 1.6){
