@@ -388,7 +388,7 @@ function playWoodTick(){
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 8000;   // ✅ 降一點更不刺耳
+  lp.frequency.value = 2800;   // ✅ 降一點更不刺耳
   lp.Q.value = 0.8;
 
   const g = ctx.createGain();
@@ -1342,5 +1342,6 @@ async function init(){
 }
 
 init();
+
 
 
