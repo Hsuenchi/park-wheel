@@ -1342,6 +1342,3 @@ async function init(){
 }
 
 init();
-
-
-
