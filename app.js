@@ -282,10 +282,44 @@ function setMapBtn(name){
 }
 
 // =========================
-// SFX（改成「試聽頁樣本4：木片啪感」）
+// SFX（樣本06｜厚木頭（更厚、更低） + 登愣）
 // =========================
 let audioCtx = null;
 let sfxUnlocked = false;
+
+// ✅ 這份 preset 取自你喜歡的 demo_06（厚木頭）
+// 想微調只要改這裡：
+// - 太小聲：tick.vol / ding.vol ↑
+// - 太悶：tick.lp ↑（例如 3600~4200） 或 tick.bp ↑
+// - 太刺：tick.lp ↓（例如 2600~3100） 或 tick.clickFreq ↓
+const SFX_PRESET_06 = {
+  tick: {
+    vol: 0.21,
+
+    clickFreq: 1450,
+    clickType: "triangle",
+    clickPeak: 0.13,
+    clickDur: 0.020,
+    clickDecay: 0.022,
+
+    noiseDur: 0.020,
+    noisePeak: 0.30,
+    noiseDecay: 0.050,
+
+    hp: 220,
+    bp: 980,
+    bpQ: 4.3,
+    lp: 3300,
+  },
+  ding: {
+    vol: 0.22,
+    lp: 3000,
+    delay: 0.060,
+    fb: 0.13,
+    f1: 560,
+    f2: 840,
+  }
+};
 
 function ensureAudio(){
   if (!audioCtx){
@@ -328,115 +362,94 @@ function getRotationDeg(el){
   return 0;
 }
 
-/**
- * ✅ 套用你貼的試聽頁「樣本4：木片啪感」
- * 結構：低頻瞬態(三角波) + 一點高頻木質(短噪音 bandpass→lowpass)
- */
+// ✅ 厚木頭 tick（demo_06 版本）
 function playWoodTick(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
-  const t = ctx.currentTime;
+  const t0 = ctx.currentTime;
+  const p = SFX_PRESET_06.tick;
 
-  // === 你最常調這三個 ===
-  const VOL = 0.18;          // 整體音量（覺得變小聲→0.20~0.26）
-  const WOOD_F = 1700;       // 木質共鳴中心（更亮→1900~2200；更溫→1300~1600）
-  const LP_CUTOFF = 3800;    // 刺耳控制（太刺→2800~3400；太悶→4000~5200）
-  // =======================
-
-  // 輸出包絡（讓 tick 乾淨不拖尾）
+  // master out
   const out = ctx.createGain();
-  out.gain.setValueAtTime(0.0001, t);
-  out.gain.exponentialRampToValueAtTime(VOL, t + 0.002);
-  out.gain.exponentialRampToValueAtTime(0.0001, t + 0.060);
+  out.gain.setValueAtTime(0.0001, t0);
+  out.gain.exponentialRampToValueAtTime(p.vol, t0 + 0.002);
+  out.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.060);
   out.connect(ctx.destination);
 
-  // 1) 低頻瞬態：triangle 往下滑音（木片「啪」的底）
-  const o = ctx.createOscillator();
-  o.type = "triangle";
-  o.frequency.setValueAtTime(260, t);
-  o.frequency.exponentialRampToValueAtTime(180, t + 0.030);
-
-  const og = ctx.createGain();
-  og.gain.setValueAtTime(0.0001, t);
-  og.gain.exponentialRampToValueAtTime(0.22, t + 0.002);
-  og.gain.exponentialRampToValueAtTime(0.0001, t + 0.055);
-
-  o.connect(og);
-  og.connect(out);
-
-  // 2) 高頻木質：短噪音 + bandpass + lowpass（木質脆感）
-  const dur = 0.018;
+  // noise burst
+  const dur = p.noiseDur;
   const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
   const data = buffer.getChannelData(0);
   for (let i = 0; i < data.length; i++){
-    const env = 1 - i / data.length; // 衰減避免刺
+    const env = 1 - i / data.length;
     data[i] = (Math.random() * 2 - 1) * env;
   }
-
   const noise = ctx.createBufferSource();
   noise.buffer = buffer;
 
+  const hp = ctx.createBiquadFilter();
+  hp.type = "highpass";
+  hp.frequency.value = p.hp;
+
   const bp = ctx.createBiquadFilter();
   bp.type = "bandpass";
-  bp.frequency.value = WOOD_F;
-  bp.Q.value = 5.2;
+  bp.frequency.value = p.bp;
+  bp.Q.value = p.bpQ;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = LP_CUTOFF;
+  lp.frequency.value = p.lp;
 
   const ng = ctx.createGain();
-  ng.gain.setValueAtTime(0.0001, t);
-  ng.gain.exponentialRampToValueAtTime(0.35, t + 0.003);
-  ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.040);
+  ng.gain.setValueAtTime(0.0001, t0);
+  ng.gain.exponentialRampToValueAtTime(p.noisePeak, t0 + 0.003);
+  ng.gain.exponentialRampToValueAtTime(0.0001, t0 + p.noiseDecay);
 
   noise.connect(bp);
-  bp.connect(lp);
+  bp.connect(hp);
+  hp.connect(lp);
   lp.connect(ng);
   ng.connect(out);
 
-  // start/stop
-  o.start(t);      o.stop(t + 0.08);
-  noise.start(t);  noise.stop(t + 0.06);
+  // click oscillator (body)
+  const click = ctx.createOscillator();
+  click.type = p.clickType;
+  click.frequency.setValueAtTime(p.clickFreq, t0);
+
+  const cg = ctx.createGain();
+  cg.gain.setValueAtTime(0.0001, t0);
+  cg.gain.exponentialRampToValueAtTime(p.clickPeak, t0 + 0.0015);
+  cg.gain.exponentialRampToValueAtTime(0.0001, t0 + p.clickDecay);
+
+  click.connect(cg);
+  cg.connect(out);
+
+  noise.start(t0); noise.stop(t0 + 0.06);
+  click.start(t0); click.stop(t0 + p.clickDur);
 }
 
-function makeSoftClipCurve(amount = 1.6){
-  const n = 1024;
-  const curve = new Float32Array(n);
-  const k = amount * 10;
-  for (let i = 0; i < n; i++){
-    const x = (i * 2) / (n - 1) - 1;
-    curve[i] = ((1 + k) * x) / (1 + k * Math.abs(x));
-  }
-  return curve;
-}
-
-// 停下「登愣！」：兩段式、不刺
+// ✅ 登愣（demo_06 版本）
 function playDengLeng(){
   if (!sfxUnlocked) return;
   const ctx = ensureAudio();
   const t0 = ctx.currentTime;
-
-  const vol = 0.22;
-
-  const f1 = 660;  // 登
-  const f2 = 990;  // 愣
+  const p = SFX_PRESET_06.ding;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 4200;
+  lp.frequency.value = p.lp;
   lp.Q.value = 0.6;
 
   const out = ctx.createGain();
   out.gain.setValueAtTime(0.0001, t0);
-  out.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
+  out.gain.exponentialRampToValueAtTime(p.vol, t0 + 0.01);
   out.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.80);
 
   const delay = ctx.createDelay(0.2);
-  delay.delayTime.value = 0.065;
+  delay.delayTime.value = p.delay;
 
   const fb = ctx.createGain();
-  fb.gain.value = 0.14;
+  fb.gain.value = p.fb;
 
   lp.connect(out);
   out.connect(ctx.destination);
@@ -465,15 +478,15 @@ function playDengLeng(){
     g2.gain.exponentialRampToValueAtTime(peak * 0.18, at + 0.008);
     g2.gain.exponentialRampToValueAtTime(0.0001, at + Math.min(dur, 0.22));
 
-    o.connect(g);   g.connect(lp);
+    o.connect(g);  g.connect(lp);
     o2.connect(g2); g2.connect(lp);
 
     o.start(at);  o.stop(at + dur + 0.03);
     o2.start(at); o2.stop(at + Math.min(dur, 0.25) + 0.03);
   }
 
-  tone(t0,        f1, 0.12, 0.22);
-  tone(t0 + 0.10, f2, 0.22, 0.28);
+  tone(t0,        p.f1, 0.12, 0.22);
+  tone(t0 + 0.10, p.f2, 0.22, 0.28);
 }
 
 /**
@@ -510,7 +523,7 @@ function startSegmentTicks(durationMs, sliceDeg){
 
     prevAngle = angle;
 
-    if (now - startTime <= durationMs + 120){
+    if (now - startTime <= durationMs + 140){
       rafId = requestAnimationFrame(step);
     }
   };
@@ -1201,7 +1214,7 @@ function refreshNow(){
 
   if (mode === "near" && !userLoc){
     setFilterHint("最近模式需要定位：請先按「取得定位」。");
-    setEmptyText("最近模式需要定位：請按「取得定位」。");
+    setEmptyText("最近模式需要定位：請先按「取得定位」。");
     return;
   }
 
