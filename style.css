@@ -214,6 +214,11 @@ body{
   border: 1px solid rgba(148,163,184,.28);
 }
 
+/* ✅ 拿掉「重新整理」按鈕（只隱藏，不影響任何 JS/功能） */
+#refreshBtn{
+  display: none !important;
+}
+
 .wheelStage{
   display:flex;
   justify-content:center;
