@@ -1,3 +1,4 @@
+/* style.css */
 :root{
   --green-50:#f0fdf4;
   --emerald-50:#ecfdf5;
@@ -113,8 +114,6 @@ body{
   flex-direction:column;
   gap: 10px;
 }
-
-
 
 .pillBtn{
   border:0;
@@ -386,6 +385,12 @@ svg text{
   border: 1px solid rgba(148,163,184,.25);
   box-shadow: var(--shadow-2xl);
   padding: 16px;
+
+  /* ✅ 修正點：面板不再無限長，內容改為可滾動 */
+  max-height: calc(100vh - 36px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .panelHeader{
   display:flex;
@@ -393,6 +398,12 @@ svg text{
   justify-content:space-between;
   gap: 10px;
   margin-bottom: 10px;
+
+  /* ✅ 修正點：header 固定在上方，永遠能按到「關閉/一鍵刪除」 */
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
 }
 .panelTitle{
   font-weight: 1000;
@@ -439,6 +450,12 @@ svg text{
   display:flex;
   flex-direction:column;
   gap: 10px;
+
+  /* ✅ 修正點：清單本體可下滑 */
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-right: 2px;
 }
 .panelItem{
   display:flex;
@@ -523,7 +540,3 @@ svg text{
   #spinText{ font-size: 16px; }
   .centerBtn{ width: 74px; height: 74px; }
 }
-
-
-
-
