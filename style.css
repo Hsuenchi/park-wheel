@@ -20,6 +20,37 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ✅✅✅ iOS「加入桌面(PWA)」第一次點擊按鈕樣式錯亂：根治區塊（新增） */
+button, a, .btn, .pillBtn, .iconBtn, .btnMini, .iconBtnSmall, .itemBtn, .itemHeart, .itemMap{
+  -webkit-tap-highlight-color: transparent;   /* 關掉 iOS 點擊高亮 */
+  -webkit-appearance: none;                  /* 關掉 iOS 預設按鈕外觀 */
+  appearance: none;
+  outline: none;
+}
+
+/* ✅ focus 可視化只留給鍵盤使用者（手機點擊不需要 focus 框） */
+button:focus{ outline: none; }
+button:focus-visible{
+  outline: 2px solid rgba(74,222,128,.75);
+  outline-offset: 2px;
+}
+
+/* ✅ 防止 iOS 把 focus 卡住導致 transform 疊加變形（最常影響「換一批」） */
+.btn:focus,
+.pillBtn:focus,
+.iconBtn:focus,
+.btnMini:focus,
+.iconBtnSmall:focus{
+  transform: none !important;
+}
+
+/* ✅ 只針對「換一批」按鈕（class = btn-batch）再補一層保險 */
+.btn-batch:focus,
+.btn-batch:active{
+  transform: none !important;
+}
+/* ✅✅✅ 根治區塊結束 */
+
 .bg{
   position:fixed;
   inset:0;
@@ -101,7 +132,8 @@ body{
   justify-content:center;
 }
 .iconBtn svg{ width:24px; height:24px; }
-.iconBtn:active{ transform: translateY(-50%) scale(.98); }
+/* 原本用 transform 做 active，iOS 會疊加出怪狀：改用 filter 代替縮放，穩定 */
+.iconBtn:active{ filter: brightness(.98); }
 .iconBtn[disabled]{ opacity:.55; cursor:not-allowed; }
 
 /* 右上：記錄 + 收藏（上下堆疊） */
@@ -134,7 +166,8 @@ body{
   border: 1px solid rgba(244,63,94,.18);
   box-shadow: 0 12px 24px rgba(244,63,94,.06);
 }
-.pillBtn:active{ transform: scale(.98); }
+/* iOS 穩定：active 不用 transform（避免 focus 卡住疊加） */
+.pillBtn:active{ filter: brightness(.98); }
 
 .btn{
   border:0;
@@ -152,8 +185,9 @@ body{
   white-space: nowrap;
   text-decoration:none;
 }
-.btn:active{ transform: scale(.98); }
-.btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
+/* iOS 穩定：active 不用 transform（避免第一次點擊疊加出怪狀） */
+.btn:active{ filter: brightness(.98); }
+.btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; filter:none; }
 
 .btnIcon{ width:18px; height:18px; display:inline-flex; }
 .btnIcon svg{ width:100%; height:100%; }
@@ -429,7 +463,8 @@ svg text{
   font-weight: 900;
   cursor:pointer;
 }
-.btnMini:active{ transform: scale(.98); }
+/* iOS 穩定：active 不用 transform */
+.btnMini:active{ filter: brightness(.98); }
 
 .iconBtnSmall{
   width: 36px;
