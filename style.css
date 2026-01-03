@@ -580,3 +580,35 @@ svg text{
   #spinText{ font-size: 16px; }
   .centerBtn{ width: 74px; height: 74px; }
 }
+/* ✅ iOS 加入桌面(PWA) 第一次 disabled 變形/殘影：只改 CSS 的補丁 */
+
+/* 1) 關掉 iOS 的點擊高亮（你之前加過就算重複也沒差） */
+#btnNewBatch{
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* 2) 關鍵：disabled 時「不要 transition」，避免正常+暗掉兩層交疊殘影 */
+#btnNewBatch:disabled{
+  transition: none !important;
+  animation: none !important;
+}
+
+/* 3) 強制建立自己的 layer + 重繪，清掉 iOS 的 ghost paint */
+#btnNewBatch,
+#btnNewBatch:disabled{
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* 4) 如果你 disabled 是靠 opacity 變暗，iOS 最容易殘影 -> 改用 filter 比較穩 */
+#btnNewBatch:disabled{
+  opacity: 1 !important;            /* 不用 opacity 變暗 */
+  filter: grayscale(.25) brightness(.92);
+  box-shadow: none;                 /* 陰影也容易殘影，disabled 時拿掉 */
+}
+
