@@ -282,150 +282,158 @@ function setMapBtn(name){
 }
 
 // =========================
-// SFX（✅完全對齊 demo_06：厚木頭（更厚、更低） + 登愣）
+// SFX（demo_06 copy：每格「噠」＋停下「登愣」）
 // =========================
-let audioCtx = null;
-let sfxUnlocked = false;
-
-// ✅ 100% 取自 demo_06.html 的 PRESET
-const SFX_PRESET_06 = {
+const PRESET = {
+  name: "樣本06｜厚木頭（更厚、更低）",
   tick: {
-    vol: 0.16,
+    type: "noise+click",
     clickWave: "triangle",
     clickFreq: 1450,
     noiseHp: 420,
     noiseBp: 1850,
     noiseQ: 5.6,
     lp: 6100,
-    decay: 0.05,
+    vol: 0.16,
+    decay: 0.05
   },
   ding: {
+    f1: 560,
+    f2: 840,
     vol: 0.22,
     lp: 3000,
     delay: 0.075,
     fb: 0.16,
-    f1: 560,
-    f2: 840,
     attack: 0.012,
-    tail: 0.90,
+    tail: 0.9
   }
 };
 
+let audioCtx = null;
+let sfxUnlocked = false;
+
 function ensureAudio(){
-  if (!audioCtx){
+  if(!audioCtx){
     const AC = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AC();
   }
   return audioCtx;
 }
 
-// iOS / Safari：需要使用者手勢解鎖（桌機也可用）
 async function unlockAudio(){
   try{
     const ctx = ensureAudio();
-    if (ctx.state === "suspended") await ctx.resume();
+    if(ctx.state === "suspended") await ctx.resume();
     sfxUnlocked = true;
-  }catch{}
+  }catch(e){}
 }
 
 // 取得 wheelRotator 即時角度（transition 中也抓得到）
 function getRotationDeg(el){
   const tr = getComputedStyle(el).transform;
   if (!tr || tr === "none") return 0;
-
-  if (tr.startsWith("matrix(")){
-    const v = tr.slice(7, -1).split(",").map(Number);
-    const a = v[0], b = v[1];
-    let deg = Math.atan2(b, a) * 180 / Math.PI;
-    if (deg < 0) deg += 360;
+  if (tr.startsWith("matrix(")) {
+    const v = tr.slice(7,-1).split(",").map(Number);
+    const a=v[0], b=v[1];
+    let deg = Math.atan2(b,a)*180/Math.PI;
+    if(deg<0) deg += 360;
     return deg;
   }
-
-  if (tr.startsWith("matrix3d(")){
-    const v = tr.slice(9, -1).split(",").map(Number);
-    const a = v[0], b = v[1];
-    let deg = Math.atan2(b, a) * 180 / Math.PI;
-    if (deg < 0) deg += 360;
+  if (tr.startsWith("matrix3d(")) {
+    const v = tr.slice(9,-1).split(",").map(Number);
+    const a=v[0], b=v[1];
+    let deg = Math.atan2(b,a)*180/Math.PI;
+    if(deg<0) deg += 360;
     return deg;
   }
-
   return 0;
 }
 
-// ✅ demo_06 的 tick：厚木頭（更厚、更低）
-function playWoodTick(){
+function playTick(){
   if(!sfxUnlocked) return;
   const ctx = ensureAudio();
   const t = ctx.currentTime;
-  const p = SFX_PRESET_06.tick;
+  const p = PRESET.tick;
 
   const out = ctx.createGain();
+  const v = p.vol * (0.88 + Math.random()*0.24);
   out.gain.setValueAtTime(0.0001, t);
-  out.gain.exponentialRampToValueAtTime(p.vol, t + 0.002);
-  out.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
+  out.gain.exponentialRampToValueAtTime(v, t + 0.003);
+  out.gain.exponentialRampToValueAtTime(0.0001, t + Math.max(0.012, p.decay || 0.030));
   out.connect(ctx.destination);
 
-  // click（厚度）
-  const click = ctx.createOscillator();
-  click.type = p.clickWave;
-  click.frequency.setValueAtTime(p.clickFreq, t);
+  let nodeIn = out;
 
-  const clickGain = ctx.createGain();
-  clickGain.gain.setValueAtTime(0.0001, t);
-  clickGain.gain.exponentialRampToValueAtTime(p.vol * 0.85, t + 0.001);
-  clickGain.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
-
-  click.connect(clickGain);
-  clickGain.connect(out);
-
-  // noise（木頭紋理）
-  const dur = 0.018;
-  const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for(let i = 0; i < data.length; i++){
-    const env = 1 - i / data.length;
-    data[i] = (Math.random() * 2 - 1) * env;
+  if (p.lp && p.lp > 0){
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = p.lp;
+    lp.Q.value = 0.7;
+    lp.connect(out);
+    nodeIn = lp;
   }
-  const noise = ctx.createBufferSource();
-  noise.buffer = buffer;
 
-  const hp = ctx.createBiquadFilter();
-  hp.type = "highpass";
-  hp.frequency.value = p.noiseHp;
+  if (String(p.type).includes("noise")){
+    const dur = 0.018;
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0;i<data.length;i++){
+      data[i] = (Math.random()*2-1) * (1 - i/data.length);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
 
-  const bp = ctx.createBiquadFilter();
-  bp.type = "bandpass";
-  bp.frequency.value = p.noiseBp;
-  bp.Q.value = p.noiseQ;
+    let nOut = null;
 
-  const lp = ctx.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = p.lp;
+    if (p.noiseHp && p.noiseHp>0){
+      const hp = ctx.createBiquadFilter();
+      hp.type = "highpass";
+      hp.frequency.value = p.noiseHp;
+      hp.Q.value = 0.75;
+      noise.connect(hp);
+      nOut = hp;
+    } else {
+      nOut = noise;
+    }
 
-  const noiseGain = ctx.createGain();
-  noiseGain.gain.setValueAtTime(0.0001, t);
-  noiseGain.gain.exponentialRampToValueAtTime(p.vol * 0.75, t + 0.003);
-  noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
+    if (p.noiseBp && p.noiseBp>0){
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.value = p.noiseBp + Math.random()*380;
+      bp.Q.value = p.noiseQ || 7.0;
+      nOut.connect(bp);
+      nOut = bp;
+    }
 
-  noise.connect(hp);
-  hp.connect(bp);
-  bp.connect(lp);
-  lp.connect(noiseGain);
-  noiseGain.connect(out);
+    nOut.connect(nodeIn);
+    noise.start(t);
+    noise.stop(t + 0.05);
+  }
 
-  noise.start(t);
-  noise.stop(t + 0.05);
+  if (String(p.type).includes("click")){
+    const o = ctx.createOscillator();
+    o.type = p.clickWave || "square";
+    const cf = (p.clickFreq || 1900) * (0.95 + Math.random()*0.10);
+    o.frequency.setValueAtTime(cf, t);
 
-  click.start(t);
-  click.stop(t + 0.02);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.10, t + 0.0016);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.010);
+
+    o.connect(g);
+    g.connect(nodeIn);
+
+    o.start(t);
+    o.stop(t + 0.02);
+  }
 }
 
-// ✅ demo_06 的 登愣
 function playDengLeng(){
   if(!sfxUnlocked) return;
   const ctx = ensureAudio();
   const t0 = ctx.currentTime;
-  const p = SFX_PRESET_06.ding;
+  const p = PRESET.ding;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
@@ -458,7 +466,7 @@ function playDengLeng(){
 
     const o2 = ctx.createOscillator();
     o2.type = "sine";
-    o2.frequency.setValueAtTime(freq * 2, at);
+    o2.frequency.setValueAtTime(freq*2, at);
 
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, at);
@@ -467,14 +475,14 @@ function playDengLeng(){
 
     const g2 = ctx.createGain();
     g2.gain.setValueAtTime(0.0001, at);
-    g2.gain.exponentialRampToValueAtTime(peak * 0.18, at + 0.008);
+    g2.gain.exponentialRampToValueAtTime(peak*0.18, at + 0.008);
     g2.gain.exponentialRampToValueAtTime(0.0001, at + Math.min(dur, 0.22));
 
-    o.connect(g);  g.connect(lp);
+    o.connect(g); g.connect(lp);
     o2.connect(g2); g2.connect(lp);
 
     o.start(at);  o.stop(at + dur + 0.03);
-    o2.start(at); o2.stop(at + Math.min(dur, 0.25) + 0.03);
+    o2.start(at); o2.stop(at + Math.min(dur,0.25) + 0.03);
   }
 
   tone(t0,        p.f1 || 660, 0.12, 0.22);
@@ -484,10 +492,10 @@ function playDengLeng(){
 // ✅ 每跨過一格就噠：用 rAF 追 CSS transition 的即時角度
 function startSegmentTicks(durationMs, sliceDeg){
   if (!wheelRotator) return () => {};
+
   let prevAngle = getRotationDeg(wheelRotator);
   let unwrapped = 0;
   let prevBucket = 0;
-
   const startTime = performance.now();
   let rafId = 0;
 
@@ -505,9 +513,8 @@ function startSegmentTicks(durationMs, sliceDeg){
 
     const bucket = Math.floor(unwrapped / sliceDeg);
     const diff = bucket - prevBucket;
-
     if (diff > 0){
-      for (let i = 0; i < diff; i++) playWoodTick();
+      for(let i=0;i<diff;i++) playTick();
       prevBucket = bucket;
     }
 
@@ -521,7 +528,6 @@ function startSegmentTicks(durationMs, sliceDeg){
   rafId = requestAnimationFrame(step);
   return () => { if (rafId) cancelAnimationFrame(rafId); };
 }
-
 
 // =========================
 // Undo (snapshot localStorage)
@@ -1336,4 +1342,3 @@ async function init(){
 }
 
 init();
-
