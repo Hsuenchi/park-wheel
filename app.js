@@ -1,3 +1,4 @@
+// app.js
 const $ = (sel) => document.querySelector(sel);
 
 // DOM
@@ -61,7 +62,10 @@ const FAV_KEY = "tripweb_fav_parks_v1";
 // state
 let parks = [];
 let isSpinning = false;
+
+// ✅ 修正點：rotation 改為「累積角度（absolute）」而不是 0~360 normalized
 let rotation = 0;
+
 let selectedPark = null;
 
 let masterPool = [];
@@ -251,6 +255,19 @@ function shuffledCopy(arr){
 }
 function pickRandomUnique(all, count){
   return shuffledCopy(all).slice(0, Math.min(count, all.length));
+}
+
+function normalize360(deg){
+  return ((deg % 360) + 360) % 360;
+}
+
+// ✅ 小工具：把輪盤「瞬間」固定到某個 absolute 角度（用來避免下一次轉動回跳）
+function snapWheelTo(absDeg){
+  if (!wheelRotator) return;
+  wheelRotator.style.transition = "none";
+  wheelRotator.style.transform = `rotate(${absDeg}deg)`;
+  wheelRotator.offsetHeight; // force reflow
+  wheelRotator.style.transition = "";
 }
 
 function resetWheelInstant(){
@@ -1083,23 +1100,37 @@ function spin(){
   const winnerName = candidates[Math.floor(Math.random() * candidates.length)];
   const winnerIndex = parks.indexOf(winnerName);
 
-  const desiredNormalized = ((360 - winnerIndex * slice) % 360 + 360) % 360;
+  // ✅ 修正點：delta 必須用「目前累積角度的 normalized」計算
+  const desiredNormalized = normalize360(360 - winnerIndex * slice);
+  const currentNorm = normalize360(rotation);
+
+  // 你原本的圈數邏輯保留（只是改成以累積角度為基準）
   const spins = 5 + Math.random() * 3;
-  const delta = ((desiredNormalized - rotation) % 360 + 360) % 360;
+  const delta = normalize360(desiredNormalized - currentNorm);
+
+  // ✅ totalRotation 會永遠比目前 rotation 大很多（確保每次都完整轉很多圈）
   const totalRotation = rotation + (spins * 360) + delta;
 
-  wheelRotator.style.transition = "transform 3800ms cubic-bezier(0.12, 0.78, 0.18, 1)";
+  wheelRotator.style.transition = `transform ${SPIN_MS}ms cubic-bezier(0.12, 0.78, 0.18, 1)`;
   wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
   window.setTimeout(() => {
-    const normalized = ((totalRotation % 360) + 360) % 360;
+    // 停下時，先把 rotation 更新成「這次停下的累積角度」
+    // （避免抽到重複時提前 return，下一次又從舊 rotation 計算造成回轉/半圈）
+    rotation = totalRotation;
+
+    const normalized = normalize360(totalRotation);
     const idx = Math.floor(((360 - normalized + slice / 2) % 360) / slice);
     const picked = parks[idx];
 
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)){
+      // ✅ 修正點：重複時也要把輪盤穩定在目前停下角度，避免下一次只轉半圈
       stopTicks?.();
       isSpinning = false;
+
+      snapWheelTo(rotation);
+
       setFilterHint("轉過這個了! 請再轉一次或換一批!");
       renderAll();
       return;
@@ -1124,11 +1155,8 @@ function spin(){
       wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
       window.setTimeout(() => {
-        rotation = normalized;
-        wheelRotator.style.transition = "none";
-        wheelRotator.style.transform = `rotate(${rotation}deg)`;
-        wheelRotator.offsetHeight;
-        wheelRotator.style.transition = "";
+        // ✅ 最終固定：保持累積角度，不再把它縮回 0~360（避免下一次回轉）
+        snapWheelTo(rotation);
 
         selectedPark = picked;
         isSpinning = false;
@@ -1146,7 +1174,7 @@ function spin(){
         renderAll();
       }, 230);
     }, 150);
-  }, 3800);
+  }, SPIN_MS);
 }
 
 // =========================
