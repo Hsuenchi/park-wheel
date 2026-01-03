@@ -282,42 +282,32 @@ function setMapBtn(name){
 }
 
 // =========================
-// SFX（樣本06｜厚木頭（更厚、更低） + 登愣）
+// SFX（✅完全對齊 demo_06：厚木頭（更厚、更低） + 登愣）
 // =========================
 let audioCtx = null;
 let sfxUnlocked = false;
 
-// ✅ 這份 preset 取自你喜歡的 demo_06（厚木頭）
-// 想微調只要改這裡：
-// - 太小聲：tick.vol / ding.vol ↑
-// - 太悶：tick.lp ↑（例如 3600~4200） 或 tick.bp ↑
-// - 太刺：tick.lp ↓（例如 2600~3100） 或 tick.clickFreq ↓
+// ✅ 100% 取自 demo_06.html 的 PRESET
 const SFX_PRESET_06 = {
   tick: {
-    vol: 0.21,
-
+    vol: 0.16,
+    clickWave: "triangle",
     clickFreq: 1450,
-    clickType: "triangle",
-    clickPeak: 0.13,
-    clickDur: 0.020,
-    clickDecay: 0.022,
-
-    noiseDur: 0.020,
-    noisePeak: 0.30,
-    noiseDecay: 0.050,
-
-    hp: 220,
-    bp: 980,
-    bpQ: 4.3,
-    lp: 3300,
+    noiseHp: 420,
+    noiseBp: 1850,
+    noiseQ: 5.6,
+    lp: 6100,
+    decay: 0.05,
   },
   ding: {
     vol: 0.22,
     lp: 3000,
-    delay: 0.060,
-    fb: 0.13,
+    delay: 0.075,
+    fb: 0.16,
     f1: 560,
     f2: 840,
+    attack: 0.012,
+    tail: 0.90,
   }
 };
 
@@ -329,7 +319,7 @@ function ensureAudio(){
   return audioCtx;
 }
 
-// iOS 需要使用者手勢解鎖
+// iOS / Safari：需要使用者手勢解鎖（桌機也可用）
 async function unlockAudio(){
   try{
     const ctx = ensureAudio();
@@ -362,25 +352,37 @@ function getRotationDeg(el){
   return 0;
 }
 
-// ✅ 厚木頭 tick（demo_06 版本）
+// ✅ demo_06 的 tick：厚木頭（更厚、更低）
 function playWoodTick(){
-  if (!sfxUnlocked) return;
+  if(!sfxUnlocked) return;
   const ctx = ensureAudio();
-  const t0 = ctx.currentTime;
+  const t = ctx.currentTime;
   const p = SFX_PRESET_06.tick;
 
-  // master out
   const out = ctx.createGain();
-  out.gain.setValueAtTime(0.0001, t0);
-  out.gain.exponentialRampToValueAtTime(p.vol, t0 + 0.002);
-  out.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.060);
+  out.gain.setValueAtTime(0.0001, t);
+  out.gain.exponentialRampToValueAtTime(p.vol, t + 0.002);
+  out.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
   out.connect(ctx.destination);
 
-  // noise burst
-  const dur = p.noiseDur;
+  // click（厚度）
+  const click = ctx.createOscillator();
+  click.type = p.clickWave;
+  click.frequency.setValueAtTime(p.clickFreq, t);
+
+  const clickGain = ctx.createGain();
+  clickGain.gain.setValueAtTime(0.0001, t);
+  clickGain.gain.exponentialRampToValueAtTime(p.vol * 0.85, t + 0.001);
+  clickGain.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
+
+  click.connect(clickGain);
+  clickGain.connect(out);
+
+  // noise（木頭紋理）
+  const dur = 0.018;
   const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
   const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++){
+  for(let i = 0; i < data.length; i++){
     const env = 1 - i / data.length;
     data[i] = (Math.random() * 2 - 1) * env;
   }
@@ -389,67 +391,57 @@ function playWoodTick(){
 
   const hp = ctx.createBiquadFilter();
   hp.type = "highpass";
-  hp.frequency.value = p.hp;
+  hp.frequency.value = p.noiseHp;
 
   const bp = ctx.createBiquadFilter();
   bp.type = "bandpass";
-  bp.frequency.value = p.bp;
-  bp.Q.value = p.bpQ;
+  bp.frequency.value = p.noiseBp;
+  bp.Q.value = p.noiseQ;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
   lp.frequency.value = p.lp;
 
-  const ng = ctx.createGain();
-  ng.gain.setValueAtTime(0.0001, t0);
-  ng.gain.exponentialRampToValueAtTime(p.noisePeak, t0 + 0.003);
-  ng.gain.exponentialRampToValueAtTime(0.0001, t0 + p.noiseDecay);
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.setValueAtTime(0.0001, t);
+  noiseGain.gain.exponentialRampToValueAtTime(p.vol * 0.75, t + 0.003);
+  noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + p.decay);
 
-  noise.connect(bp);
-  bp.connect(hp);
-  hp.connect(lp);
-  lp.connect(ng);
-  ng.connect(out);
+  noise.connect(hp);
+  hp.connect(bp);
+  bp.connect(lp);
+  lp.connect(noiseGain);
+  noiseGain.connect(out);
 
-  // click oscillator (body)
-  const click = ctx.createOscillator();
-  click.type = p.clickType;
-  click.frequency.setValueAtTime(p.clickFreq, t0);
+  noise.start(t);
+  noise.stop(t + 0.05);
 
-  const cg = ctx.createGain();
-  cg.gain.setValueAtTime(0.0001, t0);
-  cg.gain.exponentialRampToValueAtTime(p.clickPeak, t0 + 0.0015);
-  cg.gain.exponentialRampToValueAtTime(0.0001, t0 + p.clickDecay);
-
-  click.connect(cg);
-  cg.connect(out);
-
-  noise.start(t0); noise.stop(t0 + 0.06);
-  click.start(t0); click.stop(t0 + p.clickDur);
+  click.start(t);
+  click.stop(t + 0.02);
 }
 
-// ✅ 登愣（demo_06 版本）
+// ✅ demo_06 的 登愣
 function playDengLeng(){
-  if (!sfxUnlocked) return;
+  if(!sfxUnlocked) return;
   const ctx = ensureAudio();
   const t0 = ctx.currentTime;
   const p = SFX_PRESET_06.ding;
 
   const lp = ctx.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = p.lp;
+  lp.frequency.value = p.lp || 4200;
   lp.Q.value = 0.6;
 
   const out = ctx.createGain();
   out.gain.setValueAtTime(0.0001, t0);
-  out.gain.exponentialRampToValueAtTime(p.vol, t0 + 0.01);
-  out.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.80);
+  out.gain.exponentialRampToValueAtTime(p.vol || 0.20, t0 + (p.attack || 0.01));
+  out.gain.exponentialRampToValueAtTime(0.0001, t0 + (p.tail || 0.80));
 
   const delay = ctx.createDelay(0.2);
-  delay.delayTime.value = p.delay;
+  delay.delayTime.value = p.delay || 0.065;
 
   const fb = ctx.createGain();
-  fb.gain.value = p.fb;
+  fb.gain.value = p.fb || 0.14;
 
   lp.connect(out);
   out.connect(ctx.destination);
@@ -485,13 +477,11 @@ function playDengLeng(){
     o2.start(at); o2.stop(at + Math.min(dur, 0.25) + 0.03);
   }
 
-  tone(t0,        p.f1, 0.12, 0.22);
-  tone(t0 + 0.10, p.f2, 0.22, 0.28);
+  tone(t0,        p.f1 || 660, 0.12, 0.22);
+  tone(t0 + 0.10, p.f2 || 990, 0.22, 0.28);
 }
 
-/**
- * ✅ 每跨過一格就噠：用 rAF 追 CSS transition 的即時角度
- */
+// ✅ 每跨過一格就噠：用 rAF 追 CSS transition 的即時角度
 function startSegmentTicks(durationMs, sliceDeg){
   if (!wheelRotator) return () => {};
   let prevAngle = getRotationDeg(wheelRotator);
@@ -531,6 +521,7 @@ function startSegmentTicks(durationMs, sliceDeg){
   rafId = requestAnimationFrame(step);
   return () => { if (rafId) cancelAnimationFrame(rafId); };
 }
+
 
 // =========================
 // Undo (snapshot localStorage)
@@ -1345,3 +1336,4 @@ async function init(){
 }
 
 init();
+
