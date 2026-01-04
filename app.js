@@ -111,6 +111,26 @@ function setFilterHint(msg=""){
   if (filterHint) filterHint.textContent = msg;
 }
 
+/* ====== ✅ 新增：提示鎖定（只為了「已保留 / 已收藏」不被立刻清掉） ====== */
+let _hintHoldUntil = 0;
+let _hintHoldTimer = 0;
+
+function isHintHeld(){
+  return Date.now() < _hintHoldUntil;
+}
+
+function setFilterHintHold(msg, ms = 1400){
+  _hintHoldUntil = Date.now() + ms;
+  setFilterHint(msg);
+
+  if (_hintHoldTimer) window.clearTimeout(_hintHoldTimer);
+  _hintHoldTimer = window.setTimeout(() => {
+    // 鎖定結束後，讓模式提示（near）或清空提示（非 near）回到正常邏輯
+    if (!isHintHeld()) updateControlLocksByMode();
+  }, ms + 30);
+}
+/* ====== ✅ 新增結束 ====== */
+
 function loadSet(key){
   try{
     const raw = localStorage.getItem(key);
@@ -616,6 +636,9 @@ function addHistory(name){
 function toggleFavorite(name){
   const n = normalizeName(name);
   if (!n) return;
+
+  const wasFav = favorites.includes(n); // ✅ 新增：只用來判斷要不要顯示「已收藏」
+
   pushUndo("toggle_fav");
   if (favorites.includes(n)) favorites = favorites.filter(x => x !== n);
   else favorites.unshift(n);
@@ -623,6 +646,9 @@ function toggleFavorite(name){
   saveFavorites();
   renderFavPanel();
   renderRecordPanel();
+
+  // ✅ 新增：只有「加入收藏」時顯示「已收藏」
+  if (!wasFav) setFilterHintHold("已收藏");
 }
 
 function clearFavorites(){
@@ -803,14 +829,19 @@ function updateControlLocksByMode(){
 
   updateUndoUI();
 
+  // ✅ 修改：若提示正在鎖定中，就不要覆蓋提示文字（避免「已保留/已收藏」瞬間消失）
   if (mode === "near"){
-    setFilterHint(
-      userLoc
-        ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`
-        : "最近模式需要定位：請按「取得定位」，再按「重新整理」。"
-    );
+    if (!isHintHeld()){
+      setFilterHint(
+        userLoc
+          ? `已定位：從最近 ${NEAR_TOP_N} 個公園中隨機抽 ${BATCH_SIZE} 個。`
+          : "最近模式需要定位：請按「取得定位」，再按「重新整理」。"
+      );
+    }
   } else {
-    setFilterHint("");
+    if (!isHintHeld()){
+      setFilterHint("");
+    }
   }
 }
 
@@ -1197,7 +1228,8 @@ function preserveSelected(){
   history = history.filter(x => x !== name);
   saveHistory();
 
-  setFilterHint("已保留");
+  // ✅ 修改：用鎖定提示，避免被 updateControlLocksByMode 立刻清掉
+  setFilterHintHold("已保留");
   renderAll();
 }
 
