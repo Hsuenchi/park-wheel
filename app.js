@@ -91,7 +91,7 @@ const colors = [
 // =========================
 function normalizeName(x){ return String(x ?? "").trim(); }
 
-/* ✅✅✅ 新增：行政區正規化（修正「市大安區/臺北市大安區」導致只命中少數） */
+/* ✅ 行政區正規化（可吃「市大安區」或整段地址「臺北市大安區xxx」） */
 function normalizeDistrict(s){
   return String(s ?? "")
     .trim()
@@ -99,9 +99,8 @@ function normalizeDistrict(s){
     .replace(/台/g, "臺")
     .replace(/^(臺北市|台北市)/, "") // 去掉城市前綴
     .replace(/^市/, "")              // 「市大安區」→「大安區」
-    .replace(/^(.*?區).*$/, "$1");   // 只保留到「XX區」
+    .replace(/^(.*?區).*$/, "$1");   // 只保留到「XX區」（沒有區就原樣）
 }
-/* ✅✅✅ 新增結束 */
 
 function uniqueStrings(arr){
   const out = [];
@@ -147,7 +146,7 @@ function loadSet(key){
   try{
     const raw = localStorage.getItem(key);
     const arr = raw ? JSON.parse(raw) : [];
-    return new Set(Array.isArray(arr) ? arr.map(normalizeName).filter(Boolean) : []); // ✅ 這裡維持原本行為（用 name）
+    return new Set(Array.isArray(arr) ? arr.map(normalizeName).filter(Boolean) : []);
   }catch{ return new Set(); }
 }
 function saveSet(key, set){ localStorage.setItem(key, JSON.stringify([...set])); }
@@ -240,8 +239,14 @@ function extractParksFromJson(data){
         if (m) district = m[1];
       }
 
-      // ✅✅✅ 新增：統一行政區格式（避免「市大安區/臺北市大安區」造成 filter 只剩少數）
+      // ✅ 統一行政區格式
       district = normalizeDistrict(district);
+
+      /* ✅✅✅ PATCH 1：如果 district 仍然空，就用 address 補（大多數資料會在地址裡有「XX區」） */
+      if (!district && address){
+        district = normalizeDistrict(address);
+      }
+      /* ✅✅✅ PATCH 1 END */
 
       let lat = getNum(obj, [
         "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度"
@@ -259,7 +264,7 @@ function extractParksFromJson(data){
 
       out.push({
         name: normalizeName(name),
-        district: district,
+        district: normalizeName(district),
         address: normalizeName(address),
         lat,
         lng,
@@ -814,7 +819,7 @@ function updateDistrictOptions(){
   const districts = new Set();
   for (const name of masterPool){
     const meta = parkMeta.get(name);
-    const d = normalizeDistrict(meta?.district); // ✅ 修正：用 normalizeDistrict
+    const d = normalizeDistrict(meta?.district);
     if (d) districts.add(d);
   }
   const list = [...districts].sort((a,b)=>a.localeCompare(b,"zh-Hant"));
@@ -1011,9 +1016,9 @@ function getNearestTopNames(limit){
 function getFilteredPoolNamesNonNear(){
   const mode = modeSelect ? modeSelect.value : "all";
   if (mode === "district"){
-    const d = normalizeDistrict(districtSelect?.value); // ✅ 修正：用 normalizeDistrict
+    const d = normalizeDistrict(districtSelect?.value);
     if (!d) return masterPool.slice();
-    return masterPool.filter((name) => normalizeDistrict(parkMeta.get(name)?.district) === d); // ✅ 修正
+    return masterPool.filter((name) => normalizeDistrict(parkMeta.get(name)?.district) === d);
   }
   return masterPool.slice();
 }
@@ -1161,8 +1166,6 @@ function spin(){
   wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
   window.setTimeout(() => {
-    // 停下時，先把 rotation 更新成「這次停下的累積角度」
-    // （避免抽到重複時提前 return，下一次又從舊 rotation 計算造成回轉/半圈）
     rotation = totalRotation;
 
     const normalized = normalize360(totalRotation);
@@ -1171,7 +1174,6 @@ function spin(){
 
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)){
-      // ✅ 修正點：重複時也要把輪盤穩定在目前停下角度，避免下一次只轉半圈
       stopTicks?.();
       isSpinning = false;
 
@@ -1201,7 +1203,6 @@ function spin(){
       wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
       window.setTimeout(() => {
-        // ✅ 最終固定：保持累積角度，不再把它縮回 0~360（避免下一次回轉）
         snapWheelTo(rotation);
 
         selectedPark = picked;
@@ -1243,7 +1244,6 @@ function preserveSelected(){
   history = history.filter(x => x !== name);
   saveHistory();
 
-  // ✅ 修改：用鎖定提示，避免被 updateControlLocksByMode 立刻清掉
   setFilterHintHold("已保留");
   renderAll();
 }
@@ -1313,9 +1313,14 @@ async function init(){
       for (const p of list){
         if (!p?.name) continue;
         const prev = merged.get(p.name) || { name: p.name };
+
+        /* ✅✅✅ PATCH 2：merge 時再用 address 補 district（雙保險） */
+        const mergedDistrict = normalizeDistrict(prev.district || p.district || prev.address || p.address || "");
+        /* ✅✅✅ PATCH 2 END */
+
         merged.set(p.name, {
           name: p.name,
-          district: normalizeDistrict(prev.district || p.district || ""), // ✅ 修正：統一 district
+          district: mergedDistrict,
           address: prev.address || p.address || "",
           lat: (prev.lat ?? p.lat),
           lng: (prev.lng ?? p.lng),
