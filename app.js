@@ -91,6 +91,18 @@ const colors = [
 // =========================
 function normalizeName(x){ return String(x ?? "").trim(); }
 
+/* ✅✅✅ 新增：行政區正規化（修正「市大安區/臺北市大安區」導致只命中少數） */
+function normalizeDistrict(s){
+  return String(s ?? "")
+    .trim()
+    .replace(/\s+/g, "")
+    .replace(/台/g, "臺")
+    .replace(/^(臺北市|台北市)/, "") // 去掉城市前綴
+    .replace(/^市/, "")              // 「市大安區」→「大安區」
+    .replace(/^(.*?區).*$/, "$1");   // 只保留到「XX區」
+}
+/* ✅✅✅ 新增結束 */
+
 function uniqueStrings(arr){
   const out = [];
   const seen = new Set();
@@ -135,7 +147,7 @@ function loadSet(key){
   try{
     const raw = localStorage.getItem(key);
     const arr = raw ? JSON.parse(raw) : [];
-    return new Set(Array.isArray(arr) ? arr.map(normalizeName).filter(Boolean) : []);
+    return new Set(Array.isArray(arr) ? arr.map(normalizeName).filter(Boolean) : []); // ✅ 這裡維持原本行為（用 name）
   }catch{ return new Set(); }
 }
 function saveSet(key, set){ localStorage.setItem(key, JSON.stringify([...set])); }
@@ -228,6 +240,9 @@ function extractParksFromJson(data){
         if (m) district = m[1];
       }
 
+      // ✅✅✅ 新增：統一行政區格式（避免「市大安區/臺北市大安區」造成 filter 只剩少數）
+      district = normalizeDistrict(district);
+
       let lat = getNum(obj, [
         "pm_Latitude","pm_latitude","pm_lat","Latitude","latitude","lat","緯度"
       ]);
@@ -244,7 +259,7 @@ function extractParksFromJson(data){
 
       out.push({
         name: normalizeName(name),
-        district: normalizeName(district),
+        district: district,
         address: normalizeName(address),
         lat,
         lng,
@@ -799,7 +814,7 @@ function updateDistrictOptions(){
   const districts = new Set();
   for (const name of masterPool){
     const meta = parkMeta.get(name);
-    const d = normalizeName(meta?.district);
+    const d = normalizeDistrict(meta?.district); // ✅ 修正：用 normalizeDistrict
     if (d) districts.add(d);
   }
   const list = [...districts].sort((a,b)=>a.localeCompare(b,"zh-Hant"));
@@ -996,9 +1011,9 @@ function getNearestTopNames(limit){
 function getFilteredPoolNamesNonNear(){
   const mode = modeSelect ? modeSelect.value : "all";
   if (mode === "district"){
-    const d = normalizeName(districtSelect?.value);
+    const d = normalizeDistrict(districtSelect?.value); // ✅ 修正：用 normalizeDistrict
     if (!d) return masterPool.slice();
-    return masterPool.filter((name) => normalizeName(parkMeta.get(name)?.district) === d);
+    return masterPool.filter((name) => normalizeDistrict(parkMeta.get(name)?.district) === d); // ✅ 修正
   }
   return masterPool.slice();
 }
@@ -1300,7 +1315,7 @@ async function init(){
         const prev = merged.get(p.name) || { name: p.name };
         merged.set(p.name, {
           name: p.name,
-          district: prev.district || p.district || "",
+          district: normalizeDistrict(prev.district || p.district || ""), // ✅ 修正：統一 district
           address: prev.address || p.address || "",
           lat: (prev.lat ?? p.lat),
           lng: (prev.lng ?? p.lng),
