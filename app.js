@@ -50,7 +50,7 @@ const loveCloseBtn = $("#loveCloseBtn");
 // constants
 const BATCH_SIZE = 6;
 const NEAR_TOP_N = 18;
-const DATA_URLS = ["./parks.full.json", "./parks.names.json"];
+const DATA_URLS = ["./parks.district.json", "./parks.geo.json"];
 
 const WIN_KEY    = "tripweb_won_parks_v1";
 const SEALED_KEY = "tripweb_sealed_parks_v1";
@@ -1402,3 +1402,4 @@ async function init(){
 }
 
 init();
+
