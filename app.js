@@ -50,10 +50,7 @@ const loveCloseBtn = $("#loveCloseBtn");
 // constants
 const BATCH_SIZE = 6;
 const NEAR_TOP_N = 18;
-
-// ✅✅✅ 修正：near 用 geo；district/隨機 用 district（不再合併）
-const GEO_URL = "./parks.geo.json";
-const DISTRICT_URL = "./parks.district.json";
+const DATA_URLS = ["./parks.district.json", "./parks.geo.json"];
 
 const WIN_KEY    = "tripweb_won_parks_v1";
 const SEALED_KEY = "tripweb_sealed_parks_v1";
@@ -71,17 +68,8 @@ let rotation = 0;
 
 let selectedPark = null;
 
-// ✅✅✅ active pool/meta（會依 mode 切換）
 let masterPool = [];
 let parkMeta = new Map();
-
-// ✅✅✅ 分別存兩份：geo / district
-let masterPoolGeo = [];
-let parkMetaGeo = new Map();
-
-let masterPoolDistrict = [];
-let parkMetaDistrict = new Map();
-
 let userLoc = null;
 
 let favorites = [];
@@ -1019,18 +1007,9 @@ function getFilteredPoolNamesNonNear(){
 // Batch
 // =========================
 function loadNewBatch(){
-  // ✅✅✅ 依模式切換資料來源：near=geo；其他=district
-  const mode = modeSelect ? modeSelect.value : "all";
-  if (mode === "near"){
-    masterPool = masterPoolGeo.slice();
-    parkMeta = parkMetaGeo;
-  } else {
-    masterPool = masterPoolDistrict.slice();
-    parkMeta = parkMetaDistrict;
-  }
-
   if (masterPool.length === 0) return;
 
+  const mode = modeSelect ? modeSelect.value : "all";
   const sealedSet = loadSet(SEALED_KEY);
 
   if (mode === "near"){
@@ -1309,48 +1288,39 @@ async function init(){
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
 
-  // ✅✅✅ 分開載入：near=geo；行政區/隨機=district
-  let geoObjs = [];
-  let districtObjs = [];
+  // ✅ 同時讀 full + names（用 name 合併，把 district/address 補齊）
+  const merged = new Map(); // name -> meta
+  for (const url of DATA_URLS){
+    try{
+      const data = await fetchJson(url);
+      const list = extractParksFromJson(data);
 
-  try{
-    const geoData = await fetchJson(GEO_URL);
-    geoObjs = extractParksFromJson(geoData);
-  }catch{}
-
-  try{
-    const disData = await fetchJson(DISTRICT_URL);
-    districtObjs = extractParksFromJson(disData);
-  }catch{}
-
-  // 建 geo meta/pool
-  parkMetaGeo = new Map();
-  for (const p of geoObjs){
-    if (!p?.name) continue;
-    parkMetaGeo.set(p.name, p);
+      for (const p of list){
+        if (!p?.name) continue;
+        const prev = merged.get(p.name) || { name: p.name };
+        merged.set(p.name, {
+          name: p.name,
+          district: prev.district || p.district || "",
+          address: prev.address || p.address || "",
+          lat: (prev.lat ?? p.lat),
+          lng: (prev.lng ?? p.lng),
+        });
+      }
+    }catch{}
   }
-  masterPoolGeo = uniqueStrings(geoObjs.map(p => p.name));
 
-  // 建 district meta/pool
-  parkMetaDistrict = new Map();
-  for (const p of districtObjs){
-    if (!p?.name) continue;
-    parkMetaDistrict.set(p.name, p);
+  const parksObjs = [...merged.values()];
+
+  parkMeta = new Map();
+  for (const p of parksObjs){
+    if (!p.name) continue;
+    parkMeta.set(p.name, p);
   }
-  masterPoolDistrict = uniqueStrings(districtObjs.map(p => p.name));
 
-  // ✅ 預設讓 UI（行政區下拉）以 district 為準
-  masterPool = masterPoolDistrict.slice();
-  parkMeta = parkMetaDistrict;
-
-  // 若 district 沒資料，退回 geo（至少能跑）
-  if (masterPool.length === 0 && masterPoolGeo.length > 0){
-    masterPool = masterPoolGeo.slice();
-    parkMeta = parkMetaGeo;
-  }
+  masterPool = uniqueStrings(parksObjs.map(p => p.name));
 
   if (masterPool.length === 0){
-    setEmptyText("找不到公園資料（請確認 parks.geo.json / parks.district.json 存在）");
+    setEmptyText("找不到公園資料（請確認 parks.full.json 或 parks.names.json 存在）");
     setUIState();
     return;
   }
@@ -1432,3 +1402,5 @@ async function init(){
 }
 
 init();
+
+
