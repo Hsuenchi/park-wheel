@@ -1422,7 +1422,20 @@ async function init(){
   try{
     if (locBtn) locBtn.hidden = true;
   }catch{}
-
+  
+// 2b) 更保險：就算 locBtn 抓不到，也用文字/屬性把「取得定位」按鈕藏起來
+try{
+  const candidates = Array.from(document.querySelectorAll("button, a"));
+  for (const el of candidates){
+    const txt = (el.textContent || "").trim();
+    if (txt === "取得定位" || txt.includes("定位")){
+      el.style.display = "none";
+      el.hidden = true;
+      el.setAttribute("aria-hidden","true");
+    }
+  }
+}catch{}
+  
   // 3) 強制任何地方遇到 near 都轉回 all（保險）
   const _getMode = () => (modeSelect ? (modeSelect.value || "all") : "all");
 
@@ -1467,6 +1480,7 @@ async function init(){
 })();
 
 init();
+
 
 
 
