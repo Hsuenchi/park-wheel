@@ -50,7 +50,10 @@ const loveCloseBtn = $("#loveCloseBtn");
 // constants
 const BATCH_SIZE = 6;
 const NEAR_TOP_N = 18;
-const DATA_URLS = ["./parks.district.json", "./parks.geo.json"];
+
+// ✅✅✅ 修正：near 用 geo；district/隨機 用 district（不再合併）
+const GEO_URL = "./parks.geo.json";
+const DISTRICT_URL = "./parks.district.json";
 
 const WIN_KEY    = "tripweb_won_parks_v1";
 const SEALED_KEY = "tripweb_sealed_parks_v1";
@@ -68,8 +71,17 @@ let rotation = 0;
 
 let selectedPark = null;
 
+// ✅✅✅ active pool/meta（會依 mode 切換）
 let masterPool = [];
 let parkMeta = new Map();
+
+// ✅✅✅ 分別存兩份：geo / district
+let masterPoolGeo = [];
+let parkMetaGeo = new Map();
+
+let masterPoolDistrict = [];
+let parkMetaDistrict = new Map();
+
 let userLoc = null;
 
 let favorites = [];
@@ -90,19 +102,6 @@ const colors = [
 // Utils
 // =========================
 function normalizeName(x){ return String(x ?? "").trim(); }
-
-/* =========================
-   ✅✅✅ 新增：合併用 key 正規化（不影響畫面顯示）
-   目的：讓 district.json / geo.json 名字即使有小差異也能對上
-========================= */
-function normalizeKey(x){
-  return String(x ?? "")
-    .trim()
-    .replace(/\u3000/g, " ")          // 全形空白 → 半形
-    .replace(/\s+/g, " ")            // 多空白 → 一個空白
-    .replace(/[（）]/g, (m)=> (m==="（" ? "(" : m==="）" ? ")" : m))
-    .replace(/[\u200B-\u200D\uFEFF]/g, ""); // 零寬字元（保險）
-}
 
 function uniqueStrings(arr){
   const out = [];
@@ -1020,9 +1019,18 @@ function getFilteredPoolNamesNonNear(){
 // Batch
 // =========================
 function loadNewBatch(){
+  // ✅✅✅ 依模式切換資料來源：near=geo；其他=district
+  const mode = modeSelect ? modeSelect.value : "all";
+  if (mode === "near"){
+    masterPool = masterPoolGeo.slice();
+    parkMeta = parkMetaGeo;
+  } else {
+    masterPool = masterPoolDistrict.slice();
+    parkMeta = parkMetaDistrict;
+  }
+
   if (masterPool.length === 0) return;
 
-  const mode = modeSelect ? modeSelect.value : "all";
   const sealedSet = loadSet(SEALED_KEY);
 
   if (mode === "near"){
@@ -1159,6 +1167,8 @@ function spin(){
   wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
   window.setTimeout(() => {
+    // 停下時，先把 rotation 更新成「這次停下的累積角度」
+    // （避免抽到重複時提前 return，下一次又從舊 rotation 計算造成回轉/半圈）
     rotation = totalRotation;
 
     const normalized = normalize360(totalRotation);
@@ -1167,6 +1177,7 @@ function spin(){
 
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)){
+      // ✅ 修正點：重複時也要把輪盤穩定在目前停下角度，避免下一次只轉半圈
       stopTicks?.();
       isSpinning = false;
 
@@ -1196,6 +1207,7 @@ function spin(){
       wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
       window.setTimeout(() => {
+        // ✅ 最終固定：保持累積角度，不再把它縮回 0~360（避免下一次回轉）
         snapWheelTo(rotation);
 
         selectedPark = picked;
@@ -1237,6 +1249,7 @@ function preserveSelected(){
   history = history.filter(x => x !== name);
   saveHistory();
 
+  // ✅ 修改：用鎖定提示，避免被 updateControlLocksByMode 立刻清掉
   setFilterHintHold("已保留");
   renderAll();
 }
@@ -1296,42 +1309,48 @@ async function init(){
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
 
-  // ✅ 同時讀 district + geo（用「normalizeKey(name)」合併，讓順序不再影響定位）
-  const merged = new Map(); // key -> meta
-  for (const url of DATA_URLS){
-    try{
-      const data = await fetchJson(url);
-      const list = extractParksFromJson(data);
+  // ✅✅✅ 分開載入：near=geo；行政區/隨機=district
+  let geoObjs = [];
+  let districtObjs = [];
 
-      for (const p of list){
-        if (!p?.name) continue;
+  try{
+    const geoData = await fetchJson(GEO_URL);
+    geoObjs = extractParksFromJson(geoData);
+  }catch{}
 
-        const key = normalizeKey(p.name);
-        const prev = merged.get(key) || { name: p.name };
+  try{
+    const disData = await fetchJson(DISTRICT_URL);
+    districtObjs = extractParksFromJson(disData);
+  }catch{}
 
-        merged.set(key, {
-          name: prev.name || p.name,
-          district: prev.district || p.district || "",
-          address: prev.address || p.address || "",
-          lat: (prev.lat ?? p.lat),
-          lng: (prev.lng ?? p.lng),
-        });
-      }
-    }catch{}
+  // 建 geo meta/pool
+  parkMetaGeo = new Map();
+  for (const p of geoObjs){
+    if (!p?.name) continue;
+    parkMetaGeo.set(p.name, p);
   }
+  masterPoolGeo = uniqueStrings(geoObjs.map(p => p.name));
 
-  const parksObjs = [...merged.values()];
-
-  parkMeta = new Map();
-  for (const p of parksObjs){
-    if (!p.name) continue;
-    parkMeta.set(p.name, p);
+  // 建 district meta/pool
+  parkMetaDistrict = new Map();
+  for (const p of districtObjs){
+    if (!p?.name) continue;
+    parkMetaDistrict.set(p.name, p);
   }
+  masterPoolDistrict = uniqueStrings(districtObjs.map(p => p.name));
 
-  masterPool = uniqueStrings(parksObjs.map(p => p.name));
+  // ✅ 預設讓 UI（行政區下拉）以 district 為準
+  masterPool = masterPoolDistrict.slice();
+  parkMeta = parkMetaDistrict;
+
+  // 若 district 沒資料，退回 geo（至少能跑）
+  if (masterPool.length === 0 && masterPoolGeo.length > 0){
+    masterPool = masterPoolGeo.slice();
+    parkMeta = parkMetaGeo;
+  }
 
   if (masterPool.length === 0){
-    setEmptyText("找不到公園資料（請確認 parks.full.json 或 parks.names.json 存在）");
+    setEmptyText("找不到公園資料（請確認 parks.geo.json / parks.district.json 存在）");
     setUIState();
     return;
   }
@@ -1341,6 +1360,7 @@ async function init(){
   loadNewBatch();
   renderAll();
 
+  // ✅ 額外：第一次觸碰畫面也解鎖音訊（iOS 更穩）
   document.addEventListener("touchstart", unlockAudio, { passive: true, once: true });
   document.addEventListener("mousedown", unlockAudio, { passive: true, once: true });
 
