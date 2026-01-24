@@ -91,6 +91,19 @@ const colors = [
 // =========================
 function normalizeName(x){ return String(x ?? "").trim(); }
 
+/* =========================
+   ✅✅✅ 新增：合併用 key 正規化（不影響畫面顯示）
+   目的：讓 district.json / geo.json 名字即使有小差異也能對上
+========================= */
+function normalizeKey(x){
+  return String(x ?? "")
+    .trim()
+    .replace(/\u3000/g, " ")          // 全形空白 → 半形
+    .replace(/\s+/g, " ")            // 多空白 → 一個空白
+    .replace(/[（）]/g, (m)=> (m==="（" ? "(" : m==="）" ? ")" : m))
+    .replace(/[\u200B-\u200D\uFEFF]/g, ""); // 零寬字元（保險）
+}
+
 function uniqueStrings(arr){
   const out = [];
   const seen = new Set();
@@ -1146,8 +1159,6 @@ function spin(){
   wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
   window.setTimeout(() => {
-    // 停下時，先把 rotation 更新成「這次停下的累積角度」
-    // （避免抽到重複時提前 return，下一次又從舊 rotation 計算造成回轉/半圈）
     rotation = totalRotation;
 
     const normalized = normalize360(totalRotation);
@@ -1156,7 +1167,6 @@ function spin(){
 
     const sealedSet1 = loadSet(SEALED_KEY);
     if (sealedSet1.has(picked)){
-      // ✅ 修正點：重複時也要把輪盤穩定在目前停下角度，避免下一次只轉半圈
       stopTicks?.();
       isSpinning = false;
 
@@ -1186,7 +1196,6 @@ function spin(){
       wheelRotator.style.transform = `rotate(${totalRotation}deg)`;
 
       window.setTimeout(() => {
-        // ✅ 最終固定：保持累積角度，不再把它縮回 0~360（避免下一次回轉）
         snapWheelTo(rotation);
 
         selectedPark = picked;
@@ -1228,7 +1237,6 @@ function preserveSelected(){
   history = history.filter(x => x !== name);
   saveHistory();
 
-  // ✅ 修改：用鎖定提示，避免被 updateControlLocksByMode 立刻清掉
   setFilterHintHold("已保留");
   renderAll();
 }
@@ -1288,8 +1296,8 @@ async function init(){
   favorites = loadArray(FAV_KEY);
   history = loadArray(HISTORY_KEY);
 
-  // ✅ 同時讀 full + names（用 name 合併，把 district/address 補齊）
-  const merged = new Map(); // name -> meta
+  // ✅ 同時讀 district + geo（用「normalizeKey(name)」合併，讓順序不再影響定位）
+  const merged = new Map(); // key -> meta
   for (const url of DATA_URLS){
     try{
       const data = await fetchJson(url);
@@ -1297,9 +1305,12 @@ async function init(){
 
       for (const p of list){
         if (!p?.name) continue;
-        const prev = merged.get(p.name) || { name: p.name };
-        merged.set(p.name, {
-          name: p.name,
+
+        const key = normalizeKey(p.name);
+        const prev = merged.get(key) || { name: p.name };
+
+        merged.set(key, {
+          name: prev.name || p.name,
           district: prev.district || p.district || "",
           address: prev.address || p.address || "",
           lat: (prev.lat ?? p.lat),
@@ -1330,7 +1341,6 @@ async function init(){
   loadNewBatch();
   renderAll();
 
-  // ✅ 額外：第一次觸碰畫面也解鎖音訊（iOS 更穩）
   document.addEventListener("touchstart", unlockAudio, { passive: true, once: true });
   document.addEventListener("mousedown", unlockAudio, { passive: true, once: true });
 
@@ -1402,6 +1412,3 @@ async function init(){
 }
 
 init();
-
-
-
