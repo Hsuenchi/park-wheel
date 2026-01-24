@@ -1400,7 +1400,73 @@ async function init(){
     }
   });
 }
+// =========================
+// ✅ Disable "near" mode (remove/ignore "距離我最近")
+// =========================
+(function disableNearMode(){
+  // 1) 移除 modeSelect 裡的 near 選項（如果存在）
+  try{
+    if (modeSelect){
+      const opts = Array.from(modeSelect.options || []);
+      for (const o of opts){
+        if (o && String(o.value).toLowerCase() === "near") {
+          modeSelect.removeChild(o);
+        }
+      }
+      // 若目前剛好是 near，強制回到 all
+      if (modeSelect.value === "near") modeSelect.value = "all";
+    }
+  }catch{}
+
+  // 2) 隱藏定位按鈕（如果你的 UI 有）
+  try{
+    if (locBtn) locBtn.hidden = true;
+  }catch{}
+
+  // 3) 強制任何地方遇到 near 都轉回 all（保險）
+  const _getMode = () => (modeSelect ? (modeSelect.value || "all") : "all");
+
+  // 覆寫 updateControlLocksByMode：不再顯示 near 相關提示
+  const _origUpdate = updateControlLocksByMode;
+  updateControlLocksByMode = function(){
+    // 防止外部把 modeSelect 設成 near
+    if (modeSelect && modeSelect.value === "near") modeSelect.value = "all";
+    // 原本邏輯照跑，但 near 不會再出現
+    try{ return _origUpdate(); }catch(e){}
+  };
+
+  // 覆寫 requestLocation：直接提示停用
+  const _origReqLoc = requestLocation;
+  requestLocation = function(){
+    setFilterHint("『距離我最近』功能已暫時停用（目前只保留：隨機 / 行政區）。");
+    try{ if (locBtn) locBtn.disabled = false; }catch{}
+  };
+
+  // 覆寫 refreshNow：避免 near 相關檢查卡住
+  const _origRefresh = refreshNow;
+  refreshNow = function(){
+    // 若不小心是 near，直接切回 all 再刷新
+    if (modeSelect && modeSelect.value === "near") modeSelect.value = "all";
+    try{ return _origRefresh(); }catch(e){
+      // 最保底：直接抽新批次
+      try{ loadNewBatch(); setFilterHint("已重新整理。"); }catch{}
+    }
+  };
+
+  // 覆寫 loadNewBatch：完全跳過 near 分支（保險）
+  const _origLoadNewBatch = loadNewBatch;
+  loadNewBatch = function(){
+    if (modeSelect && modeSelect.value === "near") modeSelect.value = "all";
+    return _origLoadNewBatch();
+  };
+
+  // 如果你有 districtGroup 邏輯、或 UI 需要重整提示
+  try{
+    if (filterHint && _getMode() !== "near") setFilterHint("");
+  }catch{}
+})();
 
 init();
+
 
 
